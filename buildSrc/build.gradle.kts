@@ -9,6 +9,8 @@ repositories {
 dependencies {
     implementation(libs.kgp)
     implementation(libs.agp)
+    implementation(libs.dhp)
+    implementation(libs.firebase.crashlytics.plugin)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {

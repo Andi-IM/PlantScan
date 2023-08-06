@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.version.get().toInt()
-        namespace = "com.ncorti.kotlin.template.app"
+        namespace = "com.github.andiim.orchidscan.app"
 
         applicationId = AppCoordinates.APP_ID
         versionCode = AppCoordinates.APP_VERSION_CODE
@@ -56,11 +56,9 @@ android {
 
 dependencies {
     implementation(projects.libraryAndroid)
-    implementation(projects.libraryCompose)
     implementation(projects.libraryKotlin)
 
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.constraint.layout)
     implementation(libs.androidx.core.ktx)
 
     testImplementation(libs.junit)
