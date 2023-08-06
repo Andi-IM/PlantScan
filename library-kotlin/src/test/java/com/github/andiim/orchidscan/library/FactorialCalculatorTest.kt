@@ -1,6 +1,6 @@
-package com.ncorti.kotlin.template.library
+package com.github.andiim.orchidscan.library
 
-import com.ncorti.kotlin.template.library.FactorialCalculator.computeFactorial
+import com.github.andiim.orchidscan.library.FactorialCalculator.computeFactorial
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test

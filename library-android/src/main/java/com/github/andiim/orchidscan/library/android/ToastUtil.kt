@@ -1,4 +1,4 @@
-package com.ncorti.kotlin.template.library.android
+package com.github.andiim.orchidscan.library.android
 
 import android.content.Context
 import android.widget.Toast

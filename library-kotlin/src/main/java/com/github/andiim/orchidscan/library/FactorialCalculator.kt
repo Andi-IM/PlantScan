@@ -1,4 +1,4 @@
-package com.ncorti.kotlin.template.library
+package com.github.andiim.orchidscan.library
 
 object FactorialCalculator {
     private const val MAX_FACTORIAL_64BIT = 20
