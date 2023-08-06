@@ -1,4 +1,4 @@
-package com.ncorti.kotlin.template.app
+package com.github.andiim.orchidscan.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
