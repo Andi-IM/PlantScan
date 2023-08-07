@@ -18,8 +18,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
+        compose = true
         buildConfig = true
     }
+    composeOptions { kotlinCompilerExtensionVersion = libs.versions.compose.compilerextension.get() }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -71,6 +73,7 @@ dependencies {
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.debug)
     implementation(libs.bundles.lifecycle)
+
     implementation(libs.accompanist.permission)
     implementation(libs.accompanist.webview)
 
