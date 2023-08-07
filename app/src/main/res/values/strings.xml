@@ -10,6 +10,12 @@
     <string name="try_again">Try again</string>
     <string name="ok">OK</string>
 
+    <!--  FindPlant Screen  -->
+    <string name="search_placeholder">Search Plant</string>
+    <string name="search_icon_description">Search Icon</string>
+    <string name="search_icon_close_description">Close search bar</string>
+    <string name="search_using_camera_icon_description">Search using camera detection</string>
+
     <!-- Local Stack -->
     <string name="label_garden_screen">My Garden</string>
     <string name="label_search">Search</string>

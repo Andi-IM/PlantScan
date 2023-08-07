@@ -1,7 +1,6 @@
 package com.github.andiim.orchidscan.app
 
 import android.content.res.Resources
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -19,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.github.andiim.orchidscan.app.ui.common.composables.BottomBar
 import com.github.andiim.orchidscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.orchidscan.app.ui.navigation.SetupRootNavGraph
 import com.github.andiim.orchidscan.app.ui.states.PlantScanAppState
@@ -43,6 +43,7 @@ fun OrchidScanApp() {
                             )
                         })
                 },
+                bottomBar = { BottomBar(state = appState) }
             ) { innerPadding ->
                 SetupRootNavGraph(appState, modifier = Modifier.padding(innerPadding))
             }
