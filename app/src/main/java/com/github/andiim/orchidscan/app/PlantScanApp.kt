@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.github.andiim.orchidscan.app.ui.common.snackbar.SnackbarManager
+import com.github.andiim.orchidscan.app.ui.navigation.SetupRootNavGraph
 import com.github.andiim.orchidscan.app.ui.states.PlantScanAppState
 import com.github.andiim.orchidscan.app.ui.theme.PlantScanTheme
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +44,7 @@ fun OrchidScanApp() {
                         })
                 },
             ) { innerPadding ->
-                Box(modifier = Modifier.padding(innerPadding))
+                SetupRootNavGraph(appState, modifier = Modifier.padding(innerPadding))
             }
         }
     }
