@@ -7,10 +7,12 @@ import com.github.andiim.orchidscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.orchidscan.app.ui.navigation.Direction
 import com.github.andiim.orchidscan.app.ui.screens.viewModels.PlantScanViewModel
 import com.github.andiim.orchidscan.library.android.extensions.isValidEmail
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+@HiltViewModel
 class LoginViewModel @Inject
 constructor(private val accountService: AccountService, logService: LogService) :
     PlantScanViewModel(logService) {
