@@ -1,4 +1,4 @@
-package com.github.andiim.orchidscan.app.ui.screens.viewModels
+package com.github.andiim.orchidscan.app.ui.screens.splash
 
 import androidx.compose.runtime.mutableStateOf
 import com.github.andiim.orchidscan.app.data.firebase.AccountService

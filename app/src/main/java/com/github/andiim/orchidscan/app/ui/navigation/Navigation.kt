@@ -22,7 +22,7 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
         addSplashScreen(appState)
 
         navigation(
-            startDestination = Direction.SearchOrDetect.route,
+            startDestination = Direction.FindPlant.route,
             route = Direction.MainNav.route
         ) {
             // TODO : Add Bottom Navigation
@@ -38,7 +38,7 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
 
 private fun NavGraphBuilder.addWebViewScreen(appState: PlantScanAppState) {
     composable(
-        route = Direction.WebScreenView.route,
+        route = Direction.Web.route,
         arguments = listOf(navArgument("url") { type = NavType.StringType })
     ) { backStackEntry ->
         val url = backStackEntry.arguments?.getString("url")

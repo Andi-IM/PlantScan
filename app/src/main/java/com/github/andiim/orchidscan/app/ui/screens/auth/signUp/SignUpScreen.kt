@@ -22,7 +22,6 @@ import com.github.andiim.orchidscan.app.ui.common.composables.PasswordField
 import com.github.andiim.orchidscan.app.ui.common.composables.RepeatPasswordField
 import com.github.andiim.orchidscan.app.ui.common.extensions.basicButton
 import com.github.andiim.orchidscan.app.ui.common.extensions.fieldModifier
-import com.github.andiim.orchidscan.app.ui.screens.viewModels.SignUpViewModel
 import com.github.andiim.orchidscan.app.ui.theme.PlantScanTheme
 
 @Composable

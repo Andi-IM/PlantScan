@@ -1,11 +1,11 @@
-package com.github.andiim.orchidscan.app.ui.screens.viewModels
+package com.github.andiim.orchidscan.app.ui.screens.auth.login
 
 import com.github.andiim.orchidscan.app.R
 import com.github.andiim.orchidscan.app.data.firebase.AccountService
 import com.github.andiim.orchidscan.app.data.firebase.LogService
 import com.github.andiim.orchidscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.orchidscan.app.ui.navigation.Direction
-import com.github.andiim.orchidscan.app.ui.screens.auth.login.LoginState
+import com.github.andiim.orchidscan.app.ui.screens.viewModels.PlantScanViewModel
 import com.github.andiim.orchidscan.library.android.extensions.isValidEmail
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

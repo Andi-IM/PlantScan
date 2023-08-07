@@ -1,10 +1,10 @@
-package com.github.andiim.orchidscan.app.ui.screens.viewModels
+package com.github.andiim.orchidscan.app.ui.screens.auth.signUp
 
 import com.github.andiim.orchidscan.app.R
 import com.github.andiim.orchidscan.app.data.firebase.AccountService
 import com.github.andiim.orchidscan.app.data.firebase.LogService
 import com.github.andiim.orchidscan.app.ui.common.snackbar.SnackbarManager
-import com.github.andiim.orchidscan.app.ui.screens.auth.signUp.SignUpState
+import com.github.andiim.orchidscan.app.ui.screens.viewModels.PlantScanViewModel
 import com.github.andiim.orchidscan.library.android.extensions.isValidEmail
 import com.github.andiim.orchidscan.library.android.extensions.isValidPassword
 import com.github.andiim.orchidscan.library.android.extensions.passwordMatches

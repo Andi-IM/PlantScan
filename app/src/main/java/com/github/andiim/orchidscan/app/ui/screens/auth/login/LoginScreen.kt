@@ -34,7 +34,6 @@ import com.github.andiim.orchidscan.app.ui.common.composables.PasswordField
 import com.github.andiim.orchidscan.app.ui.common.extensions.basicButton
 import com.github.andiim.orchidscan.app.ui.common.extensions.fieldModifier
 import com.github.andiim.orchidscan.app.ui.common.extensions.textButton
-import com.github.andiim.orchidscan.app.ui.screens.viewModels.LoginViewModel
 import com.github.andiim.orchidscan.app.ui.theme.PlantScanTheme
 
 @Composable
