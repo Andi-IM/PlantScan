@@ -1,6 +1,6 @@
 package com.github.andiim.orchidscan.app
 
-import android.content.res.Resources
+import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -21,7 +21,6 @@ import androidx.navigation.compose.rememberNavController
 import com.github.andiim.orchidscan.app.ui.common.composables.BottomBar
 import com.github.andiim.orchidscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.orchidscan.app.ui.navigation.SetupRootNavGraph
-import com.github.andiim.orchidscan.app.ui.states.PlantScanAppState
 import com.github.andiim.orchidscan.app.ui.theme.PlantScanTheme
 import kotlinx.coroutines.CoroutineScope
 
@@ -53,9 +52,9 @@ fun OrchidScanApp() {
 
 @Composable
 @ReadOnlyComposable
-fun resources(): Resources {
+fun getContext(): Context {
     LocalConfiguration.current
-    return LocalContext.current.resources
+    return LocalContext.current
 }
 
 @Composable
@@ -63,11 +62,21 @@ fun rememberAppState(
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
     navController: NavHostController = rememberNavController(),
     snackbarManager: SnackbarManager = SnackbarManager,
-    resources: Resources = resources(),
+    context: Context = getContext(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) =
-    remember(snackbarHostState, navController, snackbarManager, resources, coroutineScope) {
+    remember(
+        snackbarHostState,
+        navController,
+        snackbarManager,
+        context,
+        coroutineScope
+    ) {
         PlantScanAppState(
-            snackbarHostState, navController, snackbarManager, resources, coroutineScope
+            snackbarHostState,
+            navController,
+            snackbarManager,
+            context,
+            coroutineScope
         )
     }

@@ -10,14 +10,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.github.andiim.orchidscan.app.PlantScanAppState
 import com.github.andiim.orchidscan.app.ui.screens.auth.login.LoginScreen
 import com.github.andiim.orchidscan.app.ui.screens.auth.login.LoginViewModel
 import com.github.andiim.orchidscan.app.ui.screens.auth.signUp.SignUpScreen
 import com.github.andiim.orchidscan.app.ui.screens.auth.signUp.SignUpViewModel
 import com.github.andiim.orchidscan.app.ui.screens.detail.DetailScreen
 import com.github.andiim.orchidscan.app.ui.screens.detail.DetailViewModel
-import com.github.andiim.orchidscan.app.ui.screens.detect.DetectScreen
-import com.github.andiim.orchidscan.app.ui.screens.detect.DetectViewModel
 import com.github.andiim.orchidscan.app.ui.screens.home.findPlant.FindPlantElement
 import com.github.andiim.orchidscan.app.ui.screens.home.findPlant.FindPlantViewModel
 import com.github.andiim.orchidscan.app.ui.screens.home.myGarden.MyGardenElement
@@ -28,7 +27,6 @@ import com.github.andiim.orchidscan.app.ui.screens.list.PlantListScreen
 import com.github.andiim.orchidscan.app.ui.screens.list.PlantListViewModel
 import com.github.andiim.orchidscan.app.ui.screens.splash.SplashScreen
 import com.github.andiim.orchidscan.app.ui.screens.web.WebScreen
-import com.github.andiim.orchidscan.app.ui.states.PlantScanAppState
 
 @Composable
 fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier) {
@@ -44,7 +42,6 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
         }
 
         detailScreen(appState)
-        detectScreen(appState)
 
         navigation(
             startDestination = Direction.FindPlant.route,
@@ -96,13 +93,6 @@ private fun NavGraphBuilder.detailScreen(appState: PlantScanAppState) {
         val viewModel: DetailViewModel = hiltViewModel()
         val id = backStackEntry.arguments?.getString("orchid_id")
         DetailScreen(id = id, popUpScreen = appState::popUp, viewModel = viewModel)
-    }
-}
-
-private fun NavGraphBuilder.detectScreen(appState: PlantScanAppState) {
-    composable(route = Direction.Detect.route) {
-        val viewModel: DetectViewModel = hiltViewModel()
-        DetectScreen(popUpScreen = appState::popUp, viewModel = viewModel)
     }
 }
 
@@ -172,3 +162,5 @@ private fun NavGraphBuilder.webViewScreen(appState: PlantScanAppState) {
         url?.let { WebScreen(url = it, name = "Testing", popUpScreen = appState::popUp) }
     }
 }
+
+

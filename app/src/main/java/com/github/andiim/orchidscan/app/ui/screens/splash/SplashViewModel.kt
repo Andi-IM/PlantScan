@@ -6,8 +6,10 @@ import com.github.andiim.orchidscan.app.data.firebase.ConfigurationService
 import com.github.andiim.orchidscan.app.data.firebase.LogService
 import com.github.andiim.orchidscan.app.ui.navigation.Direction
 import com.github.andiim.orchidscan.app.ui.screens.viewModels.PlantScanViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class SplashViewModel @Inject
 constructor(
     configurationService: ConfigurationService,
