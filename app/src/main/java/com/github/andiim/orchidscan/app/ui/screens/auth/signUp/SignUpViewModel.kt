@@ -8,10 +8,11 @@ import com.github.andiim.orchidscan.app.ui.screens.viewModels.PlantScanViewModel
 import com.github.andiim.orchidscan.library.android.extensions.isValidEmail
 import com.github.andiim.orchidscan.library.android.extensions.isValidPassword
 import com.github.andiim.orchidscan.library.android.extensions.passwordMatches
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
+@HiltViewModel
 class SignUpViewModel @Inject
 constructor(private val accountService: AccountService, logService: LogService) :
     PlantScanViewModel(logService) {
