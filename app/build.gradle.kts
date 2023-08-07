@@ -3,6 +3,9 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+    id("com.google.firebase.firebase-perf")
 }
 
 android {
@@ -10,7 +13,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.version.get().toInt()
-        namespace = "com.github.andiim.orchidscan.app"
+        namespace = "com.github.andiim.plantscan.app"
 
         applicationId = AppCoordinates.APP_ID
         versionCode = AppCoordinates.APP_VERSION_CODE
@@ -76,6 +79,11 @@ dependencies {
 
     implementation(libs.accompanist.permission)
     implementation(libs.accompanist.webview)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.bundles.firebase)
+    implementation(libs.play.services.auth)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)

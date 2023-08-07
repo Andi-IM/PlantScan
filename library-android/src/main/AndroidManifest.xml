@@ -12,7 +12,7 @@
 
     <application>
         <activity
-            android:name="com.github.andiim.orchidscan.library.android.detect.DetectActivity"
+            android:name="com.github.andiim.plantscan.library.android.detect.DetectActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
