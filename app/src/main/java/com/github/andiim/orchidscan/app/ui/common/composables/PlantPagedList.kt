@@ -25,7 +25,7 @@ import androidx.paging.compose.itemKey
 import com.github.andiim.orchidscan.app.data.model.Plant
 
 @Composable
-fun PlantList(plants: LazyPagingItems<Plant>, onItemClick: (Plant) -> Unit) {
+fun PlantPagedList(plants: LazyPagingItems<Plant>, onItemClick: (Plant) -> Unit) {
     LazyColumn(state = rememberLazyListState()) {
         items(
             count = plants.itemCount,

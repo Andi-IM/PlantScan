@@ -36,7 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.github.andiim.orchidscan.app.data.model.Plant
-import com.github.andiim.orchidscan.app.ui.common.composables.PlantList
+import com.github.andiim.orchidscan.app.ui.common.composables.PlantPagedList
 import com.github.andiim.orchidscan.app.ui.theme.PlantScanTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -131,7 +131,7 @@ fun FindPlantContent(
                         )
                     }
             }) {
-            PlantList(plants = plants, onItemClick = toDetail)
+            PlantPagedList(plants = plants, onItemClick = toDetail)
         }
     }
 }

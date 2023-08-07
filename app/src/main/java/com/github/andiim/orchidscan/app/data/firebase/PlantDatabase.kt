@@ -6,5 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlantDatabase {
     fun getAllPlant(): Flow<PagingData<Plant>>
+    fun getMyPlant(): Flow<PagingData<Plant>>
     fun searchPlant(query: String = ""): Flow<PagingData<Plant>>
 }

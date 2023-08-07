@@ -51,7 +51,7 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
             route = Direction.MainNav.route
         ) {
             homeFindPlantElement(appState)
-            homeMyGardenElement()
+            homeMyGardenElement(appState)
             homeSettingsElement(appState)
         }
 
@@ -106,10 +106,13 @@ private fun NavGraphBuilder.detectScreen(appState: PlantScanAppState) {
     }
 }
 
-private fun NavGraphBuilder.homeMyGardenElement() {
+private fun NavGraphBuilder.homeMyGardenElement(appState: PlantScanAppState) {
     composable(route = Direction.MyGarden.route) {
         val viewModel: MyGardenViewModel = hiltViewModel()
-        MyGardenElement(viewModel = viewModel)
+        MyGardenElement(
+            toDetail = { appState.navigate(Direction.Detect.route) },
+            viewModel = viewModel
+        )
     }
 }
 
