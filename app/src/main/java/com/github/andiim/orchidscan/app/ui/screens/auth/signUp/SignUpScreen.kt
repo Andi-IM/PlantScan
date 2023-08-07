@@ -66,7 +66,7 @@ fun SignUpContent(
 
 @Preview
 @Composable
-private fun Preview_LoginContent() {
+private fun Preview_SignUpScreen() {
     PlantScanTheme {
         Surface {
             SignUpContent()
