@@ -150,7 +150,7 @@ private fun NavGraphBuilder.listScreen(appState: PlantScanAppState) {
             }
         val viewModel: PlantListViewModel = hiltViewModel(parentEntry)
         PlantListScreen(
-            onDetails = { appState.navigate(Direction.Detail.createRoute(it)) },
+            toDetails = { appState.navigate(Direction.Detail.createRoute(it)) },
             popUpScreen = appState::popUp,
             viewModel = viewModel
         )

@@ -10,6 +10,10 @@
     <string name="try_again">Try again</string>
     <string name="ok">OK</string>
 
+    <!-- Plants Screen -->
+    <string name="plants_label">Plants</string>
+    <string name="plants_exit">Back</string>
+
     <!--  FindPlant Screen  -->
     <string name="search_placeholder">Search Plant</string>
     <string name="search_icon_description">Search Icon</string>
