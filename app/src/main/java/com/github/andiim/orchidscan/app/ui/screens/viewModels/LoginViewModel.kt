@@ -17,11 +17,6 @@ constructor(private val accountService: AccountService, logService: LogService) 
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
 
-    private val email
-        get() = _state.value.email
-    private val password
-        get() = _state.value.password
-
     fun onEmailChange(newValue: String) {
         _state.value = _state.value.copy(email = newValue)
     }
@@ -31,30 +26,30 @@ constructor(private val accountService: AccountService, logService: LogService) 
     }
 
     fun onSignInClick(openAndPopUp: (String, String) -> Unit) {
-        if (!email.isValidEmail()) {
+        if (!_state.value.email.isValidEmail()) {
             SnackbarManager.showMessage(R.string.email_error)
             return
         }
 
-        if (password.isBlank()) {
+        if (_state.value.password.isBlank()) {
             SnackbarManager.showMessage(R.string.error_empty_password)
             return
         }
 
         launchCatching {
-            accountService.authenticate(email, password)
+            accountService.authenticate(_state.value.email, _state.value.password)
             openAndPopUp(Direction.Settings.route, Direction.Login.route)
         }
     }
 
     fun onForgotPasswordClick() {
-        if (!email.isValidEmail()) {
+        if (!_state.value.email.isValidEmail()) {
             SnackbarManager.showMessage(R.string.email_error)
             return
         }
 
         launchCatching {
-            accountService.sendRecoveryEmail(email)
+            accountService.sendRecoveryEmail(_state.value.email)
             SnackbarManager.showMessage(R.string.hint_recovery_email_sent)
         }
     }
