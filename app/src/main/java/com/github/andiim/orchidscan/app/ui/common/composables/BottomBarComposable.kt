@@ -14,7 +14,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.github.andiim.orchidscan.app.ui.navigation.Direction
 import com.github.andiim.orchidscan.app.ui.navigation.NavigationObject
-import com.github.andiim.orchidscan.app.ui.states.PlantScanAppState
+import com.github.andiim.orchidscan.app.PlantScanAppState
 
 @Composable
 fun BottomBar(state: PlantScanAppState) {
