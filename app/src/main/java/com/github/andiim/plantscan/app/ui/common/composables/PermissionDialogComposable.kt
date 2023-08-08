@@ -32,80 +32,101 @@ import com.github.andiim.plantscan.app.R.string as AppText
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionDialog(onRequestPermission: () -> Unit) {
-  var showWarningDialog by remember { mutableStateOf(true) }
+    var showWarningDialog by remember { mutableStateOf(true) }
 
-  if (showWarningDialog) {
-    AlertDialog(
-        modifier = Modifier.alertDialog(), onDismissRequest = { showWarningDialog = false }) {
-          Surface(
-              modifier = Modifier.wrapContentWidth().wrapContentHeight(),
-              shape = MaterialTheme.shapes.large,
-              tonalElevation = AlertDialogDefaults.TonalElevation) {
+    if (showWarningDialog) {
+        AlertDialog(
+            modifier = Modifier.alertDialog(), onDismissRequest = { showWarningDialog = false }) {
+            Surface(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .wrapContentHeight(),
+                shape = MaterialTheme.shapes.large,
+                tonalElevation = AlertDialogDefaults.TonalElevation
+            ) {
                 Column(modifier = Modifier.padding(24.dp)) {
-                  Text(
-                      stringResource(AppText.notification_permission_title),
-                      color = (MaterialTheme.colorScheme).onSurface,
-                      style = (MaterialTheme.typography).headlineSmall)
-                  Spacer(modifier = Modifier.height(16.dp))
-                  Text(
-                      stringResource(AppText.notification_permission_description),
-                      style = (MaterialTheme.typography).bodyMedium,
-                      color = (MaterialTheme.colorScheme).onSurfaceVariant,
-                  )
-                  Spacer(modifier = Modifier.height(24.dp))
-                  TextButton(
-                      onClick = {
-                        onRequestPermission()
-                        showWarningDialog = true
-                      },
-                      modifier = Modifier.align(Alignment.End)) {
+                    Text(
+                        stringResource(AppText.notification_permission_title),
+                        color = (MaterialTheme.colorScheme).onSurface,
+                        style = (MaterialTheme.typography).headlineSmall
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        stringResource(AppText.notification_permission_description),
+                        style = (MaterialTheme.typography).bodyMedium,
+                        color = (MaterialTheme.colorScheme).onSurfaceVariant,
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    TextButton(
+                        onClick = {
+                            onRequestPermission()
+                            showWarningDialog = false
+                        },
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
                         Text(
                             stringResource(AppText.request_notification_permission),
-                            style = (MaterialTheme.typography).labelLarge)
-                      }
+                            style = (MaterialTheme.typography).labelLarge
+                        )
+                    }
                 }
-              }
+            }
         }
-  }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RationaleDialog() {
-  var showWarningDialog by remember { mutableStateOf(true) }
+    var showWarningDialog by remember { mutableStateOf(true) }
 
-  if (showWarningDialog) {
-    AlertDialog(
-        modifier = Modifier.alertDialog(), onDismissRequest = { showWarningDialog = false }) {
-          Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                stringResource(AppText.notification_permission_title),
-                color = (MaterialTheme.colorScheme).onSurface,
-                style = (MaterialTheme.typography).headlineSmall)
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                stringResource(AppText.notification_permission_description),
-                color = (MaterialTheme.colorScheme).onSurfaceVariant,
-                style = (MaterialTheme.typography).bodyMedium)
-            Spacer(modifier = Modifier.height(24.dp))
-            TextButton(onClick = { showWarningDialog = true }, modifier = Modifier.textButton()) {
-              Text(stringResource(AppText.ok))
+    if (showWarningDialog) {
+        AlertDialog(
+            modifier = Modifier.alertDialog(),
+            onDismissRequest = { showWarningDialog = false }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .wrapContentHeight(),
+                shape = MaterialTheme.shapes.large,
+                tonalElevation = AlertDialogDefaults.TonalElevation
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        stringResource(AppText.notification_permission_title),
+                        color = (MaterialTheme.colorScheme).onSurface,
+                        style = (MaterialTheme.typography).headlineSmall
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        stringResource(AppText.notification_permission_description),
+                        color = (MaterialTheme.colorScheme).onSurfaceVariant,
+                        style = (MaterialTheme.typography).bodyMedium
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    TextButton(
+                        onClick = { showWarningDialog = false },
+                        modifier = Modifier.textButton()
+                    ) {
+                        Text(stringResource(AppText.ok))
+                    }
+                }
             }
-          }
         }
-  }
+    }
 }
 
 @Preview(name = "Night Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(name = "Day Mode", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun RationalDialogPreview() {
-  PlantScanTheme { Surface { RationaleDialog() } }
+    PlantScanTheme { Surface { RationaleDialog() } }
 }
 
 @Preview(name = "Night Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(name = "Day Mode", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun PermissionDialogPreview() {
-  PlantScanTheme { Surface { PermissionDialog {} } }
+    PlantScanTheme { Surface { PermissionDialog {} } }
 }

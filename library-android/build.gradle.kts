@@ -25,6 +25,7 @@ android {
 
     composeOptions { kotlinCompilerExtensionVersion = libs.versions.compose.compilerextension.get() }
     buildFeatures {
+        mlModelBinding = true
         buildConfig = true
         viewBinding = true
         compose = true
@@ -55,6 +56,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
     implementation(libs.constraintlayout)
+
+    // Tensorflow
+    implementation(libs.bundles.tensorflow)
 
     // Hilt
     implementation(libs.dagger.hilt)

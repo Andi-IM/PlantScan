@@ -10,6 +10,12 @@
         <dist:fusing dist:include="true" />
     </dist:module>
 
+    <uses-feature android:name="android.hardware.camera.any" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
     <application>
         <activity
             android:name="com.github.andiim.plantscan.library.android.detect.DetectActivity"
@@ -22,6 +28,12 @@
                     android:host="detection"
                     android:scheme="plantscan" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.github.andiim.plantscan.library.android.detect.DetectTensorActivity"
+            android:exported="true">
+
         </activity>
     </application>
 </manifest>
