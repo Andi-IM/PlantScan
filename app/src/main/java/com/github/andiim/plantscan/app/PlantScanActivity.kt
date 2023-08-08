@@ -9,6 +9,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class PlantScanActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { OrchidScanApp() }
+        setContent { PlantScanApp() }
     }
 }

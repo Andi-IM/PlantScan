@@ -11,7 +11,6 @@ plugins {
     id("com.google.firebase.firebase-perf") version "1.4.2" apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
-    cleanup
     base
 }
 

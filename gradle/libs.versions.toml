@@ -7,8 +7,7 @@ androidx_test_rules = "1.5.0"
 androidx_test_ext = "1.1.5"
 appcompat = "1.6.1"
 camerax_version = "1.2.3"
-compile_sdk_version = "33"
-coroutines = "1.7.2"
+coroutines = "1.7.3"
 coil = "2.4.0"
 compose = "2023.06.01"
 compose_compilerextension = "1.4.8"
@@ -18,7 +17,7 @@ detekt = "1.23.0"
 dokka = "1.8.20"
 espresso_core = "3.5.1"
 firebase = "32.2.2"
-hilt = "2.46.1"
+hilt = "2.47"
 junit = "4.13.2"
 kotlin = "1.8.22"
 ktlint = "0.45.2"
@@ -26,6 +25,7 @@ ktlint_gradle = "10.2.1"
 lifecycle = "2.6.1"
 material = "1.9.0"
 navigation = "2.6.0"
+compile_sdk_version = "33"
 min_sdk_version = "21"
 target_sdk_version = "33"
 benmanesversion = "0.47.0"
@@ -42,8 +42,8 @@ androidx_appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx_core_ktx = { module = "androidx.core:core-ktx", version.ref = "core_ktx" }
 androidx_test_rules = { module = "androidx.test:rules",  version.ref = "androidx_test_rules" }
 androidx_test_runner = { module = "androidx.test:runner", version.ref = "androidx_test" }
-androidx_test_ext_junit = { module = "androidx.test.ext:junit", version.ref = "androidx.test.ext" }
-androidx_test_ext_junit_ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx.test.ext" }
+androidx_test_ext_junit = { module = "androidx.test.ext:junit", version.ref = "androidx_test_ext" }
+androidx_test_ext_junit_ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx_test_ext" }
 dagger_hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 dagger_hilt_navigation_compose = {module = "androidx.hilt:hilt-navigation-compose", version = "1.0.0"}
 dagger_hilt_compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }

@@ -3,8 +3,8 @@ version = LibraryAndroidCoordinates.LIBRARY_VERSION
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("maven-publish")
-    publish
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -23,9 +23,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    composeOptions { kotlinCompilerExtensionVersion = libs.versions.compose.compilerextension.get() }
     buildFeatures {
         buildConfig = true
         viewBinding = true
+        compose = true
     }
 
     kotlinOptions {
@@ -42,13 +44,6 @@ android {
         }
     }
 
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-            withJavadocJar()
-        }
-    }
-
     lint {
         warningsAsErrors = true
         abortOnError = true
@@ -60,6 +55,17 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
     implementation(libs.constraintlayout)
+
+    // Hilt
+    implementation(libs.dagger.hilt)
+    implementation(libs.dagger.hilt.navigation.compose)
+    kapt(libs.dagger.hilt.compiler)
+
+    // Compose
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
+    debugImplementation(libs.bundles.compose.debug)
+    implementation(libs.bundles.lifecycle)
 
     testImplementation(libs.junit)
     implementation(libs.bundles.camera)

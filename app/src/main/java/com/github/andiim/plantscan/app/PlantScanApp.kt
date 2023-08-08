@@ -1,7 +1,7 @@
 package com.github.andiim.plantscan.app
 
 import android.Manifest
-import android.content.res.Resources
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,18 +35,18 @@ import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun OrchidScanApp() {
+fun PlantScanApp() {
     PlantScanTheme {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             RequestNotificationPermissionDialog()
         }
 
-        val appState = rememberAppState()
-
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
+
+            val appState = rememberAppState()
             Scaffold(
                 snackbarHost = {
                     SnackbarHost(
@@ -69,9 +69,9 @@ fun OrchidScanApp() {
 
 @Composable
 @ReadOnlyComposable
-fun resources(): Resources {
+fun getContext(): Context {
     LocalConfiguration.current
-    return LocalContext.current.resources
+    return LocalContext.current
 }
 
 @Composable
@@ -79,21 +79,21 @@ fun rememberAppState(
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
     navController: NavHostController = rememberNavController(),
     snackbarManager: SnackbarManager = SnackbarManager,
-    resources: Resources = resources(),
+    getContext: Context = getContext(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) =
     remember(
         snackbarHostState,
         navController,
         snackbarManager,
-        resources,
+        getContext,
         coroutineScope
     ) {
         PlantScanAppState(
             snackbarHostState,
             navController,
             snackbarManager,
-            resources,
+            getContext,
             coroutineScope
         )
     }
