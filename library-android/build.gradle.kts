@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.version.get().toInt()
-        namespace = "com.github.andiim.orchidscan.library.android"
+        namespace = "com.github.andiim.plantscan.library.android"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
