@@ -1,40 +1,64 @@
 package com.github.andiim.plantscan.app.data.firebase.implement
 
 import com.github.andiim.plantscan.app.data.firebase.AccountService
+import com.github.andiim.plantscan.app.data.firebase.trace
 import com.github.andiim.plantscan.app.data.model.User
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 
-class AccountServiceImpl @Inject constructor() : AccountService {
+class AccountServiceImpl  @Inject constructor(private val auth: FirebaseAuth) : AccountService {
     override val currentUserId: String
-        get() = "1"
+        get() = auth.currentUser?.uid.orEmpty()
+
     override val hasUser: Boolean
-        get() = true
+        get() = auth.currentUser != null
+
     override val currentUser: Flow<User>
-        get() = flowOf(User(id = "1", isAnonymous = true))
+        get() = callbackFlow {
+            val listener =
+                FirebaseAuth.AuthStateListener { auth ->
+                    this.trySend(auth.currentUser?.let { User(it.uid, it.isAnonymous) } ?: User())
+                }
+            auth.addAuthStateListener(listener)
+            awaitClose { auth.removeAuthStateListener(listener) }
+        }
 
     override suspend fun authenticate(email: String, password: String) {
-        TODO("Not yet implemented")
+        auth.signInWithEmailAndPassword(email, password).await()
     }
 
     override suspend fun sendRecoveryEmail(email: String) {
-        TODO("Not yet implemented")
+        auth.sendPasswordResetEmail(email).await()
     }
 
     override suspend fun createAnonymousAccount() {
-        TODO("Not yet implemented")
+        auth.signInAnonymously().await()
     }
 
     override suspend fun linkAccount(email: String, password: String) {
-        TODO("Not yet implemented")
+        trace(LINK_ACCOUNT_TRACE) {
+            val credential = EmailAuthProvider.getCredential(email, password)
+            auth.currentUser!!.linkWithCredential(credential).await()
+        }
     }
 
     override suspend fun deleteAccount() {
-        TODO("Not yet implemented")
+        auth.currentUser!!.delete().await()
     }
 
     override suspend fun signOut() {
-        TODO("Not yet implemented")
+        if (auth.currentUser!!.isAnonymous) {
+            auth.currentUser!!.delete()
+        }
+        createAnonymousAccount()
+    }
+
+    companion object {
+        private const val LINK_ACCOUNT_TRACE = "linkAccount"
     }
 }

@@ -6,7 +6,7 @@ import com.github.andiim.plantscan.app.data.model.Plant
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
-class PlantDatabaseImpl @Inject constructor() : PlantDatabase {
+class FakePlantDatabaseImpl @Inject constructor() : PlantDatabase {
     override fun getAllPlant(): Flow<PagingData<Plant>> {
         TODO("Not yet implemented")
     }
