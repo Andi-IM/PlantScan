@@ -13,7 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = ("PlantScan")
+rootProject.name = ("plantscan")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

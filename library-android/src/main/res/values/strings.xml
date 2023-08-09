@@ -1,0 +1,10 @@
+<resources>
+    <string name="title_detection">Detect a Plant</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="start_capture">Start Capture</string>
+    <string name="stop_capture">Stop Capture</string>
+    <string name="nothing">Nothing</string>
+    <string name="select_button_label">Select</string>
+    <string name="predict_button_label">Predict</string>
+    <string name="sample_text_view">TextView</string>
+</resources>

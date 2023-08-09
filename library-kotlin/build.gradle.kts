@@ -4,7 +4,6 @@ plugins {
     id("java-library")
     kotlin("jvm")
     id("maven-publish")
-    publish
 }
 
 dependencies {
