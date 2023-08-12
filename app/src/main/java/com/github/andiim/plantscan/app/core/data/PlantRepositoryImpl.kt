@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 
 class PlantRepositoryImpl @Inject constructor(private val remote: RemotePlantSource) :
     PlantRepository {
+
   override fun getAllPlant(pagingConfig: PagingConfig): Flow<PagingData<Plant>> {
     return Pager(
             config = pagingConfig, pagingSourceFactory = { PlantPagingSource(remote = remote) })

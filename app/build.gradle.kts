@@ -98,7 +98,13 @@ dependencies {
 
     // Unit tests
     testImplementation(libs.junit)
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.androidx.test.rules)
+    testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.kotlin.coroutines.test.turbine)
     testImplementation(libs.dagger.hilt.testing)
+    testImplementation(libs.androidx.mockito)
+    testImplementation(libs.androidx.mockito.inline)
     kaptTest(libs.dagger.hilt.compiler)
 
     // Instrument test
