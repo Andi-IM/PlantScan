@@ -1,5 +1,14 @@
 package com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document
 
+data class TaxonomyResponse(
+    val id: String = "",
+    val phylum: String = "",
+    val className: String = "",
+    val order: String = "",
+    val family: String = "",
+    val genus: String = ""
+)
+
 data class PhylumResponse(val name: String)
 
 data class ClassResponse(val name: String, val orders: List<String>)

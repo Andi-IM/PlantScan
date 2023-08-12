@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    id("kotlin-parcelize")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
@@ -67,6 +68,7 @@ dependencies {
 
     // UI
     implementation(libs.material)
+    implementation(libs.bundles.paging)
 
     // Hilt
     implementation(libs.dagger.hilt)
@@ -96,6 +98,12 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
 
+    //rooms
+    implementation(libs.bundles.room)
+    //noinspection KaptUsageInsteadOfKsp
+    kapt(libs.room.compiler)
+    androidTestImplementation(libs.room.testing)
+
     // Unit tests
     testImplementation(libs.junit)
     testImplementation(libs.androidx.core.testing)
@@ -105,6 +113,7 @@ dependencies {
     testImplementation(libs.dagger.hilt.testing)
     testImplementation(libs.androidx.mockito)
     testImplementation(libs.androidx.mockito.inline)
+    testImplementation(libs.paging.testing)
     kaptTest(libs.dagger.hilt.compiler)
 
     // Instrument test

@@ -1,7 +1,7 @@
 package com.github.andiim.plantscan.app.ui.screens.detect
 
-import com.github.andiim.plantscan.app.core.data.source.firebase.LogService
-import com.github.andiim.plantscan.app.ui.screens.viewModels.PlantScanViewModel
+import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
+import com.github.andiim.plantscan.app.PlantScanViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

@@ -1,9 +1,9 @@
 package com.github.andiim.plantscan.app.ui.screens.home.settings
 
-import com.github.andiim.plantscan.app.core.data.source.firebase.AccountService
-import com.github.andiim.plantscan.app.core.data.source.firebase.LogService
+import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.AccountService
+import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import com.github.andiim.plantscan.app.ui.navigation.Direction
-import com.github.andiim.plantscan.app.ui.screens.viewModels.PlantScanViewModel
+import com.github.andiim.plantscan.app.PlantScanViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.map

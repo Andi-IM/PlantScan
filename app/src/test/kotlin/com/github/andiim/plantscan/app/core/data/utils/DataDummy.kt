@@ -8,6 +8,7 @@ import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.docum
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PhylumResponse
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantDetailResponse
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantResponse
+import com.github.andiim.plantscan.app.core.domain.model.Plant
 
 object DataDummy {
   const val ERROR_FAIL_MESSAGE = "fail"
@@ -16,7 +17,7 @@ object DataDummy {
 
   var PLANTS =
       List(10) {
-        PlantResponse(
+        Plant(
             id = "id@$it",
             name = "name@$it",
             species = "species",
@@ -25,6 +26,8 @@ object DataDummy {
             commonName = listOf(),
             detail = null)
       }
+
+  var PLANT_ENTITIES = PLANTS.map { plant -> plant.toEntity() }
 
   fun getPlants(list: List<PlantResponse>): PagingData<PlantResponse> = PagingData.from(list)
 

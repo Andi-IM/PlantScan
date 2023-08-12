@@ -26,7 +26,7 @@ fun PlantListScreen(
     viewModel: PlantListViewModel = hiltViewModel()
 ) {
     PlantListContent(
-        data = viewModel.fetchedData,
+        data = viewModel.fetchData(),
         onItemClick = toDetails,
         popUpScreen = popUpScreen
     )

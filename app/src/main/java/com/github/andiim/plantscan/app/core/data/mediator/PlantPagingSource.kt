@@ -2,11 +2,9 @@ package com.github.andiim.plantscan.app.core.data.mediator
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.github.andiim.plantscan.app.core.data.source.firebase.RemotePlantSource
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.DbResponse
 import com.github.andiim.plantscan.app.core.domain.model.Plant
-import com.github.andiim.plantscan.app.core.domain.model.PlantDetail
-import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
+import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.RemotePlantSource
 
 class PlantPagingSource(private val remote: RemotePlantSource, private val query: String = "") :
     PagingSource<Int, Plant>() {
@@ -22,7 +20,7 @@ class PlantPagingSource(private val remote: RemotePlantSource, private val query
         val results = Plant.mapFromResponse(response.data)
 
         LoadResult.Page(
-            data = fetchPlants(results),
+            data = results,
             prevKey = if (position == STARTING_PAGE_INDEX) null else position - 1,
             nextKey = if (endPaginationReached) null else position + 1)
       }
@@ -34,42 +32,6 @@ class PlantPagingSource(private val remote: RemotePlantSource, private val query
       }
     }
   }
-
-  private suspend fun fetchPlants(plants: List<Plant>): List<Plant> =
-      plants.map { plant ->
-        val detailDocument = remote.getPlantDetail(plant.id)
-        if (detailDocument is DbResponse.Success) {
-          val response = detailDocument.data
-
-          val genusResponse = remote.getGenus(response.classification)
-          if (genusResponse is DbResponse.Success) {
-            val genus = genusResponse.data
-
-            val phylumResponse = remote.getPhylum(genus.phylumRef)
-            val classResponse = remote.getClass(genus.phylumRef, genus.classRef)
-            val orderResponse = remote.getOrder(genus.orderRef)
-            val familyResponse = remote.getFamily(genus.orderRef, genus.familyRef)
-
-            if (phylumResponse is DbResponse.Success &&
-                classResponse is DbResponse.Success &&
-                orderResponse is DbResponse.Success &&
-                familyResponse is DbResponse.Success) {
-
-              val taxon =
-                  Taxonomy.mapFromResponse(
-                      phylumResponse.data,
-                      classResponse.data,
-                      orderResponse.data,
-                      familyResponse.data,
-                      genus)
-
-              val plantDetail = PlantDetail.mapFromResponse(response, taxon)
-              plant.detail = plantDetail
-            }
-          }
-        }
-        plant
-      }
 
   companion object {
     private const val STARTING_PAGE_INDEX = 1

@@ -1,21 +1,17 @@
 package com.github.andiim.plantscan.app.core.domain.repository
 
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.github.andiim.plantscan.app.core.data.mediator.PlantPagingSource.Companion.NETWORK_PAGE_SIZE
+import androidx.paging.PagingSource
+import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import kotlinx.coroutines.flow.Flow
 
 interface PlantRepository {
-  companion object {
-    fun getDefaultPageConfig(): PagingConfig {
-      return PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false)
-    }
-  }
-  fun getAllPlant(pagingConfig: PagingConfig = getDefaultPageConfig()): Flow<PagingData<Plant>>
-  fun getMyPlant(pagingConfig: PagingConfig = getDefaultPageConfig()): Flow<PagingData<Plant>>
-  fun searchPlant(
-      query: String = "",
-      pagingConfig: PagingConfig = getDefaultPageConfig()
-  ): Flow<PagingData<Plant>>
+  fun getAllPlant(): Flow<PagingData<Plant>>
+  fun getPlantDetail(id: String): Flow<Resource<Plant>>
+  fun searchPlant(query: String = ""): PagingSource<Int, Plant>
+  fun getGarden(): Flow<List<Plant>>
+  fun isAddedToGarden(id: String): Flow<Boolean>
+  fun addPlantToGarden(plant: Plant)
+  fun removePlantFromGarden(plant: Plant)
 }

@@ -50,17 +50,17 @@ fun FindPlantElement(
     toPlantType: () -> Unit,
     viewModel: FindPlantViewModel = hiltViewModel()
 ) {
-    val query by viewModel.query.collectAsState()
+  val query by viewModel.query.collectAsState()
 
-    FindPlantContent(
-        modifier = modifier,
-        query = query,
-        data = viewModel.fetchedData,
-        onQueryChange = viewModel::onQueryChange,
-        toDetail = onDetails,
-        toDetect = toDetect,
-        toPlantType = toPlantType
-    )
+  FindPlantContent(
+      modifier = modifier,
+      query = query,
+      data = viewModel.items,
+      onQueryChange = viewModel::onQueryChange,
+      onSearch = viewModel::onSearch,
+      toDetail = onDetails,
+      toDetect = toDetect,
+      toPlantType = toPlantType)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,78 +70,69 @@ fun FindPlantContent(
     query: String = "",
     data: Flow<PagingData<Plant>> = flowOf(),
     onQueryChange: (String) -> Unit = {},
+    onSearch: (String) -> Unit = {},
     toDetect: () -> Unit = {},
     toDetail: (Plant) -> Unit = {},
     toPlantType: () -> Unit = {},
 ) {
-    var active by rememberSaveable { mutableStateOf(false) }
-    val plants = data.collectAsLazyPagingItems()
+  var active by rememberSaveable { mutableStateOf(false) }
+  val plants = data.collectAsLazyPagingItems()
 
-    Box(contentAlignment = Alignment.Center, modifier = modifier.fillMaxSize()) {
-        IconButton(modifier = modifier.size(100.dp), onClick = toDetect) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier =
-                modifier
-                    .fillMaxSize()
-                    .background(
-                        brush =
-                        Brush.radialGradient(
-                            colors = listOf(Color(0xFF789885), Color(0xFF7D8A82)),
-                            center = Offset(0.5f, 0.5f),
-                            radius = 0.2f
-                        )
-                    )
-            ) {
-                Icon(
-                    Icons.Default.CameraAlt,
-                    tint = Color.White,
-                    modifier = modifier
-                        .fillMaxSize()
-                        .padding(30.dp)
-                        .shadow(8.dp, shape = CircleShape),
-                    contentDescription = stringResource(AppText.search_using_camera_icon_description)
-                )
-            }
-        }
-        Button(modifier = Modifier.align(Alignment.BottomCenter), onClick = toPlantType) {
-            Text(text = "Find by plant type")
-        }
-
-        SearchBar(
-            modifier = Modifier.align(Alignment.TopCenter),
-            query = query,
-            onQueryChange = onQueryChange,
-            onSearch = { active = false },
-            active = active,
-            onActiveChange = { active = it },
-            placeholder = { Text(stringResource(AppText.search_placeholder)) },
-            leadingIcon = {
-                Icon(
-                    Icons.Default.Search,
-                    contentDescription = stringResource(AppText.search_icon_description)
-                )
-            },
-            trailingIcon = {
-                if (active)
-                    IconButton(onClick = { active = false }) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = stringResource(AppText.search_icon_close_description)
-                        )
-                    }
-            }) {
-            PlantPagedList(plants = plants, onItemClick = toDetail)
-        }
+  Box(contentAlignment = Alignment.Center, modifier = modifier.fillMaxSize()) {
+    IconButton(modifier = modifier.size(100.dp), onClick = toDetect) {
+      Box(
+          contentAlignment = Alignment.Center,
+          modifier =
+              modifier
+                  .fillMaxSize()
+                  .background(
+                      brush =
+                          Brush.radialGradient(
+                              colors = listOf(Color(0xFF789885), Color(0xFF7D8A82)),
+                              center = Offset(0.5f, 0.5f),
+                              radius = 0.2f))) {
+            Icon(
+                Icons.Default.CameraAlt,
+                tint = Color.White,
+                modifier = modifier.fillMaxSize().padding(30.dp).shadow(8.dp, shape = CircleShape),
+                contentDescription = stringResource(AppText.search_using_camera_icon_description))
+          }
     }
+    Button(modifier = Modifier.align(Alignment.BottomCenter), onClick = toPlantType) {
+      Text(text = "Find by plant type")
+    }
+
+    SearchBar(
+        modifier = Modifier.align(Alignment.TopCenter),
+        query = query,
+        onQueryChange = onQueryChange,
+        onSearch = {
+          active = false
+          onSearch(it)
+        },
+        active = active,
+        onActiveChange = { active = it },
+        placeholder = { Text(stringResource(AppText.search_placeholder)) },
+        leadingIcon = {
+          Icon(
+              Icons.Default.Search,
+              contentDescription = stringResource(AppText.search_icon_description))
+        },
+        trailingIcon = {
+          if (active)
+              IconButton(onClick = { active = false }) {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = stringResource(AppText.search_icon_close_description))
+              }
+        }) {
+          PlantPagedList(plants = plants, onItemClick = toDetail)
+        }
+  }
 }
 
 @Preview
 @Composable
 private fun Preview_FindPlantContent() {
-    PlantScanTheme {
-        Surface {
-            FindPlantContent()
-        }
-    }
+  PlantScanTheme { Surface { FindPlantContent() } }
 }

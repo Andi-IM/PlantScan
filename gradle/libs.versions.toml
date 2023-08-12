@@ -91,6 +91,13 @@ lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-
 lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
+room = { module = "androidx.room:room-runtime", version = "2.5.2" }
+room-compiler = { module = "androidx.room:room-compiler", version = "2.5.2" }
+room-ktx = { module = "androidx.room:room-ktx", version = "2.5.2" }
+room-testing = { module = "androidx.room:room-testing", version = "2.5.2" }
+room-rxjava2 = {module = "androidx.room:room-rxjava2", version = "2.5.2"}
+room-rxjava3 = {module = "androidx.room:room-rxjava3", version = "2.5.2"}
+room-cipher = { module = "net.zetetic:android-database-sqlcipher", version = "4.4.0" }
 tensorflow = { module = "org.tensorflow:tensorflow-lite-gpu", version.ref = "tensorflow" }
 tensorflow-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflow_support" }
 tensorflow-metadata = { module = "org.tensorflow:tensorflow-lite-metadata", version.ref = "tensorflow_support" }
@@ -102,6 +109,7 @@ dokka_gradle_plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", vers
 dokka_core = { module = "org.jetbrains.dokka:dokka-core", version.ref = "dokka" }
 paging-common = { module = "androidx.paging:paging-common-ktx", version = "3.2.0" }
 paging-compose = { module = "androidx.paging:paging-compose", version = "3.2.0" }
+paging-testing = { module = "androidx.paging:paging-testing", version = "3.2.0" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version = "20.6.0" }
@@ -109,12 +117,14 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 
 [bundles]
 camera = ["camera", "camera-core", "camera-lifecycle", "camera-extensions", "camera-video", "camera-view"]
-compose = ["coil-compose", "compose-activity", "compose-material", "compose-materialIcons", "compose-runtimeLivedata", "compose-ui", "compose-ui-graphics", "compose-ui-tooling-preview", "paging-compose", "navigation-compose"]
+compose = ["coil-compose", "compose-activity", "compose-material", "compose-materialIcons", "compose-runtimeLivedata", "compose-ui", "compose-ui-graphics", "compose-ui-tooling-preview", "navigation-compose"]
 compose-debug = ["compose-ui-tooling", "compose-ui-test-manifest"]
 tensorflow = ["tensorflow", "tensorflow-metadata", "tensorflow-support"]
 firebase = ["firebase-auth", "firebase-config", "firebase-crashlytics", "firebase-firestore", "firebase-analytics", "firebase-perf", "firebase-messaging", "firebase-app-check", "firebase-app-check-debug"]
 lifecycle = ["lifecycle-livedata", "lifecycle-runtime", "lifecycle-viewmodel-compose"]
 paging = ["paging-common", "paging-compose"]
+room = ["room","room-cipher", "room-ktx", "room-rxjava2", "room-rxjava3"]
+
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

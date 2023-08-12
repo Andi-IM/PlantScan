@@ -1,10 +1,10 @@
 package com.github.andiim.plantscan.app.ui.screens.auth.signUp
 
 import com.github.andiim.plantscan.app.R
-import com.github.andiim.plantscan.app.core.data.source.firebase.AccountService
-import com.github.andiim.plantscan.app.core.data.source.firebase.LogService
+import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.AccountService
+import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
-import com.github.andiim.plantscan.app.ui.screens.viewModels.PlantScanViewModel
+import com.github.andiim.plantscan.app.PlantScanViewModel
 import com.github.andiim.plantscan.library.android.extensions.isValidEmail
 import com.github.andiim.plantscan.library.android.extensions.isValidPassword
 import com.github.andiim.plantscan.library.android.extensions.passwordMatches
