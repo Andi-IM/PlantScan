@@ -3,9 +3,9 @@ package com.github.andiim.plantscan.app.ui.screens.home.findPlant
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.github.andiim.plantscan.app.data.firebase.LogService
-import com.github.andiim.plantscan.app.data.firebase.PlantDatabase
-import com.github.andiim.plantscan.app.data.model.Plant
+import com.github.andiim.plantscan.app.core.data.source.firebase.LogService
+import com.github.andiim.plantscan.app.core.domain.repository.PlantRepository
+import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.ui.screens.viewModels.PlantScanViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -20,7 +20,7 @@ import kotlin.time.Duration.Companion.seconds
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class FindPlantViewModel @Inject constructor(
-    private val plantDatabase: PlantDatabase,
+    private val plantRepository: PlantRepository,
     logService: LogService
 ) :
     PlantScanViewModel(logService) {
@@ -46,7 +46,7 @@ class FindPlantViewModel @Inject constructor(
     private fun searchPlant(query: String) {
         viewModelScope.launch {
             if (query.isNotEmpty())
-                plantDatabase
+                plantRepository
                     .searchPlant(query = query)
                     .cachedIn(viewModelScope)
                     .collect { _fetchedData.value = it }

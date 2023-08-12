@@ -2,7 +2,7 @@ package com.github.andiim.plantscan.app.ui.screens.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.andiim.plantscan.app.data.firebase.LogService
+import com.github.andiim.plantscan.app.core.data.source.firebase.LogService
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
 import kotlinx.coroutines.CoroutineExceptionHandler

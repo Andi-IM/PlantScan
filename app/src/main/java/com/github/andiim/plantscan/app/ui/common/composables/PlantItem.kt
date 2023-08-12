@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.andiim.plantscan.app.data.model.Image
-import com.github.andiim.plantscan.app.data.model.Plant
+import com.github.andiim.plantscan.app.core.domain.model.Image
+import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 
 @Composable
@@ -91,7 +91,8 @@ private fun Preview() {
                       attribution = "Creative Common",
                       name = "Orchid",
                       file =
-                          "https://upload.wikimedia.org/wikipedia/commons/3/30/Orchid_Phalaenopsis_hybrid.jpg")),
+                          "https://upload.wikimedia.org/wikipedia/commons/3/30/Orchid_Phalaenopsis_hybrid.jpg")
+              ),
           commonName = listOf("Strelizia reginae", "Crane flower", "Bird of Paradise"),
       )
   PlantScanTheme { PlantItem(plant) }

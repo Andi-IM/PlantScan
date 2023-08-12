@@ -1,9 +1,9 @@
 package com.github.andiim.plantscan.app.ui.screens.splash
 
 import androidx.compose.runtime.mutableStateOf
-import com.github.andiim.plantscan.app.data.firebase.AccountService
-import com.github.andiim.plantscan.app.data.firebase.ConfigurationService
-import com.github.andiim.plantscan.app.data.firebase.LogService
+import com.github.andiim.plantscan.app.core.data.source.firebase.AccountService
+import com.github.andiim.plantscan.app.core.data.source.firebase.ConfigurationService
+import com.github.andiim.plantscan.app.core.data.source.firebase.LogService
 import com.github.andiim.plantscan.app.ui.navigation.Direction
 import com.github.andiim.plantscan.app.ui.screens.viewModels.PlantScanViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

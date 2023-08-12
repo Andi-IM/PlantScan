@@ -1,6 +1,6 @@
 package com.github.andiim.plantscan.app.ui.navigation
 
-import com.github.andiim.plantscan.app.data.model.Plant
+import com.github.andiim.plantscan.app.core.domain.model.Plant
 
 sealed class Direction(val route: String) {
     object MainNav : Direction("main_navigation")

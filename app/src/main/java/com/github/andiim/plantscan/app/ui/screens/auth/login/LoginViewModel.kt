@@ -1,8 +1,8 @@
 package com.github.andiim.plantscan.app.ui.screens.auth.login
 
 import com.github.andiim.plantscan.app.R
-import com.github.andiim.plantscan.app.data.firebase.AccountService
-import com.github.andiim.plantscan.app.data.firebase.LogService
+import com.github.andiim.plantscan.app.core.data.source.firebase.AccountService
+import com.github.andiim.plantscan.app.core.data.source.firebase.LogService
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.plantscan.app.ui.navigation.Direction
 import com.github.andiim.plantscan.app.ui.screens.viewModels.PlantScanViewModel

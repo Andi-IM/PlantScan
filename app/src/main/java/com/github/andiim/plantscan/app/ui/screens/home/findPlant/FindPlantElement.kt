@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.github.andiim.plantscan.app.data.model.Plant
+import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.ui.common.composables.PlantPagedList
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import kotlinx.coroutines.flow.Flow

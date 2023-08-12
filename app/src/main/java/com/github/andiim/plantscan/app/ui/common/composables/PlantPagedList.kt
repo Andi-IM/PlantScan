@@ -22,7 +22,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
-import com.github.andiim.plantscan.app.data.model.Plant
+import com.github.andiim.plantscan.app.core.domain.model.Plant
 
 @Composable
 fun PlantPagedList(plants: LazyPagingItems<Plant>, onItemClick: (Plant) -> Unit) {
