@@ -1,4 +1,4 @@
-package com.github.andiim.plantscan.app.core.data.source.firebase
+package com.github.andiim.plantscan.app.core.data.source.firebase.firestore
 
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
@@ -36,5 +36,4 @@ class FakePlantRepositoryImpl @Inject constructor() : PlantRepository {
   override fun removePlantFromGarden(plant: Plant) {
     TODO("Not yet implemented")
   }
-
 }

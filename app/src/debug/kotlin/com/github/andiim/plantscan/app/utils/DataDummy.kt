@@ -1,4 +1,4 @@
-package com.github.andiim.plantscan.app.core.data.utils
+package com.github.andiim.plantscan.app.utils
 
 import androidx.paging.PagingData
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.ClassResponse
@@ -15,6 +15,7 @@ object DataDummy {
 
   private fun String.removeWhitespace() = filterNot { it.isWhitespace() }
 
+  private var KNOWN_NAMES = (0..3).map { "name$it" }
   var PLANTS =
       List(10) {
         Plant(
@@ -23,7 +24,7 @@ object DataDummy {
             species = "species",
             type = "type",
             images = null,
-            commonName = listOf(),
+            commonName = KNOWN_NAMES,
             detail = null)
       }
 
