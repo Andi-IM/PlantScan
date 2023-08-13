@@ -4,7 +4,7 @@ import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.testing.asPagingSourceFactory
 import com.github.andiim.plantscan.app.core.data.Resource
-import com.github.andiim.plantscan.app.core.data.utils.DataDummy
+import com.github.andiim.plantscan.app.utils.DataDummy
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

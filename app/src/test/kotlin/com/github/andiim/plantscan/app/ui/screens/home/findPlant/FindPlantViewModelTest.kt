@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PagingData
 import androidx.paging.testing.asSnapshot
 import com.github.andiim.plantscan.app.core.data.source.firebase.FakeLogService
-import com.github.andiim.plantscan.app.core.data.utils.DataDummy
+import com.github.andiim.plantscan.app.utils.DataDummy
 import com.github.andiim.plantscan.app.core.data.utils.MainDispatcherRule
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.usecase.FakeUseCase

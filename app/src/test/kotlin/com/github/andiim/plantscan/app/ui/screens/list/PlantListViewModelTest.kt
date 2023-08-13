@@ -2,7 +2,7 @@ package com.github.andiim.plantscan.app.ui.screens.list
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PagingData
-import com.github.andiim.plantscan.app.core.data.utils.DataDummy
+import com.github.andiim.plantscan.app.utils.DataDummy
 import com.github.andiim.plantscan.app.core.data.utils.MainDispatcherRule
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService

@@ -2,7 +2,7 @@ package com.github.andiim.plantscan.app.ui.screens.home.myGarden
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.github.andiim.plantscan.app.core.data.source.firebase.FakeLogService
-import com.github.andiim.plantscan.app.core.data.utils.DataDummy
+import com.github.andiim.plantscan.app.utils.DataDummy
 import com.github.andiim.plantscan.app.core.data.utils.MainDispatcherRule
 import com.github.andiim.plantscan.app.core.domain.usecase.FakeUseCase
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase

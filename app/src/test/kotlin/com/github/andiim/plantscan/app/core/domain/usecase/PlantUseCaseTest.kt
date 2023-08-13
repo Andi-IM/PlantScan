@@ -3,7 +3,7 @@ package com.github.andiim.plantscan.app.core.domain.usecase
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PagingData
 import com.github.andiim.plantscan.app.core.data.Resource
-import com.github.andiim.plantscan.app.core.data.utils.DataDummy
+import com.github.andiim.plantscan.app.utils.DataDummy
 import com.github.andiim.plantscan.app.core.data.utils.MainDispatcherRule
 import com.github.andiim.plantscan.app.core.domain.repository.PlantRepository
 import kotlinx.coroutines.flow.flow
