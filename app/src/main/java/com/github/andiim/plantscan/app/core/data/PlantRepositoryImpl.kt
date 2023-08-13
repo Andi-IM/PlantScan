@@ -15,11 +15,13 @@ import com.github.andiim.plantscan.app.core.domain.repository.PlantRepository
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.RemotePlantSource
 import com.github.andiim.plantscan.app.core.utils.AppExecutors
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
+@Singleton
 class PlantRepositoryImpl
 @Inject
 constructor(
