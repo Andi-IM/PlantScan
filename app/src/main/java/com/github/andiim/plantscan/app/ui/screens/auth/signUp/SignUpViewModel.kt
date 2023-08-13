@@ -5,6 +5,7 @@ import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.Acc
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.plantscan.app.PlantScanViewModel
+import com.github.andiim.plantscan.app.ui.navigation.Direction
 import com.github.andiim.plantscan.library.android.extensions.isValidEmail
 import com.github.andiim.plantscan.library.android.extensions.isValidPassword
 import com.github.andiim.plantscan.library.android.extensions.passwordMatches
@@ -53,7 +54,7 @@ constructor(private val accountService: AccountService, logService: LogService) 
 
         launchCatching {
             accountService.linkAccount(email, password)
-            openAndPopUp("mandatory", "mandatory")
+            openAndPopUp(Direction.Settings.route, Direction.SignUp.route)
         }
     }
 }
