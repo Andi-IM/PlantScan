@@ -9,7 +9,7 @@ appcompat = "1.6.1"
 camerax_version = "1.2.3"
 coroutines = "1.7.3"
 coil = "2.4.0"
-compose = "2023.08.00"
+compose = "2023.06.01"
 compose_compilerextension = "1.4.8"
 constraint_layout = "2.1.4"
 core_ktx = "1.10.1"
@@ -24,7 +24,7 @@ ktlint = "0.45.2"
 ktlint_gradle = "10.2.1"
 lifecycle = "2.6.1"
 material = "1.9.0"
-navigation = "2.7.0"
+navigation = "2.6.0"
 compile_sdk_version = "33"
 min_sdk_version = "21"
 target_sdk_version = "33"
@@ -61,6 +61,7 @@ camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = 
 camera-video = { module = "androidx.camera:camera-video", version.ref = "camerax_version" }
 camera-view = { module = "androidx.camera:camera-view", version.ref = "camerax_version" }
 camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "camerax_version" }
+coil = { module = "io.coil-kt:coil", version = "2.4.0" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
@@ -90,6 +91,7 @@ firebase-app-check = { module = "com.google.firebase:firebase-appcheck-ktx" }
 firebase-storage = { module = "com.google.firebase:firebase-storage-ktx" }
 firebase-app-check-debug = { module = "com.google.firebase:firebase-appcheck-debug" }
 firebase-app-check-debug-testing = { module = "com.google.firebase:firebase-appcheck-debug-testing" }
+firebase-app-check-playintegrity = { group = "com.google.firebase", name = "firebase-appcheck-playintegrity", version = "17.0.1" }
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlin-coroutines-test-turbine = { module = "app.cash.turbine:turbine", version = "1.0.0" }
@@ -127,7 +129,7 @@ camera = ["camera", "camera-core", "camera-lifecycle", "camera-extensions", "cam
 compose = ["coil-compose", "compose-activity", "compose-material", "compose-materialIcons", "compose-runtimeLivedata", "compose-ui", "compose-ui-graphics", "compose-ui-tooling-preview", "navigation-compose"]
 compose-debug = ["compose-ui-tooling", "compose-ui-test-manifest"]
 tensorflow = ["tensorflow", "tensorflow-metadata", "tensorflow-support"]
-firebase = ["firebase-auth", "firebase-config", "firebase-crashlytics", "firebase-firestore", "firebase-analytics", "firebase-perf", "firebase-messaging", "firebase-app-check", "firebase-app-check-debug", "firebase-storage"]
+firebase = ["firebase-auth", "firebase-config", "firebase-crashlytics", "firebase-firestore", "firebase-analytics", "firebase-perf", "firebase-messaging", "firebase-app-check", "firebase-app-check-debug", "firebase-storage", "firebase-app-check-playintegrity"]
 lifecycle = ["lifecycle-livedata", "lifecycle-runtime", "lifecycle-viewmodel-compose"]
 paging = ["paging-common", "paging-compose"]
 room = ["room", "room-cipher", "room-ktx", "room-rxjava2", "room-rxjava3"]

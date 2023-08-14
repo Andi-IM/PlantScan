@@ -23,6 +23,7 @@ android {
     testInstrumentationRunner = "com.github.andiim.plantscan.app.PlantScanTestRunner"
   }
   buildFeatures {
+    viewBinding = true
     compose = true
     buildConfig = true
   }
@@ -65,12 +66,19 @@ dependencies {
   implementation(libs.espresso.idlingResource)
 
   // UI
+  implementation(libs.coil)
   implementation(libs.material)
   implementation(libs.bundles.paging)
+
+  // Tensorflow
+  implementation(libs.bundles.tensorflow)
+  // Camera
+  implementation(libs.bundles.camera)
 
   // Hilt
   implementation(libs.dagger.hilt)
   implementation(libs.dagger.hilt.navigation.compose)
+  implementation(libs.constraintlayout)
   kapt(libs.dagger.hilt.compiler)
 
   // Ext. Module

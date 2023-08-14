@@ -59,6 +59,8 @@ dependencies {
 
     // Tensorflow
     implementation(libs.bundles.tensorflow)
+    // Camera
+    implementation(libs.bundles.camera)
 
     // Hilt
     implementation(libs.dagger.hilt)
@@ -72,7 +74,7 @@ dependencies {
     implementation(libs.bundles.lifecycle)
 
     testImplementation(libs.junit)
-    implementation(libs.bundles.camera)
+
 
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.ext.junit)
