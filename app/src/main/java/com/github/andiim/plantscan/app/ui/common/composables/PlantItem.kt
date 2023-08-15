@@ -29,7 +29,8 @@ import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 
 @Composable
 fun PlantItem(plant: Plant, onClick: (Plant) -> Unit = {}) {
-  val nameString = plant.commonName.joinToString(", ")
+  var nameString = ""
+  plant.commonName?.let { nameString = it.joinToString(", ") }
 
   Card(modifier = Modifier.fillMaxWidth().height(96.dp).clickable { onClick.invoke(plant) }) {
     Row(

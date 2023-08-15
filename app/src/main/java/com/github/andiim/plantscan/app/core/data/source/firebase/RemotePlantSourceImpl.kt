@@ -8,7 +8,6 @@ import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.docum
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PhylumResponse
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantDetailResponse
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantResponse
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.TaxonomyResponse
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.RemotePlantSource
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference

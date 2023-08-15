@@ -81,13 +81,9 @@ dependencies {
   implementation(libs.constraintlayout)
   kapt(libs.dagger.hilt.compiler)
 
-  // Ext. Module
-  implementation(projects.libraryAndroid)
-  implementation(projects.libraryKotlin)
-
   // Compose
   implementation(platform(libs.compose.bom))
-  implementation(libs.bundles.compose)
+  api(libs.bundles.compose)
   implementation(libs.bundles.lifecycle)
   androidTestImplementation(libs.compose.ui.test)
   debugImplementation(libs.bundles.compose.debug)

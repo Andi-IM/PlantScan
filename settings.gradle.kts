@@ -17,8 +17,4 @@ rootProject.name = ("plantscan")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-include(
-    "app",
-    "library-android",
-    "library-kotlin"
-)
+include(":app")

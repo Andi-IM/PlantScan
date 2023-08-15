@@ -38,12 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.github.andiim.plantscan.app.R.string as AppText
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.ui.common.composables.PlantPagedList
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import com.github.andiim.plantscan.app.R.string as AppText
 
 @Composable
 fun FindPlantElement(
@@ -80,7 +80,6 @@ fun FindPlantContent(
 ) {
   var active by rememberSaveable { mutableStateOf(false) }
   val plants = data.collectAsLazyPagingItems()
-
   Box(
       contentAlignment = Alignment.Center,
       modifier = modifier.fillMaxSize().testTag("Find Plant Content")) {
@@ -88,7 +87,7 @@ fun FindPlantContent(
             onClick = toDetect,
             modifier = Modifier.semantics(false) { contentDescription = "Detect Button" })
 
-      Button(
+        Button(
             modifier =
                 Modifier.align(Alignment.BottomCenter).semantics(true) {
                   contentDescription = "Manual Find Button"

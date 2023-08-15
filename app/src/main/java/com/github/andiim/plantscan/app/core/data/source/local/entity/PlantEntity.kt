@@ -13,7 +13,7 @@ data class PlantEntity(
     val name: String = "",
     val species: String = "",
     val type: String = "",
-    val commonName: List<String> = listOf(""),
+    val commonName: List<String>? = null,
 ) : Parcelable {
   companion object {
     fun mapFromDomain(plant: Plant) =

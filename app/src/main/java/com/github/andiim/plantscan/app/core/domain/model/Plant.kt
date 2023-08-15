@@ -9,7 +9,7 @@ data class Plant(
     val species: String = "",
     val type: String = "",
     var images: List<Image>? = null,
-    val commonName: List<String> = listOf(),
+    val commonName: List<String>? = null,
     var detail: PlantDetail? = null
 ) {
   fun toEntity() =

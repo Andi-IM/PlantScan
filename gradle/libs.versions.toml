@@ -65,7 +65,7 @@ coil = { module = "io.coil-kt:coil", version = "2.4.0" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
-compose-material = { group = "androidx.compose.material3", name = "material3" }
+compose-material = { group = "androidx.compose.material3", name = "material3", version = "1.2.0-alpha02" }
 compose-materialIcons = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-runtimeLivedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
@@ -74,6 +74,7 @@ compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-mani
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-test = { group = "androidx.compose.ui", name = "ui-test-junit4", version = "1.5.0" }
+compose-ui-viewBinding = { module = "androidx.compose.ui:ui-viewbinding" }
 detekt_formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 espresso_core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso_core" }
 espresso_intent = { module = "androidx.test.espresso:espresso-intents", version.ref = "espresso_core" }
@@ -126,7 +127,7 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 
 [bundles]
 camera = ["camera", "camera-core", "camera-lifecycle", "camera-extensions", "camera-video", "camera-view"]
-compose = ["coil-compose", "compose-activity", "compose-material", "compose-materialIcons", "compose-runtimeLivedata", "compose-ui", "compose-ui-graphics", "compose-ui-tooling-preview", "navigation-compose"]
+compose = ["coil-compose", "compose-activity", "compose-material", "compose-materialIcons", "compose-runtimeLivedata", "compose-ui", "compose-ui-graphics", "compose-ui-tooling-preview", "navigation-compose", "compose-ui-viewBinding"]
 compose-debug = ["compose-ui-tooling", "compose-ui-test-manifest"]
 tensorflow = ["tensorflow", "tensorflow-metadata", "tensorflow-support"]
 firebase = ["firebase-auth", "firebase-config", "firebase-crashlytics", "firebase-firestore", "firebase-analytics", "firebase-perf", "firebase-messaging", "firebase-app-check", "firebase-app-check-debug", "firebase-storage", "firebase-app-check-playintegrity"]

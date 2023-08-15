@@ -27,7 +27,7 @@ constructor(
     showError.value = false
     if (accountService.hasUser) openAndPopup(Direction.MainNav.route, Direction.Splash.route)
     else {
-      launchCatching(snackbar = false) {
+      launchCatching(snackbar = true) {
         try {
           accountService.createAnonymousAccount()
         } catch (ex: Exception) {

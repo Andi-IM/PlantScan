@@ -17,7 +17,7 @@ class PlantPagingSource(private val remote: RemotePlantSource, private val query
         if (query.isEmpty()) remote.getAllPlant() else remote.searchPlant(query)) {
       is DbResponse.Success -> {
         val endPaginationReached = response.data.isEmpty()
-        val results = Plant.mapFromResponse(response.data)
+        val results = response.data.map { it.toDomain() }
 
         LoadResult.Page(
             data = results,

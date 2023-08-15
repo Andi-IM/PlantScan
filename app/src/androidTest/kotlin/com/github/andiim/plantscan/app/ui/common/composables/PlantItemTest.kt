@@ -31,6 +31,6 @@ class PlantItemTest {
     composeRule.onNodeWithTag("Plant Name", useUnmergedTree = true).assert(hasText(dummy.name))
     composeRule
         .onNodeWithTag("Plant Known Names", useUnmergedTree = true)
-        .assert(hasText(dummy.commonName.joinToString(", ")))
+        .assert(hasText(dummy.commonName!!.joinToString(", ")))
   }
 }

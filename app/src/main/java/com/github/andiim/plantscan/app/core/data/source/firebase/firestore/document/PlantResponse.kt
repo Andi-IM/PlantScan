@@ -4,14 +4,15 @@ import com.github.andiim.plantscan.app.core.data.source.local.entity.PlantEntity
 import com.github.andiim.plantscan.app.core.domain.model.Image
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.model.PlantDetail
+import com.google.firebase.firestore.DocumentId
 
 data class PlantResponse(
-    val id: String = "",
+    @DocumentId val id: String = "",
     val name: String = "",
     val species: String = "",
     val type: String = "",
     var images: List<Image>? = null,
-    val commonName: List<String> = listOf(),
+    val commonName: List<String>? = null,
     var detail: PlantDetail? = null
 ) {
   fun toDomain() =

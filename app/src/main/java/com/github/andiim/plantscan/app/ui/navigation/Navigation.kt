@@ -3,14 +3,18 @@ package com.github.andiim.plantscan.app.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.github.andiim.plantscan.app.PlantScanAppState
+import com.github.andiim.plantscan.app.ui.navigation.NavigationConstants.APP_URI
 import com.github.andiim.plantscan.app.ui.screens.auth.login.LoginScreen
 import com.github.andiim.plantscan.app.ui.screens.auth.login.LoginViewModel
 import com.github.andiim.plantscan.app.ui.screens.auth.signUp.SignUpScreen
@@ -32,7 +36,7 @@ import com.github.andiim.plantscan.app.ui.screens.web.WebScreen
 @Composable
 fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier) {
   NavHost(
-      modifier = modifier,
+      modifier = modifier.semantics(false) { contentDescription = "Nav Host" },
       navController = appState.navController,
       startDestination = Direction.Splash.route,
   ) {
@@ -83,8 +87,10 @@ private fun NavGraphBuilder.authSignUpScreen(appState: PlantScanAppState) {
 private fun NavGraphBuilder.detailScreen(appState: PlantScanAppState) {
   composable(
       route = Direction.Detail.route,
-      arguments = listOf(navArgument("orchid_id") { type = NavType.StringType })) { backStackEntry
-        ->
+      arguments = listOf(navArgument("orchid_id") { type = NavType.StringType }),
+      deepLinks =
+          listOf(navDeepLink { uriPattern = "$APP_URI/${Direction.Detail.route}/{orchid_id}" })) {
+          backStackEntry ->
         val viewModel: DetailViewModel = hiltViewModel()
         val id = backStackEntry.arguments?.getString("orchid_id")
         DetailScreen(id = id, popUpScreen = appState::popUp, viewModel = viewModel)
@@ -99,14 +105,16 @@ private fun NavGraphBuilder.homeMyGardenElement(appState: PlantScanAppState) {
 }
 
 private fun NavGraphBuilder.homeFindPlantElement(appState: PlantScanAppState) {
-  composable(route = Direction.FindPlant.route) {
-    val viewModel: FindPlantViewModel = hiltViewModel()
-    FindPlantElement(
-        onDetails = { appState.navigate(Direction.Detail.createRoute(it)) },
-        viewModel = viewModel,
-        toDetect = { appState.navigate(Direction.Detect.route) },
-        toPlantType = {})
-  }
+  composable(
+      route = Direction.FindPlant.route,
+      deepLinks = listOf(navDeepLink { uriPattern = "$APP_URI/${Direction.FindPlant.route}" })) {
+        val viewModel: FindPlantViewModel = hiltViewModel()
+        FindPlantElement(
+            onDetails = { appState.navigate(Direction.Detail.createRoute(it)) },
+            viewModel = viewModel,
+            toDetect = { appState.navigate(Direction.Detect.route) },
+            toPlantType = {})
+      }
 }
 
 private fun NavGraphBuilder.homeSettingsElement(appState: PlantScanAppState) {

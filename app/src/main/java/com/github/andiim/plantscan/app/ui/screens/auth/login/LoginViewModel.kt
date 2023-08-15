@@ -1,12 +1,12 @@
 package com.github.andiim.plantscan.app.ui.screens.auth.login
 
+import com.github.andiim.plantscan.app.PlantScanViewModel
 import com.github.andiim.plantscan.app.R
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.AccountService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
+import com.github.andiim.plantscan.app.ui.common.extensions.isValidEmail
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.plantscan.app.ui.navigation.Direction
-import com.github.andiim.plantscan.app.PlantScanViewModel
-import com.github.andiim.plantscan.library.android.extensions.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

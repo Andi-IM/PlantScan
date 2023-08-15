@@ -1,11 +1,13 @@
 package com.github.andiim.plantscan.app.core.domain.usecase
 
+import android.net.Uri
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.testing.asPagingSourceFactory
 import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.utils.DataDummy
+import java.io.File
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -62,4 +64,11 @@ class FakePlantInteractor @Inject constructor() : PlantUseCase {
   override fun addPlantToGarden(plant: Plant) = addPlant(plant)
 
   override fun removePlantFromGarden(plant: Plant) = removePlant(plant)
+  override fun notifyImageCreated(savedUri: Uri) {
+    TODO("Not yet implemented")
+  }
+
+  override fun createImageOutputFile(): File {
+    TODO("Not yet implemented")
+  }
 }
