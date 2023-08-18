@@ -35,43 +35,34 @@ import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun PlantScanApp() {
-    PlantScanTheme {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            RequestNotificationPermissionDialog()
-        }
-
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-
-            val appState = rememberAppState()
-            Scaffold(
-                snackbarHost = {
-                    SnackbarHost(
-                        hostState = appState.snackbarHostState,
-                        modifier = Modifier.padding(8.dp),
-                        snackbar = { snackbarData ->
-                            Snackbar(
-                                snackbarData,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
-                            )
-                        })
-                },
-                bottomBar = { BottomBar(state = appState) }
-            ) { innerPadding ->
-                SetupRootNavGraph(appState, modifier = Modifier.padding(innerPadding))
-            }
-        }
+fun PlantScanApp(appState: PlantScanAppState = rememberAppState()) {
+  PlantScanTheme {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      RequestNotificationPermissionDialog()
     }
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+      Scaffold(
+          snackbarHost = {
+            SnackbarHost(
+                hostState = appState.snackbarHostState,
+                modifier = Modifier.padding(8.dp),
+                snackbar = { snackbarData ->
+                  Snackbar(snackbarData, contentColor = MaterialTheme.colorScheme.onPrimary)
+                })
+          },
+          bottomBar = { BottomBar(state = appState) }
+      ) { innerPadding ->
+            SetupRootNavGraph(appState, modifier = Modifier.padding(innerPadding))
+          }
+    }
+  }
 }
 
 @Composable
 @ReadOnlyComposable
 fun getContext(): Context {
-    LocalConfiguration.current
-    return LocalContext.current
+  LocalConfiguration.current
+  return LocalContext.current
 }
 
 @Composable
@@ -82,31 +73,19 @@ fun rememberAppState(
     getContext: Context = getContext(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ) =
-    remember(
-        snackbarHostState,
-        navController,
-        snackbarManager,
-        getContext,
-        coroutineScope
-    ) {
-        PlantScanAppState(
-            snackbarHostState,
-            navController,
-            snackbarManager,
-            getContext,
-            coroutineScope
-        )
+    remember(snackbarHostState, navController, snackbarManager, getContext, coroutineScope) {
+      PlantScanAppState(
+          snackbarHostState, navController, snackbarManager, getContext, coroutineScope)
     }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RequestNotificationPermissionDialog() {
-    val permissionState =
-        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+  val permissionState = rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
 
-    if (!permissionState.status.isGranted) {
-        if (permissionState.status.shouldShowRationale) RationaleDialog()
-        else PermissionDialog { permissionState.launchPermissionRequest() }
-    }
+  if (!permissionState.status.isGranted) {
+    if (permissionState.status.shouldShowRationale) RationaleDialog()
+    else PermissionDialog { permissionState.launchPermissionRequest() }
+  }
 }

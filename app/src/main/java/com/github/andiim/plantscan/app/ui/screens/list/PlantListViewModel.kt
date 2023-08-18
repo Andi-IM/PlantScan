@@ -1,17 +1,15 @@
 package com.github.andiim.plantscan.app.ui.screens.list
 
-import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
-import com.github.andiim.plantscan.app.data.firebase.LogService
-import com.github.andiim.plantscan.app.data.firebase.PlantDatabase
-import com.github.andiim.plantscan.app.ui.screens.viewModels.PlantScanViewModel
+import com.github.andiim.plantscan.app.PlantScanViewModel
+import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
+import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class PlantListViewModel @Inject constructor(
-    plantDatabase: PlantDatabase,
-    logService: LogService
-) : PlantScanViewModel(logService) {
-    val fetchedData = plantDatabase.getAllPlant().cachedIn(viewModelScope)
+class PlantListViewModel
+@Inject
+constructor(private val useCase: PlantUseCase, logService: LogService) :
+    PlantScanViewModel(logService) {
+  fun fetchData() = useCase.getAllPlant()
 }

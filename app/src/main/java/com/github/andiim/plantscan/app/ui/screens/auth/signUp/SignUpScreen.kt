@@ -12,6 +12,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.andiim.plantscan.app.R
@@ -29,15 +32,15 @@ fun SignUpScreen(
     openAndPopUp: (String, String) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
-    SignUpContent(
-        openAndPopUp = openAndPopUp,
-        uiState = state,
-        onEmailChange = viewModel::onEmailChange,
-        onPasswordChange = viewModel::onPasswordChange,
-        onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
-        onSignUpClick = viewModel::onSignUpClick,
-    )
+  val state by viewModel.state.collectAsState()
+  SignUpContent(
+      openAndPopUp = openAndPopUp,
+      uiState = state,
+      onEmailChange = viewModel::onEmailChange,
+      onPasswordChange = viewModel::onPasswordChange,
+      onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
+      onSignUpClick = viewModel::onSignUpClick,
+  )
 }
 
 @Composable
@@ -49,26 +52,44 @@ fun SignUpContent(
     onRepeatPasswordChange: (String) -> Unit = {},
     onSignUpClick: ((String, String) -> Unit) -> Unit = {}
 ) {
-    BasicToolbar(R.string.label_create_account)
+  BasicToolbar(
+      modifier = Modifier.testTag("Sign Up Toolbar"),
+      title = R.string.label_create_account
+  )
 
-    Column(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight().verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        EmailField(uiState.email, onEmailChange, Modifier.fieldModifier())
-        PasswordField(uiState.password, onPasswordChange, Modifier.fieldModifier())
-        RepeatPasswordField(uiState.repeatPassword, onRepeatPasswordChange, Modifier.fieldModifier())
+  Column(
+      modifier =
+          Modifier.fillMaxWidth()
+              .fillMaxHeight()
+              .testTag("SignUp Content")
+              .verticalScroll(rememberScrollState()),
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally) {
+        EmailField(
+            uiState.email,
+            onEmailChange,
+            Modifier.fieldModifier().semantics(true) { contentDescription = "Email Field" })
+        PasswordField(
+            uiState.password,
+            onPasswordChange,
+            Modifier.fieldModifier().semantics(true) { contentDescription = "Password Field" })
+        RepeatPasswordField(
+            uiState.repeatPassword,
+            onRepeatPasswordChange,
+            Modifier.fieldModifier().semantics(true) {
+              contentDescription = "Repeat Password Field"
+            })
 
-        BasicButton(R.string.label_create_account, Modifier.basicButton()) { onSignUpClick(openAndPopUp) }
-    }
+        BasicButton(
+            R.string.label_create_account,
+            Modifier.basicButton().semantics(true) { contentDescription = "Sign Up Button" }) {
+              onSignUpClick(openAndPopUp)
+            }
+      }
 }
 
 @Preview
 @Composable
 private fun Preview_SignUpScreen() {
-    PlantScanTheme {
-        Surface {
-            SignUpContent()
-        }
-    }
+  PlantScanTheme { Surface { SignUpContent() } }
 }

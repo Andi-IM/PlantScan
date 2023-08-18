@@ -16,6 +16,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -27,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.andiim.plantscan.app.R
+import com.github.andiim.plantscan.app.R.string as AppString
 import com.github.andiim.plantscan.app.ui.common.composables.BasicButton
 import com.github.andiim.plantscan.app.ui.common.composables.BasicTextButton
 import com.github.andiim.plantscan.app.ui.common.composables.EmailField
@@ -42,18 +48,17 @@ fun LoginScreen(
     openAndPopUp: (String, String) -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
-    val loginState by viewModel.state.collectAsState()
+  val loginState by viewModel.state.collectAsState()
 
-    LoginContent(
-        email = loginState.email,
-        password = loginState.password,
-        openWeb = openWeb,
-        openAndPopUp = openAndPopUp,
-        onEmailChange = viewModel::onEmailChange,
-        onPasswordChange = viewModel::onPasswordChange,
-        onSignInClick = viewModel::onSignInClick,
-        onForgotPasswordClick = viewModel::onForgotPasswordClick
-    )
+  LoginContent(
+      email = loginState.email,
+      password = loginState.password,
+      openWeb = openWeb,
+      openAndPopUp = openAndPopUp,
+      onEmailChange = viewModel::onEmailChange,
+      onPasswordChange = viewModel::onPasswordChange,
+      onSignInClick = viewModel::onSignInClick,
+      onForgotPasswordClick = viewModel::onForgotPasswordClick)
 }
 
 @Composable
@@ -67,87 +72,86 @@ fun LoginContent(
     onForgotPasswordClick: () -> Unit = {},
     onSignInClick: ((String, String) -> Unit) -> Unit = {}
 ) {
-    Box(modifier = Modifier.padding(24.dp)) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            EmailField(email, onEmailChange, Modifier.fieldModifier())
-            PasswordField(password, onPasswordChange, Modifier.fieldModifier())
+  Box(modifier = Modifier.padding(24.dp).testTag("Login Content")) {
+    Column(
+        modifier = Modifier.fillMaxWidth().fillMaxHeight().verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+          EmailField(
+              email,
+              onEmailChange,
+              Modifier.fieldModifier().semantics(true) { contentDescription = "Email Field" })
+          PasswordField(
+              password,
+              onPasswordChange,
+              Modifier.fieldModifier().semantics(true) { contentDescription = "Password Field" })
 
-            BasicButton(
-                R.string.label_sign_in,
-                Modifier.basicButton(),
-                action = { onSignInClick(openAndPopUp) })
+          BasicButton(
+              R.string.label_sign_in,
+              Modifier.basicButton().semantics(true) { contentDescription = "Sign In Button" },
+              action = { onSignInClick(openAndPopUp) })
 
-            BasicTextButton(
-                R.string.hint_forgot_password,
-                Modifier.textButton(),
-                action = onForgotPasswordClick
-            )
+          BasicTextButton(
+              R.string.hint_forgot_password,
+              Modifier.textButton().semantics(true) {
+                contentDescription = "Forgot Password Button"
+              },
+              action = onForgotPasswordClick)
         }
-        TermsAndPrivacyStatementText(
-            openWeb = openWeb,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
-    }
+    TermsAndPrivacyStatementText(
+        annotatedText = generateAnnotatedText(),
+        openWeb = openWeb,
+        modifier =
+            Modifier.align(Alignment.BottomCenter).semantics(true) {
+              contentDescription = "Terms Label"
+            })
+  }
+}
+
+@Composable
+private fun generateAnnotatedText(): AnnotatedString {
+  return buildAnnotatedString {
+    withStyle(style = SpanStyle()) { append(stringResource(AppString.terms_label)) }
+    pushStringAnnotation(tag = "URL_A", annotation = "android.com")
+    withStyle(
+        style =
+            SpanStyle(color = (MaterialTheme.colorScheme).primary, fontWeight = FontWeight.Bold)) {
+          append(" ${stringResource(AppString.terms_text_button)} ")
+        }
+    append(" ${stringResource(AppString.and_separator)} ")
+    pushStringAnnotation(tag = "URL_B", annotation = "developer.android.com")
+    withStyle(
+        style =
+            SpanStyle(color = (MaterialTheme.colorScheme).primary, fontWeight = FontWeight.Bold)) {
+          append(" ${stringResource(AppString.privacy_policy_text_button)} ")
+        }
+    pop()
+  }
 }
 
 @Composable
 private fun TermsAndPrivacyStatementText(
+    annotatedText: AnnotatedString,
     modifier: Modifier = Modifier,
     openWeb: (String) -> Unit,
 ) {
-    val annotatedText = buildAnnotatedString {
-        withStyle(style = SpanStyle()) { append("By continuing, you agree to our") }
-        pushStringAnnotation(tag = "URL_A", annotation = "android.com")
-        withStyle(
-            style =
-            SpanStyle(color = (MaterialTheme.colorScheme).primary, fontWeight = FontWeight.Bold)
-        ) {
-            append(" Terms ")
+  ClickableText(
+      text = annotatedText,
+      modifier = modifier,
+      style = TextStyle.Default.copy(textAlign = TextAlign.Center, fontSize = 13.sp)) { offset ->
+        annotatedText.getStringAnnotations(offset, offset).firstOrNull()?.tag?.let { tag ->
+          if (tag == "URL_A") {
+            openWeb(annotatedText.text)
+          }
+          if (tag == "URL_B") {
+            openWeb(annotatedText.text)
+          }
         }
-        append(" and ")
-        pushStringAnnotation(tag = "URL_B", annotation = "developer.android.com")
-        withStyle(
-            style =
-            SpanStyle(color = (MaterialTheme.colorScheme).primary, fontWeight = FontWeight.Bold)
-        ) {
-            append(" Privacy Policy ")
-        }
-        pop()
-    }
-
-    ClickableText(
-        text = annotatedText,
-        modifier = modifier,
-        style = TextStyle.Default.copy(textAlign = TextAlign.Center, fontSize = 13.sp)
-    ) { offset ->
-        val termsString =
-            annotatedText
-                .getStringAnnotations(tag = "URL_A", start = offset, end = offset)
-                .firstOrNull()
-        val privacyString =
-            annotatedText
-                .getStringAnnotations(tag = "URL_B", start = offset, end = offset)
-                .firstOrNull()
-
-        if (termsString != null && privacyString == null) {
-            openWeb(termsString.item)
-        } else privacyString?.let { openWeb(it.item) }
-    }
+      }
 }
 
 @Preview
 @Composable
 private fun Preview_LoginContent() {
-    PlantScanTheme {
-        Surface {
-            LoginContent(openAndPopUp = { _, _ -> })
-        }
-    }
+  PlantScanTheme { Surface { LoginContent(openAndPopUp = { _, _ -> }) } }
 }

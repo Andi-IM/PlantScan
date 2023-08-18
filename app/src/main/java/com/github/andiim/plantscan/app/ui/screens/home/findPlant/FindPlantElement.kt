@@ -29,13 +29,16 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.github.andiim.plantscan.app.data.model.Plant
+import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.ui.common.composables.PlantPagedList
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import kotlinx.coroutines.flow.Flow
@@ -50,17 +53,17 @@ fun FindPlantElement(
     toPlantType: () -> Unit,
     viewModel: FindPlantViewModel = hiltViewModel()
 ) {
-    val query by viewModel.query.collectAsState()
+  val query by viewModel.query.collectAsState()
 
-    FindPlantContent(
-        modifier = modifier,
-        query = query,
-        data = viewModel.fetchedData,
-        onQueryChange = viewModel::onQueryChange,
-        toDetail = onDetails,
-        toDetect = toDetect,
-        toPlantType = toPlantType
-    )
+  FindPlantContent(
+      modifier = modifier,
+      query = query,
+      data = viewModel.items,
+      onQueryChange = viewModel::onQueryChange,
+      onSearch = viewModel::onSearch,
+      toDetail = onDetails,
+      toDetect = toDetect,
+      toPlantType = toPlantType)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,78 +73,84 @@ fun FindPlantContent(
     query: String = "",
     data: Flow<PagingData<Plant>> = flowOf(),
     onQueryChange: (String) -> Unit = {},
+    onSearch: (String) -> Unit = {},
     toDetect: () -> Unit = {},
     toDetail: (Plant) -> Unit = {},
     toPlantType: () -> Unit = {},
 ) {
-    var active by rememberSaveable { mutableStateOf(false) }
-    val plants = data.collectAsLazyPagingItems()
+  var active by rememberSaveable { mutableStateOf(false) }
+  val plants = data.collectAsLazyPagingItems()
+  Box(
+      contentAlignment = Alignment.Center,
+      modifier = modifier.fillMaxSize().testTag("Find Plant Content")) {
+        DetectButton(
+            onClick = toDetect,
+            modifier = Modifier.semantics(false) { contentDescription = "Detect Button" })
 
-    Box(contentAlignment = Alignment.Center, modifier = modifier.fillMaxSize()) {
-        IconButton(modifier = modifier.size(100.dp), onClick = toDetect) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier =
-                modifier
-                    .fillMaxSize()
-                    .background(
-                        brush =
-                        Brush.radialGradient(
-                            colors = listOf(Color(0xFF789885), Color(0xFF7D8A82)),
-                            center = Offset(0.5f, 0.5f),
-                            radius = 0.2f
-                        )
-                    )
-            ) {
-                Icon(
-                    Icons.Default.CameraAlt,
-                    tint = Color.White,
-                    modifier = modifier
-                        .fillMaxSize()
-                        .padding(30.dp)
-                        .shadow(8.dp, shape = CircleShape),
-                    contentDescription = stringResource(AppText.search_using_camera_icon_description)
-                )
-            }
-        }
-        Button(modifier = Modifier.align(Alignment.BottomCenter), onClick = toPlantType) {
-            Text(text = "Find by plant type")
+        Button(
+            modifier =
+                Modifier.align(Alignment.BottomCenter).semantics(true) {
+                  contentDescription = "Manual Find Button"
+                },
+            onClick = toPlantType,
+        ) {
+          Text(text = stringResource(AppText.search_find_by_type_button))
         }
 
         SearchBar(
-            modifier = Modifier.align(Alignment.TopCenter),
+            modifier = Modifier.align(Alignment.TopCenter).testTag("Search Bar"),
             query = query,
             onQueryChange = onQueryChange,
-            onSearch = { active = false },
+            onSearch = {
+              active = false
+              onSearch(it)
+            },
             active = active,
             onActiveChange = { active = it },
             placeholder = { Text(stringResource(AppText.search_placeholder)) },
             leadingIcon = {
-                Icon(
-                    Icons.Default.Search,
-                    contentDescription = stringResource(AppText.search_icon_description)
-                )
+              Icon(
+                  Icons.Default.Search,
+                  contentDescription = stringResource(AppText.search_icon_description))
             },
             trailingIcon = {
-                if (active)
-                    IconButton(onClick = { active = false }) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = stringResource(AppText.search_icon_close_description)
-                        )
-                    }
+              if (active)
+                  IconButton(onClick = { active = false }) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = stringResource(AppText.search_icon_close_description))
+                  }
             }) {
-            PlantPagedList(plants = plants, onItemClick = toDetail)
+              PlantPagedList(plants = plants, onItemClick = toDetail)
+            }
+      }
+}
+
+@Composable
+fun DetectButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+  IconButton(modifier = modifier.size(100.dp), onClick = onClick) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(
+                    brush =
+                        Brush.radialGradient(
+                            colors = listOf(Color(0xFF789885), Color(0xFF7D8A82)),
+                            center = Offset(0.5f, 0.5f),
+                            radius = 0.2f))) {
+          Icon(
+              Icons.Default.CameraAlt,
+              tint = Color.White,
+              modifier = modifier.fillMaxSize().padding(30.dp).shadow(8.dp, shape = CircleShape),
+              contentDescription = stringResource(AppText.search_using_camera_icon_description))
         }
-    }
+  }
 }
 
 @Preview
 @Composable
 private fun Preview_FindPlantContent() {
-    PlantScanTheme {
-        Surface {
-            FindPlantContent()
-        }
-    }
+  PlantScanTheme { Surface { FindPlantContent() } }
 }

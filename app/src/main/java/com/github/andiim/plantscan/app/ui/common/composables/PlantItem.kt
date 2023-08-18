@@ -19,54 +19,52 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.andiim.plantscan.app.data.model.Image
-import com.github.andiim.plantscan.app.data.model.Plant
+import com.github.andiim.plantscan.app.core.domain.model.Image
+import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 
 @Composable
 fun PlantItem(plant: Plant, onClick: (Plant) -> Unit = {}) {
+  var nameString = ""
+  plant.commonName?.let { nameString = it.joinToString(", ") }
+
   Card(modifier = Modifier.fillMaxWidth().height(96.dp).clickable { onClick.invoke(plant) }) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround) {
-//          AsyncImage(
-//              model =
-//                  ImageRequest.Builder(LocalContext.current)
-//                      .data(plant.images[0].file)
-//                      .crossfade(true)
-//                      .build(),
-//              placeholder = painterResource(ImageDrawable.ic_error),
-//              contentDescription = plant.name,
-//              contentScale = ContentScale.Crop,
-//              modifier = Modifier.clip(CircleShape).size(64.dp).align(Alignment.CenterVertically))
+          //          AsyncImage(
+          //              model =
+          //                  ImageRequest.Builder(LocalContext.current)
+          //                      .data(plant.images[0].file)
+          //                      .crossfade(true)
+          //                      .build(),
+          //              placeholder = painterResource(ImageDrawable.ic_error),
+          //              contentDescription = plant.name,
+          //              contentScale = ContentScale.Crop,
+          //              modifier =
+          // Modifier.clip(CircleShape).size(64.dp).align(Alignment.CenterVertically))
           Spacer(modifier = Modifier.size(8.dp))
-          PlantContent(modifier = Modifier.weight(2f), plant = plant)
+          Column(modifier = Modifier.weight(2f)) {
+            Text(
+                modifier = Modifier.testTag("Plant Name"),
+                text = plant.name,
+                style = (MaterialTheme.typography).titleSmall)
+            Text(
+                modifier = Modifier.testTag("Plant Known Names"),
+                text = nameString,
+                maxLines = 2,
+                overflow = TextOverflow.Clip,
+                style = (MaterialTheme.typography).bodyMedium)
+          }
           Spacer(modifier = Modifier.size(8.dp))
           Icon(Icons.Default.ArrowForwardIos, contentDescription = "click")
         }
   }
-}
-
-@Composable
-private fun PlantContent(modifier: Modifier = Modifier, plant: Plant) {
-  Column(modifier = modifier) {
-    Text(text = plant.name, style = (MaterialTheme.typography).titleSmall)
-    KnownNames(names = plant.commonName)
-  }
-}
-
-@Composable
-private fun KnownNames(names: List<String>) {
-  val nameString = names.joinToString(", ")
-  Text(
-      text = nameString,
-      maxLines = 2,
-      overflow = TextOverflow.Clip,
-      style = (MaterialTheme.typography).bodyMedium)
 }
 
 @Preview(

@@ -15,7 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.andiim.plantscan.app.R
@@ -32,12 +35,11 @@ fun SplashScreen(
     openAndPopUp: (String, String) -> Unit,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
-    SplashContent(
-        modifier = modifier,
-        openAndPopUp = openAndPopUp,
-        onAppStart = viewModel::onAppStart,
-        isError = viewModel.showError.value
-    )
+  SplashContent(
+      modifier = modifier,
+      openAndPopUp = openAndPopUp,
+      onAppStart = viewModel::onAppStart,
+      isError = viewModel.showError.value)
 }
 
 @Composable
@@ -47,40 +49,40 @@ fun SplashContent(
     onAppStart: ((String, String) -> Unit) -> Unit = {},
     isError: Boolean = false
 ) {
-    Column(
-        modifier =
-        modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .background(color = MaterialTheme.colorScheme.background)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+  Column(
+      modifier =
+          modifier
+              .fillMaxWidth()
+              .fillMaxHeight()
+              .background(color = MaterialTheme.colorScheme.background)
+              .semantics(false) {
+                  contentDescription = "Splash Screen Content"
+              }
+              .verticalScroll(rememberScrollState()),
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally) {
         if (isError) {
-            Text(text = stringResource(R.string.generic_error))
+          Text(text = stringResource(R.string.generic_error))
 
-            BasicButton(
-                text = R.string.try_again,
-                Modifier.basicButton(),
-                action = { onAppStart(openAndPopUp) })
+          BasicButton(
+              text = R.string.try_again,
+              Modifier.basicButton().testTag("Reload Button"),
+              action = { onAppStart(openAndPopUp) })
         } else {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
+          CircularProgressIndicator(
+              modifier = Modifier.testTag("Progress"),
+              color = MaterialTheme.colorScheme.onBackground)
         }
-    }
+      }
 
-    LaunchedEffect(true) {
-        delay(SPLASH_TIMEOUT)
-        onAppStart(openAndPopUp)
-    }
+  LaunchedEffect(true) {
+    delay(SPLASH_TIMEOUT)
+    onAppStart(openAndPopUp)
+  }
 }
 
 @Preview
 @Composable
 private fun Preview_PlantListContent() {
-    PlantScanTheme {
-        Surface {
-            SplashContent()
-        }
-    }
+  PlantScanTheme { Surface { SplashContent() } }
 }

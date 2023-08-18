@@ -19,6 +19,7 @@
     <string name="search_icon_description">Search Icon</string>
     <string name="search_icon_close_description">Close search bar</string>
     <string name="search_using_camera_icon_description">Search using camera detection</string>
+    <string name="search_find_by_type_button">Find by plant type</string>
 
     <!-- Local Stack -->
     <string name="label_garden_screen">My Garden</string>
@@ -36,6 +37,10 @@
     <string name="label_create_account">Create account</string>
     <string name="error_wrong_password">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
     <string name="error_password_match">Passwords do not match.</string>
+    <string name="terms_label">By continuing, you agree to our</string>
+    <string name="terms_text_button">Terms</string>
+    <string name="and_separator">and</string>
+    <string name="privacy_policy_text_button">Privacy Policy</string>
 
     <!-- SettingsScreen -->
     <string name="label_sign_in_sign_up">Sign in / Sign up</string>
@@ -49,10 +54,25 @@
     <string name="title_delete_account">Delete account?</string>
     <string name="description_delete_account">You will lose all your tasks and your account will be deleted. This action is irreversible.</string>
 
+    <!-- Detect -->
+    <string name="camera_mode_none">None</string>
+    <string name="camera_mode_auto">Auto</string>
+    <string name="camera_mode_bokeh">Bokeh</string>
+    <string name="camera_mode_hdr">HDR</string>
+    <string name="camera_mode_night">Night</string>
+    <string name="camera_mode_face_retouch">Face Retouch</string>
+
+    <string name="camera_permissions_request_with_rationale">You can\'t use camera extensions unless CameraX Extensions has access to your camera.</string>
+    <string name="camera_permissions_request">Allow CameraX Extensions access to your camera to try camera extensions.</string>
+    <string name="camera_permissions_action">Turn On</string>
+    <string name="camera_detection_tooltip">Detect This Image?</string>
+
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="request_notification_permission">Request permission</string>
     <string name="notification_permission_title">Notification permission</string>
     <string name="notification_permission_description">The notification permission is important for this app. Please grant the permission.</string>
     <string name="notification_permission_settings">The notification permission is important for this app. Please navigate to your device settings and enable notifications for Make it So.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

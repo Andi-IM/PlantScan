@@ -1,56 +1,40 @@
 package com.github.andiim.plantscan.app.ui.screens.home.findPlant
 
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.github.andiim.plantscan.app.data.firebase.LogService
-import com.github.andiim.plantscan.app.data.firebase.PlantDatabase
-import com.github.andiim.plantscan.app.data.model.Plant
-import com.github.andiim.plantscan.app.ui.screens.viewModels.PlantScanViewModel
+import androidx.paging.Pager
+import com.github.andiim.plantscan.app.PlantScanViewModel
+import com.github.andiim.plantscan.app.core.data.PlantRepositoryImpl.Companion.getDefaultPageConfig
+import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
+import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.seconds
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
-class FindPlantViewModel @Inject constructor(
-    private val plantDatabase: PlantDatabase,
-    logService: LogService
-) :
+class FindPlantViewModel
+@Inject
+constructor(private val useCase: PlantUseCase, logService: LogService) :
     PlantScanViewModel(logService) {
 
-    private val _query = MutableStateFlow("")
-    val query: StateFlow<String> = _query.asStateFlow()
+  private val queryState = MutableStateFlow("")
+  val query: StateFlow<String> = queryState.asStateFlow()
 
-    private val _fetchedData = MutableStateFlow<PagingData<Plant>>(PagingData.empty())
-    val fetchedData: StateFlow<PagingData<Plant>> = _fetchedData.asStateFlow()
+  val items =
+      Pager(
+              config = getDefaultPageConfig(),
+              pagingSourceFactory = { useCase.searchPlant(queryState.value) })
+          .flow
 
-    fun onQueryChange(query: String) {
-        _query.value = query
-    }
+  fun onQueryChange(queryData: String) {
+    launchCatching { queryState.debounce(1.seconds).collect { queryState.value = queryData } }
+  }
 
-    init {
-        viewModelScope.launch {
-            _query
-                .debounce(1.seconds)
-                .collect { query -> searchPlant(query) }
-        }
-    }
-
-    private fun searchPlant(query: String) {
-        viewModelScope.launch {
-            if (query.isNotEmpty())
-                plantDatabase
-                    .searchPlant(query = query)
-                    .cachedIn(viewModelScope)
-                    .collect { _fetchedData.value = it }
-            else _fetchedData.value = PagingData.empty()
-        }
-    }
+  fun onSearch(query: String) {
+    launchCatching { queryState.value = query }
+  }
 }
