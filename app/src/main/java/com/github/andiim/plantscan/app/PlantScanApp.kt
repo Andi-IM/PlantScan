@@ -50,7 +50,8 @@ fun PlantScanApp(appState: PlantScanAppState = rememberAppState()) {
                   Snackbar(snackbarData, contentColor = MaterialTheme.colorScheme.onPrimary)
                 })
           },
-          bottomBar = { BottomBar(state = appState) }) { innerPadding ->
+          bottomBar = { BottomBar(state = appState) }
+      ) { innerPadding ->
             SetupRootNavGraph(appState, modifier = Modifier.padding(innerPadding))
           }
     }

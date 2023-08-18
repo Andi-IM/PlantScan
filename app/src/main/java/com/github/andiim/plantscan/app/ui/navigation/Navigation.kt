@@ -5,6 +5,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.viewinterop.AndroidViewBinding
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -14,13 +16,16 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.github.andiim.plantscan.app.PlantScanAppState
+import com.github.andiim.plantscan.app.databinding.FragmentContainerBinding
 import com.github.andiim.plantscan.app.ui.navigation.NavigationConstants.APP_URI
 import com.github.andiim.plantscan.app.ui.screens.auth.login.LoginScreen
 import com.github.andiim.plantscan.app.ui.screens.auth.login.LoginViewModel
 import com.github.andiim.plantscan.app.ui.screens.auth.signUp.SignUpScreen
 import com.github.andiim.plantscan.app.ui.screens.auth.signUp.SignUpViewModel
+import com.github.andiim.plantscan.app.ui.screens.camera.CameraFragment
 import com.github.andiim.plantscan.app.ui.screens.detail.DetailScreen
 import com.github.andiim.plantscan.app.ui.screens.detail.DetailViewModel
+import com.github.andiim.plantscan.app.ui.screens.detect.DetectScreen
 import com.github.andiim.plantscan.app.ui.screens.home.findPlant.FindPlantElement
 import com.github.andiim.plantscan.app.ui.screens.home.findPlant.FindPlantViewModel
 import com.github.andiim.plantscan.app.ui.screens.home.myGarden.MyGardenElement
@@ -56,6 +61,9 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
 
     listScreen(appState)
     splashScreen(appState)
+
+    cameraFragment(appState)
+    detectFragment(appState)
   }
 }
 
@@ -112,7 +120,7 @@ private fun NavGraphBuilder.homeFindPlantElement(appState: PlantScanAppState) {
         FindPlantElement(
             onDetails = { appState.navigate(Direction.Detail.createRoute(it)) },
             viewModel = viewModel,
-            toDetect = { appState.navigate(Direction.Detect.route) },
+            toDetect = { appState.navigate(Direction.Camera.route, singleTopLaunch = false) },
             toPlantType = {})
       }
 }
@@ -158,5 +166,25 @@ private fun NavGraphBuilder.webViewScreen(appState: PlantScanAppState) {
       arguments = listOf(navArgument("url") { type = NavType.StringType })) { backStackEntry ->
         val url = backStackEntry.arguments?.getString("url")
         url?.let { WebScreen(url = it, name = "Testing", popUpScreen = appState::popUp) }
+      }
+}
+
+private fun NavGraphBuilder.cameraFragment(appState: PlantScanAppState) {
+  composable(route = Direction.Camera.route) {
+    AndroidViewBinding(FragmentContainerBinding::inflate) {
+      root.getFragment<CameraFragment>().apply {
+        onBackPressed = appState::popUp
+        toDetect = appState::navigate
+      }
+    }
+  }
+}
+
+private fun NavGraphBuilder.detectFragment(appState: PlantScanAppState) {
+  composable(
+      route = Direction.Detect.route,
+      arguments = listOf(navArgument("imageUri") { type = NavType.StringType })) { backStackEntry ->
+        val imageUri = backStackEntry.arguments?.getString("imageUri")
+        imageUri?.let { DetectScreen(imageUri = it.toUri()) }
       }
 }

@@ -8,4 +8,6 @@ class FakeConfigurationServiceImpl @Inject constructor() : ConfigurationService 
 
   override val isShowTaskEditButtonConfig: Boolean
     get() = true
+  override val mlModelName: String
+    get() = "sample"
 }

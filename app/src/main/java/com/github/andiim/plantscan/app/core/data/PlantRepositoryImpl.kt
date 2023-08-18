@@ -51,9 +51,9 @@ constructor(
 
       val detailDocument = remote.getPlantDetail(id)
       if (detailDocument is DbResponse.Success) {
-        val response = detailDocument.data
+        val detail = detailDocument.data
 
-        val genusResponse = remote.getGenus(response.classification)
+        val genusResponse = remote.getGenus(detail.classification)
         if (genusResponse is DbResponse.Success) {
           val genus = genusResponse.data
 
@@ -75,7 +75,7 @@ constructor(
                     familyResponse.data,
                     genus)
 
-            val plantDetail = PlantDetail.mapFromResponse(response, taxon)
+            val plantDetail = PlantDetail.mapFromResponse(detail, taxon)
             emit(Resource.Success(plant.copy(detail = plantDetail)))
           }
         }

@@ -100,6 +100,10 @@ lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-
 lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
+navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version = "2.6.0" }
+navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version = "2.6.0" }
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigation" }
 room = { module = "androidx.room:room-runtime", version = "2.5.2" }
 room-compiler = { module = "androidx.room:room-compiler", version = "2.5.2" }
 room-ktx = { module = "androidx.room:room-ktx", version = "2.5.2" }
@@ -108,10 +112,9 @@ room-rxjava2 = { module = "androidx.room:room-rxjava2", version = "2.5.2" }
 room-rxjava3 = { module = "androidx.room:room-rxjava3", version = "2.5.2" }
 room-cipher = { module = "net.zetetic:android-database-sqlcipher", version = "4.4.0" }
 tensorflow = { module = "org.tensorflow:tensorflow-lite-gpu", version.ref = "tensorflow" }
+tensorflow-downloader = {module = "com.google.firebase:firebase-ml-modeldownloader-ktx"}
 tensorflow-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflow_support" }
 tensorflow-metadata = { module = "org.tensorflow:tensorflow-lite-metadata", version.ref = "tensorflow_support" }
-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigation" }
 agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kgp = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 dhp = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
@@ -129,7 +132,8 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 camera = ["camera", "camera-core", "camera-lifecycle", "camera-extensions", "camera-video", "camera-view"]
 compose = ["coil-compose", "compose-activity", "compose-material", "compose-materialIcons", "compose-runtimeLivedata", "compose-ui", "compose-ui-graphics", "compose-ui-tooling-preview", "navigation-compose", "compose-ui-viewBinding"]
 compose-debug = ["compose-ui-tooling", "compose-ui-test-manifest"]
-tensorflow = ["tensorflow", "tensorflow-metadata", "tensorflow-support"]
+navigation = ["navigation-ui", "navigation-fragment-ktx"]
+tensorflow = ["tensorflow", "tensorflow-metadata", "tensorflow-support", "tensorflow-downloader"]
 firebase = ["firebase-auth", "firebase-config", "firebase-crashlytics", "firebase-firestore", "firebase-analytics", "firebase-perf", "firebase-messaging", "firebase-app-check", "firebase-app-check-debug", "firebase-storage", "firebase-app-check-playintegrity"]
 lifecycle = ["lifecycle-livedata", "lifecycle-runtime", "lifecycle-viewmodel-compose"]
 paging = ["paging-common", "paging-compose"]

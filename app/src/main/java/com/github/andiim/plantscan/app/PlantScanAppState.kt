@@ -1,14 +1,11 @@
 package com.github.andiim.plantscan.app
 
 import android.content.Context
-import android.content.Intent
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.github.andiim.plantscan.app.detect.activity.CameraActivity
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarMessage.Companion.toMessage
-import com.github.andiim.plantscan.app.ui.navigation.Direction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
@@ -34,22 +31,7 @@ class PlantScanAppState(
   }
 
   fun navigate(route: String, singleTopLaunch: Boolean = true) {
-    if (route == Direction.Detect.route) {
-      toDetectActivity()
-    } else {
-      navController.navigate(route) { launchSingleTop = singleTopLaunch }
-    }
-  }
-
-  private fun toDetectActivity() {
-    /* Use Deeplink when the activity in another module
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        data = Uri.parse("plantscan://detection")
-        `package` = context.packageName
-    }*/
-    val intent = Intent(context, CameraActivity::class.java)
-    context.startActivity(intent)
-
+    navController.navigate(route) { launchSingleTop = singleTopLaunch }
   }
 
   fun navigateAndPopUp(route: String, popUp: String) {

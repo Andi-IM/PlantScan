@@ -92,6 +92,9 @@ dependencies {
   implementation(libs.accompanist.permission)
   implementation(libs.accompanist.webview)
 
+  // Navigation
+  implementation(libs.bundles.navigation)
+
   // Firebase
   implementation(platform(libs.firebase.bom))
   implementation(libs.bundles.firebase)

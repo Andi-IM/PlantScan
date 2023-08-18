@@ -48,6 +48,7 @@ fun DetailScreen(
           Text("Oops, something went wrong: ${state.message}", textAlign = TextAlign.Justify)
         }
       }
+      else -> {}
     }
   }
 }

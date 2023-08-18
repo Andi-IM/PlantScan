@@ -5,7 +5,7 @@ import com.github.andiim.plantscan.app.core.data.source.firebase.RemotePlantSour
 import com.github.andiim.plantscan.app.core.domain.repository.CameraRepository
 import com.github.andiim.plantscan.app.core.domain.repository.PlantRepository
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.RemotePlantSource
-import com.github.andiim.plantscan.app.detect.repository.CameraRepositoryImpl
+import com.github.andiim.plantscan.app.ui.screens.camera.repository.CameraRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
