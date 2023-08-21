@@ -1,25 +1,17 @@
 <resources>
     <string name="app_name">Plant Scan</string>
 
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="repeat_password">Repeat password</string>
-    <string name="generic_error">Something wrong happened. Please try again.</string>
+
     <string name="email_error">Please insert a valid email.</string>
     <string name="cancel">Cancel</string>
     <string name="try_again">Try again</string>
     <string name="ok">OK</string>
+    <string name="not_connected">⚠️ You aren’t connected to the internet</string>
 
     <!-- Plants Screen -->
-    <string name="plants_label">Plants</string>
-    <string name="plants_exit">Back</string>
 
-    <!--  FindPlant Screen  -->
-    <string name="search_placeholder">Search Plant</string>
-    <string name="search_icon_description">Search Icon</string>
-    <string name="search_icon_close_description">Close search bar</string>
-    <string name="search_using_camera_icon_description">Search using camera detection</string>
-    <string name="search_find_by_type_button">Find by plant type</string>
+
+
 
     <!-- Local Stack -->
     <string name="label_garden_screen">My Garden</string>
@@ -54,25 +46,11 @@
     <string name="title_delete_account">Delete account?</string>
     <string name="description_delete_account">You will lose all your tasks and your account will be deleted. This action is irreversible.</string>
 
-    <!-- Detect -->
-    <string name="camera_mode_none">None</string>
-    <string name="camera_mode_auto">Auto</string>
-    <string name="camera_mode_bokeh">Bokeh</string>
-    <string name="camera_mode_hdr">HDR</string>
-    <string name="camera_mode_night">Night</string>
-    <string name="camera_mode_face_retouch">Face Retouch</string>
-
-    <string name="camera_permissions_request_with_rationale">You can\'t use camera extensions unless CameraX Extensions has access to your camera.</string>
-    <string name="camera_permissions_request">Allow CameraX Extensions access to your camera to try camera extensions.</string>
-    <string name="camera_permissions_action">Turn On</string>
-    <string name="camera_detection_tooltip">Detect This Image?</string>
 
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
-    <string name="request_notification_permission">Request permission</string>
-    <string name="notification_permission_title">Notification permission</string>
-    <string name="notification_permission_description">The notification permission is important for this app. Please grant the permission.</string>
-    <string name="notification_permission_settings">The notification permission is important for this app. Please navigate to your device settings and enable notifications for Make it So.</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

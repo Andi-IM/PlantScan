@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  FindPlant Screen  -->
+    <string name="search_placeholder">Search Plant</string>
+    <string name="search_icon_description">Search Icon</string>
+    <string name="search_icon_close_description">Close search bar</string>
+    <string name="search_using_camera_icon_description">Search using camera detection</string>
+    <string name="search_find_by_type_button">Find by plant type</string>
+</resources>

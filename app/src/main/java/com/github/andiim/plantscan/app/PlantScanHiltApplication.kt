@@ -2,6 +2,7 @@ package com.github.andiim.plantscan.app
 
 import android.app.Application
 import com.github.andiim.plantscan.app.di.DebugModule.provideTimberTree
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.appcheck.ktx.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
