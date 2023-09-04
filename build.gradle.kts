@@ -1,5 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("com.android.application") apply false
     id("com.android.library") apply false
@@ -8,7 +8,7 @@ plugins {
     id("com.google.gms.google-services") version "4.3.15" apply false
     id("com.google.dagger.hilt.android") apply false
     id("com.google.firebase.crashlytics") apply false
-    id("com.google.firebase.firebase-perf") version "1.4.2" apply false
+    id("com.google.firebase.firebase-perf") apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
     base

@@ -85,6 +85,7 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-config = { group = "com.google.firebase", name = "firebase-config-ktx" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-crashlytics-plugin = { module = "com.google.firebase:firebase-crashlytics-gradle", version = "2.9.8" }
+firebase-perf-plugin = { group = "com.google.firebase", name = "perf-plugin", version = "1.4.2" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
 firebase-perf = { group = "com.google.firebase", name = "firebase-perf-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
