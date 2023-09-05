@@ -38,5 +38,21 @@ gradlePlugin {
             id = "plantscan.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
         }
+        register("androidApplication"){
+            id = "plantscan.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
+        register("androidFirebase"){
+            id = "plantscan.android.application.firebase"
+            implementationClass = "AndroidApplicationFirebaseConventionPlugin"
+        }
+        register("androidCompose"){
+            id = "plantscan.android.application.compose"
+            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+        register("androidFlavors") {
+            id = "plantscan.android.application.flavors"
+            implementationClass = "AndroidApplicationFlavorsConventionPlugin"
+        }
     }
 }
