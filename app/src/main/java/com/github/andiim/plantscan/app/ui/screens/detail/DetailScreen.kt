@@ -48,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
@@ -57,6 +58,7 @@ import com.github.andiim.plantscan.app.core.domain.model.Image
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
+import com.github.andiim.plantscan.app.utils.PlantPreviewParameterProvider
 
 @Composable
 fun DetailRoute(
@@ -292,28 +294,15 @@ private fun LazyListScope.imageCard(image: List<Image>) {
 
 @Preview
 @Composable
-private fun Preview_DetailContent() {
+private fun Preview_DetailContent(
+    @PreviewParameter(PlantPreviewParameterProvider::class) plant: Plant
+) {
     PlantScanTheme {
         Surface {
             DetailScreen(
                 onBackClick = {},
                 detailUiState = DetailUiState.Success(
-                    detail = Plant(
-                        id = "1",
-                        name = "Dendrobium",
-                        thumbnail = "xx",
-                        species = "Dendrobium",
-                        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-                        commonName = listOf(),
-                        images = listOf(),
-                        taxon = Taxonomy(
-                            genus = "Dendrobium",
-                            className = "Liliopsida",
-                            family = "Orchidaceae",
-                            order = "Asparagales",
-                            phylum = "Tracheophyta"
-                        )
-                    )
+                    detail = plant
                 )
             )
         }

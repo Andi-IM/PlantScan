@@ -2,29 +2,33 @@ package com.github.andiim.plantscan.app.core.data.source.firebase.firestore.docu
 
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.google.firebase.firestore.DocumentId
+import com.google.firebase.firestore.ServerTimestamp
+import kotlinx.datetime.Instant
 
 data class PlantResponse(
     @DocumentId val id: String = "",
-    val name: String = "",
-    val species: String = "",
-    val thumbnail: String = "",
-    val description: String = "",
-    val commonName: List<String> = listOf(),
-    val images: List<ImageResponse> = listOf(),
     val taxon: TaxonomyResponse,
+    val species: String = "",
+    val name: String = "",
+    val images: List<ImageResponse> = listOf(),
+    val commonName: List<String> = listOf(),
+    val thumbnail: String = "",
+    @ServerTimestamp val updated: Instant,
+    val description: String = "",
 ) {
-    fun toDomain(): Plant =
+    fun toModel(): Plant =
         Plant(
             id = this.id,
-            name = this.name,
+            taxon = this.taxon.toModel(),
             species = this.species,
-            thumbnail = this.thumbnail,
-            description = this.description,
-            commonName = this.commonName,
+            name = this.name,
             images = this.images.map {
                 it.toModel()
             },
-            taxon = this.taxon.toModel()
+            commonName = this.commonName,
+            thumbnail = this.thumbnail,
+            updated = this.updated,
+            description = this.description,
         )
 }
 

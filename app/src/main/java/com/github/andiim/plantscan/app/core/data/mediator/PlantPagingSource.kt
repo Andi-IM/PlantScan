@@ -14,7 +14,7 @@ class PlantPagingSource(private val remote: FirestoreSource, private val query: 
         val response = remote.getPlants(query, NETWORK_PAGE_SIZE.toLong())
 
         val endPaginationReached = if (position < NETWORK_PAGE_SIZE) true else response.isEmpty()
-        val results = response.map { it.toDomain() }
+        val results = response.map { it.toModel() }
 
         return LoadResult.Page(
             data = results,

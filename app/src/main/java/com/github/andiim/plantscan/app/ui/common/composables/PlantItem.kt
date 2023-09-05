@@ -27,12 +27,13 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.github.andiim.plantscan.app.core.domain.model.Plant
-import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
+import com.github.andiim.plantscan.app.utils.PlantPreviewParameterProvider
 import com.github.andiim.plantscan.app.R.drawable as ImageDrawable
 
 @Composable
@@ -93,21 +94,8 @@ fun PlantItem(plant: Plant, onClick: (String) -> Unit = {}) {
     uiMode = Configuration.UI_MODE_NIGHT_NO,
 )
 @Composable
-private fun Preview() {
-    val plant =
-        Plant(
-            id = "1",
-            name = "Bird of Paradise",
-            species = "Strelizia reginae",
-            thumbnail = "https://upload.wikimedia.org/wikipedia/commons/3/30/Orchid_Phalaenopsis_hybrid.jpg",
-            description = "",
-            taxon = Taxonomy(
-                genus = "",
-                className = "",
-                family = "",
-                order = "",
-                phylum = ""
-            )
-        )
+private fun Preview(
+    @PreviewParameter(PlantPreviewParameterProvider::class) plant: Plant
+) {
     PlantScanTheme { PlantItem(plant) }
 }

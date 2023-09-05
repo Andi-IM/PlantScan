@@ -1,6 +1,6 @@
 package com.github.andiim.plantscan.app.core.data.source.firebase
 
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.DetectionDocument
+import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.DetectionHistoryDocument
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantResponse
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.FirestoreSource
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.trace
@@ -25,12 +25,12 @@ class FirestoreSourceImpl @Inject constructor(private val db: FirebaseFirestore)
     override suspend fun getPlantById(id: String): PlantResponse =
         documentSnapshotHandling(db.collection(PLANT_COLLECTION).document(id))
 
-    override suspend fun recordDetection(detection: DetectionDocument): String =
+    override suspend fun recordDetection(detection: DetectionHistoryDocument): String =
         trace(SAVE_DETECT_TRACE) {
             db.collection(DETECT_COLLECTION).add(detection).await().id
         }
 
-    override suspend fun getDetectionsList(): List<DetectionDocument> =
+    override suspend fun getDetectionsList(): List<DetectionHistoryDocument> =
         querySnapshotHandling(db.collection(DETECT_COLLECTION))
 
 

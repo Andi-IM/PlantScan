@@ -27,7 +27,7 @@ constructor(private val useCase: PlantUseCase, logService: LogService) :
   val items =
       Pager(
               config = getDefaultPageConfig(),
-              pagingSourceFactory = { useCase.searchPlant(queryState.value) })
+              pagingSourceFactory = { useCase.getPlants(queryState.value) })
           .flow
 
   fun onQueryChange(queryData: String) {

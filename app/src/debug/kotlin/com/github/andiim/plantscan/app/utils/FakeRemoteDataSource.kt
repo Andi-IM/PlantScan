@@ -1,6 +1,6 @@
 package com.github.andiim.plantscan.app.utils
 
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.DetectionDocument
+import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.DetectionHistoryDocument
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantResponse
 import com.github.andiim.plantscan.app.core.data.source.network.Dispatcher
 import com.github.andiim.plantscan.app.core.data.source.network.PsDispatchers.IO
@@ -30,12 +30,12 @@ class FakeRemoteDataSource @Inject constructor(
             assets.open(PLANT_ASSET).use(networkJson::decodeFromStream)
         }
 
-    override suspend fun recordDetection(detection: DetectionDocument): String {
+    override suspend fun recordDetection(detection: DetectionHistoryDocument): String {
         return "Success"
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun getDetectionsList(): List<DetectionDocument> =
+    override suspend fun getDetectionsList(): List<DetectionHistoryDocument> =
         withContext(ioDispatcher) {
             assets.open(DETECT_ASSET).use(networkJson::decodeFromStream)
         }

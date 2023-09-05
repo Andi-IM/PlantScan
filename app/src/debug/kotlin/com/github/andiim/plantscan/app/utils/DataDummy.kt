@@ -10,6 +10,7 @@ import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.docum
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantResponse
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
+import kotlinx.datetime.Clock
 
 object DataDummy {
     const val ERROR_FAIL_MESSAGE = "fail"
@@ -27,7 +28,8 @@ object DataDummy {
                 commonName = KNOWN_NAMES,
                 thumbnail = "",
                 description = "",
-                taxon = Taxonomy("", "", "", "", "")
+                taxon = Taxonomy("", "", "", "", ""),
+                updated = Clock.System.now(),
             )
         }
 
