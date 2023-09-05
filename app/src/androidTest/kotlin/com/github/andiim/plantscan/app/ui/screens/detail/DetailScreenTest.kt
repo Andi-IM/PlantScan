@@ -22,7 +22,6 @@ class DetailScreenTest {
   @get:Rule(order = 2) val composeRule = createAndroidComposeRule<PlantScanActivity>()
   private lateinit var viewModel: DetailViewModel
   private val popupScreen: () -> Unit = {}
-  private val id = DataDummy.PLANTS.first().id
 
   @Before
   fun setUp() {
@@ -30,7 +29,7 @@ class DetailScreenTest {
     viewModel = composeRule.activity.viewModels<DetailViewModel>().value
     composeRule.setContentOnActivity {
       PlantScanTheme {
-        Surface { DetailScreen(id = id, popUpScreen = popupScreen, viewModel = viewModel) }
+        Surface { DetailRoute(popUpScreen = popupScreen, viewModel = viewModel) }
       }
     }
   }

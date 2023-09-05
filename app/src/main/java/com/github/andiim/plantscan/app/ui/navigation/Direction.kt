@@ -1,6 +1,5 @@
 package com.github.andiim.plantscan.app.ui.navigation
 
-import com.github.andiim.plantscan.app.core.domain.model.Plant
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 

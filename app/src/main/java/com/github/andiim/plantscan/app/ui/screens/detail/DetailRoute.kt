@@ -11,7 +11,7 @@ import com.github.andiim.plantscan.app.ui.navigation.Direction
 import com.github.andiim.plantscan.app.ui.navigation.NavigationConstants
 
 
-fun PlantScanAppState.navigateToDetail(id: String){
+fun PlantScanAppState.navigateToDetail(id: String) {
     this.navigate(Direction.Detail.createRoute(id))
 }
 
@@ -20,11 +20,11 @@ fun NavGraphBuilder.detailScreen(appState: PlantScanAppState) {
         route = Direction.Detail.route,
         arguments = listOf(navArgument("orchid_id") { type = NavType.StringType }),
         deepLinks =
-        listOf(navDeepLink { uriPattern = "${NavigationConstants.APP_URI}/${Direction.Detail.route}/{orchid_id}" })
+        listOf(navDeepLink {
+            uriPattern = "${NavigationConstants.APP_URI}/${Direction.Detail.route}/{orchid_id}"
+        })
     ) {
-            backStackEntry ->
         val viewModel: DetailViewModel = hiltViewModel()
-        val id = backStackEntry.arguments?.getString("orchid_id")
-        DetailScreen(id = id, popUpScreen = appState::popUp, viewModel = viewModel)
+        DetailRoute(popUpScreen = appState::popUp, viewModel = viewModel)
     }
 }
