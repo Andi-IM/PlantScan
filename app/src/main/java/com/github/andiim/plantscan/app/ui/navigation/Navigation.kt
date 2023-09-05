@@ -1,190 +1,53 @@
 package com.github.andiim.plantscan.app.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.viewinterop.AndroidViewBinding
-import androidx.core.net.toUri
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.github.andiim.plantscan.app.PlantScanAppState
-import com.github.andiim.plantscan.app.databinding.FragmentContainerBinding
-import com.github.andiim.plantscan.app.ui.navigation.NavigationConstants.APP_URI
-import com.github.andiim.plantscan.app.ui.screens.auth.login.LoginScreen
-import com.github.andiim.plantscan.app.ui.screens.auth.login.LoginViewModel
-import com.github.andiim.plantscan.app.ui.screens.auth.signUp.SignUpScreen
-import com.github.andiim.plantscan.app.ui.screens.auth.signUp.SignUpViewModel
-import com.github.andiim.plantscan.app.ui.screens.camera.CameraFragment
-import com.github.andiim.plantscan.app.ui.screens.detail.DetailScreen
-import com.github.andiim.plantscan.app.ui.screens.detail.DetailViewModel
-import com.github.andiim.plantscan.app.ui.screens.detect.DetectScreen
-import com.github.andiim.plantscan.app.ui.screens.home.findPlant.FindPlantElement
-import com.github.andiim.plantscan.app.ui.screens.home.findPlant.FindPlantViewModel
-import com.github.andiim.plantscan.app.ui.screens.home.myGarden.MyGardenElement
-import com.github.andiim.plantscan.app.ui.screens.home.myGarden.MyGardenViewModel
-import com.github.andiim.plantscan.app.ui.screens.home.settings.SettingsElement
-import com.github.andiim.plantscan.app.ui.screens.home.settings.SettingsViewModel
-import com.github.andiim.plantscan.app.ui.screens.list.PlantListScreen
-import com.github.andiim.plantscan.app.ui.screens.list.PlantListViewModel
-import com.github.andiim.plantscan.app.ui.screens.splash.SplashScreen
-import com.github.andiim.plantscan.app.ui.screens.splash.SplashViewModel
-import com.github.andiim.plantscan.app.ui.screens.web.WebScreen
+import com.github.andiim.plantscan.app.ui.screens.auth.login.authLoginScreen
+import com.github.andiim.plantscan.app.ui.screens.auth.signUp.authSignUpScreen
+import com.github.andiim.plantscan.app.ui.screens.camera.cameraFragment
+import com.github.andiim.plantscan.app.ui.screens.detail.detailScreen
+import com.github.andiim.plantscan.app.ui.screens.detail.navigateToDetail
+import com.github.andiim.plantscan.app.ui.screens.detect.detectFragment
+import com.github.andiim.plantscan.app.ui.screens.home.findPlant.homeFindPlantElement
+import com.github.andiim.plantscan.app.ui.screens.home.myGarden.homeHistoryElement
+import com.github.andiim.plantscan.app.ui.screens.home.settings.homeSettingsElement
+import com.github.andiim.plantscan.app.ui.screens.list.listScreen
+import com.github.andiim.plantscan.app.ui.screens.splash.splashScreen
+import com.github.andiim.plantscan.app.ui.screens.web.webViewScreen
 
 @Composable
 fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier) {
-  NavHost(
-      modifier = modifier.semantics(false) { contentDescription = "Nav Host" },
-      navController = appState.navController,
-      startDestination = Direction.Splash.route,
-  ) {
-    navigation(startDestination = Direction.Login.route, route = Direction.AccountNav.route) {
-      authLoginScreen(appState)
-      authSignUpScreen(appState)
-      webViewScreen(appState)
+    NavHost(
+        modifier = modifier.semantics(false) { contentDescription = "Nav Host" },
+        navController = appState.navController,
+        startDestination = Direction.Splash.route,
+    ) {
+        navigation(startDestination = Direction.Login.route, route = Direction.AccountNav.route) {
+            authLoginScreen(appState)
+            authSignUpScreen(appState)
+            webViewScreen(appState)
+        }
+
+        detailScreen(appState)
+
+        navigation(startDestination = Direction.FindPlant.route, route = Direction.MainNav.route) {
+            homeFindPlantElement(routeToDetail = appState::navigateToDetail, appState)
+            homeHistoryElement(appState)
+            homeSettingsElement(appState)
+        }
+
+        listScreen(appState)
+        splashScreen(navigateAndPopUp = appState::navigateAndPopUp)
+
+        cameraFragment(appState)
+        detectFragment(appState)
     }
-
-    detailScreen(appState)
-
-    navigation(startDestination = Direction.FindPlant.route, route = Direction.MainNav.route) {
-      homeFindPlantElement(appState)
-      homeMyGardenElement(appState)
-      homeSettingsElement(appState)
-    }
-
-    listScreen(appState)
-    splashScreen(appState)
-
-    cameraFragment(appState)
-    detectFragment(appState)
-  }
 }
 
-private fun NavGraphBuilder.authLoginScreen(appState: PlantScanAppState) {
-  composable(route = Direction.Login.route) { backStackEntry ->
-    val parentEntry =
-        remember(backStackEntry) {
-          appState.navController.getBackStackEntry(Direction.AccountNav.route)
-        }
-    val viewModel: LoginViewModel = hiltViewModel(parentEntry)
-    LoginScreen(
-        openAndPopUp = appState::navigateAndPopUp,
-        openWeb = { url -> appState.navigate(Direction.Web.setUrl(url), singleTopLaunch = false) },
-        viewModel = viewModel)
-  }
-}
 
-private fun NavGraphBuilder.authSignUpScreen(appState: PlantScanAppState) {
-  composable(route = Direction.SignUp.route) { backStackEntry ->
-    val parentEntry =
-        remember(backStackEntry) {
-          appState.navController.getBackStackEntry(Direction.AccountNav.route)
-        }
-    val viewModel: SignUpViewModel = hiltViewModel(parentEntry)
-    SignUpScreen(openAndPopUp = appState::navigateAndPopUp, viewModel = viewModel)
-  }
-}
 
-private fun NavGraphBuilder.detailScreen(appState: PlantScanAppState) {
-  composable(
-      route = Direction.Detail.route,
-      arguments = listOf(navArgument("orchid_id") { type = NavType.StringType }),
-      deepLinks =
-          listOf(navDeepLink { uriPattern = "$APP_URI/${Direction.Detail.route}/{orchid_id}" })) {
-          backStackEntry ->
-        val viewModel: DetailViewModel = hiltViewModel()
-        val id = backStackEntry.arguments?.getString("orchid_id")
-        DetailScreen(id = id, popUpScreen = appState::popUp, viewModel = viewModel)
-      }
-}
-
-private fun NavGraphBuilder.homeMyGardenElement(appState: PlantScanAppState) {
-  composable(route = Direction.MyGarden.route) {
-    val viewModel: MyGardenViewModel = hiltViewModel()
-    MyGardenElement(toDetail = { appState.navigate(Direction.Detect.route) }, viewModel = viewModel)
-  }
-}
-
-private fun NavGraphBuilder.homeFindPlantElement(appState: PlantScanAppState) {
-  composable(
-      route = Direction.FindPlant.route,
-      deepLinks = listOf(navDeepLink { uriPattern = "$APP_URI/${Direction.FindPlant.route}" })) {
-        val viewModel: FindPlantViewModel = hiltViewModel()
-        FindPlantElement(
-            onDetails = { appState.navigate(Direction.Detail.createRoute(it)) },
-            viewModel = viewModel,
-            toDetect = { appState.navigate(Direction.Camera.route, singleTopLaunch = false) },
-            toPlantType = {})
-      }
-}
-
-private fun NavGraphBuilder.homeSettingsElement(appState: PlantScanAppState) {
-  composable(route = Direction.Settings.route) { backStackEntry ->
-    val parentEntry =
-        remember(backStackEntry) {
-          appState.navController.getBackStackEntry(Direction.MainNav.route)
-        }
-    val viewModel: SettingsViewModel = hiltViewModel(parentEntry)
-    SettingsElement(
-        restartApp = appState::clearAndNavigate,
-        openScreen = appState::navigate,
-        viewModel = viewModel)
-  }
-}
-
-private fun NavGraphBuilder.listScreen(appState: PlantScanAppState) {
-  composable(route = Direction.List.route) { backStackEntry ->
-    val parentEntry =
-        remember(backStackEntry) {
-          appState.navController.getBackStackEntry(Direction.MainNav.route)
-        }
-    val viewModel: PlantListViewModel = hiltViewModel(parentEntry)
-    PlantListScreen(
-        toDetails = { appState.navigate(Direction.Detail.createRoute(it)) },
-        popUpScreen = appState::popUp,
-        viewModel = viewModel)
-  }
-}
-
-private fun NavGraphBuilder.splashScreen(appState: PlantScanAppState) {
-  composable(route = Direction.Splash.route) {
-    val viewModel: SplashViewModel = hiltViewModel()
-    SplashScreen(openAndPopUp = appState::navigateAndPopUp, viewModel = viewModel)
-  }
-}
-
-private fun NavGraphBuilder.webViewScreen(appState: PlantScanAppState) {
-  composable(
-      route = Direction.Web.route,
-      arguments = listOf(navArgument("url") { type = NavType.StringType })) { backStackEntry ->
-        val url = backStackEntry.arguments?.getString("url")
-        url?.let { WebScreen(url = it, name = "Testing", popUpScreen = appState::popUp) }
-      }
-}
-
-private fun NavGraphBuilder.cameraFragment(appState: PlantScanAppState) {
-  composable(route = Direction.Camera.route) {
-    AndroidViewBinding(FragmentContainerBinding::inflate) {
-      root.getFragment<CameraFragment>().apply {
-        onBackPressed = appState::popUp
-        toDetect = appState::navigate
-      }
-    }
-  }
-}
-
-private fun NavGraphBuilder.detectFragment(appState: PlantScanAppState) {
-  composable(
-      route = Direction.Detect.route,
-      arguments = listOf(navArgument("imageUri") { type = NavType.StringType })) { backStackEntry ->
-        val imageUri = backStackEntry.arguments?.getString("imageUri")
-        imageUri?.let { DetectScreen(imageUri = it.toUri()) }
-      }
-}

@@ -19,7 +19,7 @@ sealed class Direction(val route: String) {
     }
 
     object Detail : Direction("orchid/{orchid_id}") {
-        fun createRoute(plant: Plant) = "orchid/${plant.id}"
+        fun createRoute(id: String) = "orchid/$id"
     }
 
     object Camera: Direction("camera")

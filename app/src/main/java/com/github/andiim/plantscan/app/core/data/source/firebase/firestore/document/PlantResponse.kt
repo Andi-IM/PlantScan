@@ -1,35 +1,32 @@
 package com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document
 
-import com.github.andiim.plantscan.app.core.data.source.local.entity.PlantEntity
-import com.github.andiim.plantscan.app.core.domain.model.Image
 import com.github.andiim.plantscan.app.core.domain.model.Plant
-import com.github.andiim.plantscan.app.core.domain.model.PlantDetail
 import com.google.firebase.firestore.DocumentId
 
 data class PlantResponse(
     @DocumentId val id: String = "",
     val name: String = "",
     val species: String = "",
-    val type: String = "",
-    var images: List<Image>? = null,
-    val commonName: List<String>? = null,
-    var detail: PlantDetail? = null
+    val thumbnail: String = "",
+    val description: String = "",
+    val commonName: List<String> = listOf(),
+    val images: List<ImageResponse> = listOf(),
+    val taxon: TaxonomyResponse,
 ) {
-  fun toDomain() =
-      Plant(
-          id = this.id,
-          name = this.name,
-          species = this.species,
-          type = this.type,
-          images = this.images,
-          commonName = this.commonName,
-          detail = this.detail)
-
-  fun toEntity() =
-      PlantEntity(
-          id = this.id,
-          name = this.name,
-          species = this.species,
-          type = this.type,
-          commonName = this.commonName)
+    fun toDomain(): Plant =
+        Plant(
+            id = this.id,
+            name = this.name,
+            species = this.species,
+            thumbnail = this.thumbnail,
+            description = this.description,
+            commonName = this.commonName,
+            images = this.images.map {
+                it.toModel()
+            },
+            taxon = this.taxon.toModel()
+        )
 }
+
+
+

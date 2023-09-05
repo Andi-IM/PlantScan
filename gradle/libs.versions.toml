@@ -1,8 +1,12 @@
 [versions]
 # SDK VERSION
 compile_sdk_version = "33"
+gson = "2.10.1"
+kotlinxDatetime = "0.4.1"
 min_sdk_version = "21"
 target_sdk_version = "33"
+compose_compilerextension = "1.5.0"
+kotlin = "1.9.0"
 
 # DEPENDENCIES
 agp = "8.1.0"
@@ -17,7 +21,6 @@ camerax_version = "1.2.3"
 coroutines = "1.7.3"
 coil = "2.4.0"
 compose = "2023.06.01"
-compose_compilerextension = "1.4.8"
 constraint_layout = "2.1.4"
 core_ktx = "1.10.1"
 detekt = "1.23.0"
@@ -26,13 +29,11 @@ espresso_core = "3.5.1"
 firebase = "32.2.2"
 hilt = "2.47"
 junit = "4.13.2"
-kotlin = "1.8.22"
 ktlint = "0.45.2"
 ktlint_gradle = "10.2.1"
 lifecycle = "2.6.1"
 material = "1.9.0"
 navigation = "2.6.0"
-
 benmanesversion = "0.47.0"
 timber = "5.0.1"
 truth = "1.1.5"
@@ -40,8 +41,13 @@ org-jetbrains-kotlin-android = "1.8.0"
 constraintlayout = "2.1.4"
 tensorflow = "2.12.0"
 tensorflow_support = "0.4.3"
+retrofit = "2.9.0"
+kotlinx-serialization = "1.0.0"
+kotlinx-serialization-json = "1.5.1"
+
 
 [libraries]
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { module = "junit:junit", version.ref = "junit" }
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version = "0.30.1" }
 accompanist_permission = { module = "com.google.accompanist:accompanist-permissions", version = "0.30.1" }
@@ -103,6 +109,7 @@ firebase-app-check-playintegrity = { group = "com.google.firebase", name = "fire
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlin-coroutines-test-turbine = { module = "app.cash.turbine:turbine", version = "1.0.0" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
@@ -111,15 +118,8 @@ navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version = "2
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version = "2.6.0" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigation" }
-room = { module = "androidx.room:room-runtime", version = "2.5.2" }
-room-compiler = { module = "androidx.room:room-compiler", version = "2.5.2" }
-room-ktx = { module = "androidx.room:room-ktx", version = "2.5.2" }
-room-testing = { module = "androidx.room:room-testing", version = "2.5.2" }
-room-rxjava2 = { module = "androidx.room:room-rxjava2", version = "2.5.2" }
-room-rxjava3 = { module = "androidx.room:room-rxjava3", version = "2.5.2" }
-room-cipher = { module = "net.zetetic:android-database-sqlcipher", version = "4.4.0" }
 tensorflow = { module = "org.tensorflow:tensorflow-lite-gpu", version.ref = "tensorflow" }
-tensorflow-downloader = {module = "com.google.firebase:firebase-ml-modeldownloader-ktx"}
+tensorflow-downloader = { module = "com.google.firebase:firebase-ml-modeldownloader-ktx" }
 tensorflow-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflow_support" }
 tensorflow-metadata = { module = "org.tensorflow:tensorflow-lite-metadata", version.ref = "tensorflow_support" }
 agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
@@ -134,8 +134,12 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version = "20.6.0" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 
 [bundles]
+retrofit = ["retrofit-core", "retrofit-kotlin-serialization", "kotlinx-serialization-json"]
 camera = ["camera", "camera-core", "camera-lifecycle", "camera-extensions", "camera-video", "camera-view"]
 compose = ["coil-compose", "compose-activity", "compose-material", "compose-materialIcons", "compose-runtimeLivedata", "compose-ui", "compose-ui-graphics", "compose-ui-tooling-preview", "navigation-compose", "compose-ui-viewBinding"]
 compose-debug = ["compose-ui-tooling", "compose-ui-test-manifest"]
@@ -144,7 +148,6 @@ tensorflow = ["tensorflow", "tensorflow-metadata", "tensorflow-support", "tensor
 firebase = ["firebase-auth", "firebase-config", "firebase-crashlytics", "firebase-firestore", "firebase-analytics", "firebase-perf", "firebase-messaging", "firebase-app-check", "firebase-app-check-debug", "firebase-storage", "firebase-app-check-playintegrity"]
 lifecycle = ["lifecycle-livedata", "lifecycle-runtime", "lifecycle-viewmodel-compose"]
 paging = ["paging-common", "paging-compose"]
-room = ["room", "room-cipher", "room-ktx", "room-rxjava2", "room-rxjava3"]
 
 
 [plugins]

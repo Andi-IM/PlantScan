@@ -14,6 +14,5 @@ import kotlinx.coroutines.flow.stateIn
 @HiltViewModel
 class MyGardenViewModel @Inject constructor(useCase: PlantUseCase, logService: LogService) :
     PlantScanViewModel(logService) {
-  val myPlant: StateFlow<List<Plant>> = useCase.getGarden()
-          .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), listOf())
+
 }

@@ -60,6 +60,15 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.espresso.idlingResource)
 
+    // GSON
+    implementation(libs.gson)
+
+    // Datetime
+    implementation(libs.kotlinx.datetime)
+
+    // Retrofit
+    implementation(libs.bundles.retrofit)
+
     // UI
     implementation(libs.coil)
     implementation(libs.material)
@@ -96,12 +105,6 @@ dependencies {
     // compat
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
-
-    // rooms
-    implementation(libs.bundles.room)
-    //noinspection KaptUsageInsteadOfKsp
-    kapt(libs.room.compiler)
-    androidTestImplementation(libs.room.testing)
 
     // Unit tests
     testImplementation(libs.junit)

@@ -26,31 +26,7 @@ fun DetailScreen(
     popUpScreen: () -> Unit,
     viewModel: DetailViewModel = hiltViewModel()
 ) {
-  val isSaved = viewModel.isSaved.collectAsState(initial = false)
-  viewModel.uiState.collectAsState(initial = Resource.Empty).value.let { state ->
-    when (state) {
-      is Resource.Empty -> {
-        viewModel.getDetail(id)
-        viewModel.retrieveSaveData(id)
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {}
-      }
-      is Resource.Success -> {
-        val data = state.data
-        DetailContent(
-            content = data,
-            isSaved = isSaved.value,
-            onBackClick = popUpScreen,
-            onSave = viewModel::setPlantToGarden,
-            onRemove = viewModel::removePlantFromGarden)
-      }
-      is Resource.Error -> {
-        Box(modifier = Modifier.fillMaxSize().padding(8.dp), contentAlignment = Alignment.Center) {
-          Text("Oops, something went wrong: ${state.message}", textAlign = TextAlign.Justify)
-        }
-      }
-      else -> {}
-    }
-  }
+
 }
 
 @Composable

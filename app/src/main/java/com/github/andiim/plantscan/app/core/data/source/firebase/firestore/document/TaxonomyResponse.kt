@@ -1,13 +1,23 @@
 package com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document
 
+import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
+import com.google.firebase.firestore.PropertyName
+
 data class TaxonomyResponse(
-    val id: String = "",
     val phylum: String = "",
-    val className: String = "",
+    @PropertyName("class") val className: String = "",
     val order: String = "",
     val family: String = "",
     val genus: String = ""
-)
+) {
+    fun toModel(): Taxonomy = Taxonomy(
+        phylum = this.phylum,
+        className = this.className,
+        order = this.order,
+        family = this.family,
+        genus = this.genus
+    )
+}
 
 data class PhylumResponse(val name: String)
 

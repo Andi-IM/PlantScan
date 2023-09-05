@@ -48,7 +48,7 @@ import com.github.andiim.plantscan.app.R.string as AppText
 @Composable
 fun FindPlantElement(
     modifier: Modifier = Modifier,
-    onDetails: (Plant) -> Unit,
+    onDetails: (String) -> Unit,
     toDetect: () -> Unit,
     toPlantType: () -> Unit,
     viewModel: FindPlantViewModel = hiltViewModel()
@@ -75,7 +75,7 @@ fun FindPlantContent(
     onQueryChange: (String) -> Unit = {},
     onSearch: (String) -> Unit = {},
     toDetect: () -> Unit = {},
-    toDetail: (Plant) -> Unit = {},
+    toDetail: (String) -> Unit = {},
     toPlantType: () -> Unit = {},
 ) {
   var active by rememberSaveable { mutableStateOf(false) }

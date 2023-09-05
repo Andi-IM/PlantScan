@@ -12,10 +12,6 @@ interface PlantUseCase {
   fun getAllPlant(): Flow<PagingData<Plant>>
   fun getPlantDetail(id: String): Flow<Resource<Plant>>
   fun searchPlant(query: String = ""): PagingSource<Int, Plant>
-  fun getGarden(): Flow<List<Plant>>
-  fun isAddedToGarden(id: String): Flow<Boolean>
-  fun addPlantToGarden(plant: Plant)
-  fun removePlantFromGarden(plant: Plant)
   fun notifyImageCreated(savedUri: Uri)
   fun createImageOutputFile(): File
 }

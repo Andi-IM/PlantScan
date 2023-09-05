@@ -1,48 +1,59 @@
 package com.github.andiim.plantscan.app.ui.screens.detail
 
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import com.github.andiim.plantscan.app.PlantScanViewModel
 import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
-import com.github.andiim.plantscan.app.PlantScanViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 class DetailViewModel
 @Inject
-constructor(private val useCase: PlantUseCase, logService: LogService) :
+constructor(
+    savedStateHandle: SavedStateHandle,
+    private val useCase: PlantUseCase,
+    logService: LogService,
+) :
     PlantScanViewModel(logService) {
-  private val _uiState: MutableStateFlow<Resource<Plant>> = MutableStateFlow(Resource.Empty)
-  val uiState = _uiState.asStateFlow()
 
-  private val _isSaved = MutableStateFlow(false)
-  val isSaved = _isSaved.asStateFlow()
+    val detailUiState: StateFlow<DetailUiState> =
+        detailUiState(
+            plantId = "",
+            useCase = useCase
+        ).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = DetailUiState.Loading,
+        )
+}
 
-  fun retrieveSaveData(id: String?) {
-    launchCatching {
-      id?.let { useCase.isAddedToGarden(it).collect { data -> _isSaved.update { data } } }
+private fun detailUiState(
+    plantId: String,
+    useCase: PlantUseCase,
+): Flow<DetailUiState> {
+    return useCase.getPlantDetail(plantId).map {
+        when (it) {
+            is Resource.Error -> DetailUiState.Error
+            is Resource.Loading -> DetailUiState.Loading
+            is Resource.Success -> {
+                val data = it.data
+                DetailUiState.Success(data)
+            }
+        }
     }
-  }
+}
 
-  fun getDetail(id: String?) {
-    if (id == null) _uiState.update { Resource.Error("ID can't be null!") }
-
-    launchCatching {
-      id?.let { useCase.getPlantDetail(it).collect { result -> _uiState.update { result } } }
-    }
-  }
-
-  fun setPlantToGarden(plant: Plant) {
-    launchCatching { useCase.addPlantToGarden(plant) }
-    retrieveSaveData(plant.id)
-  }
-
-  fun removePlantFromGarden(plant: Plant) {
-    launchCatching { useCase.removePlantFromGarden(plant) }
-    retrieveSaveData(plant.id)
-  }
+sealed interface DetailUiState {
+    data class Success(val detail: Plant) : DetailUiState
+    data object Error : DetailUiState
+    data object Loading : DetailUiState
 }

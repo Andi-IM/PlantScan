@@ -21,7 +21,7 @@ import com.github.andiim.plantscan.app.R.string as AppText
 
 @Composable
 fun PlantListScreen(
-    toDetails: (Plant) -> Unit,
+    toDetails: (String) -> Unit,
     popUpScreen: () -> Unit,
     viewModel: PlantListViewModel = hiltViewModel()
 ) {
@@ -35,7 +35,7 @@ fun PlantListScreen(
 @Composable
 fun PlantListContent(
     popUpScreen: () -> Unit = {},
-    onItemClick: (Plant) -> Unit = {},
+    onItemClick: (String) -> Unit = {},
     data: Flow<PagingData<Plant>> = flowOf()
 ) {
     val plants = data.collectAsLazyPagingItems()

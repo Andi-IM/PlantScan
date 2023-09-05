@@ -30,84 +30,87 @@ import java.text.DecimalFormat
 
 @Composable
 fun DetectScreen(imageUri: Uri, viewModel: DetectViewModel = hiltViewModel()) {
-  val context = LocalContext.current
+    val context = LocalContext.current
 
-  val image =
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        val source = ImageDecoder.createSource(context.contentResolver, imageUri)
-        ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
-          decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
-          decoder.isMutableRequired = true
+    val image =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val source = ImageDecoder.createSource(context.contentResolver, imageUri)
+            ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
+                decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+                decoder.isMutableRequired = true
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
         }
-      } else {
-        @Suppress("DEPRECATION")
-        MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
-      }
 
-  when (val state = viewModel.interpreter.collectAsState().value) {
-    is Resource.Empty -> {
-      LoadingState("Getting Model")
-    }
-    is Resource.Loading -> {
-      LoadingState("Getting Model ${state.status.toInt()}%", percent = state.status)
-    }
-    is Resource.Error -> {
-      ErrorState(state.message)
-    }
-    is Resource.Success -> {
-      val labels = BufferedReader(InputStreamReader(context.assets.open("labels.txt")))
-      viewModel.detect(labels, image, state.data)
+    when (val state = viewModel.interpreter.collectAsState().value) {
+        is Resource.Loading -> {
+            LoadingState("Getting Model ")
+        }
 
-      when (val detectionState = viewModel.detectResult.collectAsState().value) {
-        Resource.Empty -> LoadingState("Trying to Detect...")
-        is Resource.Success -> DetectContent(detectionState.data)
-        else -> {}
-      }
-    }
-  }
+        is Resource.Error -> {
+            ErrorState(state.message)
+        }
 
-  LaunchedEffect(viewModel) { viewModel.loadInterpreter(context) }
+        is Resource.Success -> {
+            val labels = BufferedReader(InputStreamReader(context.assets.open("labels.txt")))
+            viewModel.detect(labels, image, state.data)
+
+            when (val detectionState = viewModel.detectResult.collectAsState().value) {
+                Resource.Loading -> LoadingState("Trying to Detect...")
+                is Resource.Success -> DetectContent(detectionState.data)
+                else -> {}
+            }
+        }
+    }
+
+    LaunchedEffect(viewModel) { viewModel.loadInterpreter(context) }
 }
 
 @Composable
 fun DetectContent(detectResult: DetectResult) {
-  val dec = DecimalFormat("#.##")
-  val percentage = dec.format(detectResult.prob * 100)
-  Column { Text("${detectResult.label} : ${percentage}%") }
+    val dec = DecimalFormat("#.##")
+    val percentage = dec.format(detectResult.prob * 100)
+    Column { Text("${detectResult.label} : ${percentage}%") }
 }
 
 @Composable
 private fun LoadingState(message: String? = null, percent: Float? = null) {
-  Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-    if (percent != null) CircularProgressIndicator(progress = percent)
-    else CircularProgressIndicator()
-    if (message != null)
-        Text(message, modifier = Modifier.align(Alignment.BottomCenter).padding(50.dp))
-  }
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+        if (percent != null) CircularProgressIndicator(progress = percent)
+        else CircularProgressIndicator()
+        if (message != null)
+            Text(
+                message, modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(50.dp)
+            )
+    }
 }
 
 @Composable
 private fun ErrorState(message: String) {
-  Column(horizontalAlignment = Alignment.CenterHorizontally) {
-    Text("Error: $message")
-    Button(onClick = {}) { Text("Try Again") }
-  }
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("Error: $message")
+        Button(onClick = {}) { Text("Try Again") }
+    }
 }
 
 @Preview
 @Composable
 private fun Preview_LoadingContent() {
-  PlantScanTheme { Surface { LoadingState() } }
+    PlantScanTheme { Surface { LoadingState() } }
 }
 
 @Preview
 @Composable
 private fun Preview_DetectContent() {
-  PlantScanTheme { Surface { DetectContent(DetectResult("Testing", 0.5f)) } }
+    PlantScanTheme { Surface { DetectContent(DetectResult("Testing", 0.5f)) } }
 }
 
 @Preview
 @Composable
 private fun Preview_ErrorState() {
-  PlantScanTheme { Surface { ErrorState("Something Error!") } }
+    PlantScanTheme { Surface { ErrorState("Something Error!") } }
 }

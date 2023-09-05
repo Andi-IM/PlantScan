@@ -1,0 +1,40 @@
+{
+  "id": "gaHtUTEZXJGJw3kcHWOB",
+  "taxonomy": {
+    "phylum": "phylum1",
+    "genus": "genuss",
+    "class": "class1",
+    "order": "order1",
+    "family": "family1"
+  },
+  "species": "spesies",
+  "name": "Susu Kotak",
+  "images": [
+    {
+      "url": "https://firebasestorage.googleapis.com/v0/b/orchid-app-7fe3d.appspot.com/o/orchids%2FSusu%20Kotak%2F2a7c6eff-d6f9-42e8-acb1-50a5e9b32307.jpg?alt=media&token=a7c06c2d-28d6-4448-8f7d-d57838a7a580",
+      "id": 1693925228656,
+      "attribution": "",
+      "desc": ""
+    },
+    {
+      "desc": "",
+      "id": 1693925233769,
+      "url": "https://firebasestorage.googleapis.com/v0/b/orchid-app-7fe3d.appspot.com/o/orchids%2FSusu%20Kotak%2Flogo%20pnp.png?alt=media&token=f6b397a3-24e2-445d-99d4-411dda4545fc",
+      "attribution": ""
+    }
+  ],
+  "common_name": [
+    {
+      "name": "dfsdfs"
+    },
+    {
+      "name": "dgfhfgh"
+    }
+  ],
+  "thumbnail": "https://firebasestorage.googleapis.com/v0/b/orchid-app-7fe3d.appspot.com/o/orchids%2FSusu%20Kotak%2F2a7c6eff-d6f9-42e8-acb1-50a5e9b32307.jpg?alt=media&token=a7c06c2d-28d6-4448-8f7d-d57838a7a580",
+  "Updated": {
+    "seconds": 1693925288,
+    "nanoseconds": 561000000
+  },
+  "description": "asdasdasdasd"
+}

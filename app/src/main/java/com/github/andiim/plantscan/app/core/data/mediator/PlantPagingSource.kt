@@ -2,39 +2,29 @@ package com.github.andiim.plantscan.app.core.data.mediator
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.DbResponse
 import com.github.andiim.plantscan.app.core.domain.model.Plant
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.RemotePlantSource
+import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.FirestoreSource
 
-class PlantPagingSource(private val remote: RemotePlantSource, private val query: String = "") :
+class PlantPagingSource(private val remote: FirestoreSource, private val query: String = "") :
     PagingSource<Int, Plant>() {
+    override fun getRefreshKey(state: PagingState<Int, Plant>): Int? = state.anchorPosition
 
-  override fun getRefreshKey(state: PagingState<Int, Plant>): Int? = state.anchorPosition
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Plant> {
+        val position = params.key ?: STARTING_PAGE_INDEX
+        val response = remote.getPlants(query, NETWORK_PAGE_SIZE.toLong())
 
-  override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Plant> {
-    val position = params.key ?: STARTING_PAGE_INDEX
-    return when (val response =
-        if (query.isEmpty()) remote.getAllPlant() else remote.searchPlant(query)) {
-      is DbResponse.Success -> {
-        val endPaginationReached = response.data.isEmpty()
-        val results = response.data.map { it.toDomain() }
+        val endPaginationReached = if (position < NETWORK_PAGE_SIZE) true else response.isEmpty()
+        val results = response.map { it.toDomain() }
 
-        LoadResult.Page(
+        return LoadResult.Page(
             data = results,
             prevKey = if (position == STARTING_PAGE_INDEX) null else position - 1,
-            nextKey = if (endPaginationReached) null else position + 1)
-      }
-      is DbResponse.Empty -> {
-        LoadResult.Page(data = emptyList(), prevKey = null, nextKey = null)
-      }
-      is DbResponse.Error -> {
-        LoadResult.Error(Exception(response.errorMessage))
-      }
+            nextKey = if (endPaginationReached) null else position + 1
+        )
     }
-  }
 
-  companion object {
-    private const val STARTING_PAGE_INDEX = 1
-    const val NETWORK_PAGE_SIZE = 5
-  }
+    companion object {
+        private const val STARTING_PAGE_INDEX = 1
+        const val NETWORK_PAGE_SIZE = 5
+    }
 }

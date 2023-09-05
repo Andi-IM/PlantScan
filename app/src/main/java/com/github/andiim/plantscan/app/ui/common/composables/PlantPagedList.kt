@@ -30,7 +30,7 @@ import com.github.andiim.plantscan.app.core.domain.model.Plant
 fun PlantPagedList(
     modifier: Modifier = Modifier,
     plants: LazyPagingItems<Plant>,
-    onItemClick: (Plant) -> Unit
+    onItemClick: (String) -> Unit
 ) {
   LazyColumn(
       state = rememberLazyListState(),

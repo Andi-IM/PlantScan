@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material3.Card
@@ -19,52 +20,68 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.andiim.plantscan.app.core.domain.model.Image
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.github.andiim.plantscan.app.core.domain.model.Plant
+import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
+import com.github.andiim.plantscan.app.R.drawable as ImageDrawable
 
 @Composable
-fun PlantItem(plant: Plant, onClick: (Plant) -> Unit = {}) {
-  var nameString = ""
-  plant.commonName?.let { nameString = it.joinToString(", ") }
-
-  Card(modifier = Modifier.fillMaxWidth().height(96.dp).clickable { onClick.invoke(plant) }) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround) {
-          //          AsyncImage(
-          //              model =
-          //                  ImageRequest.Builder(LocalContext.current)
-          //                      .data(plant.images[0].file)
-          //                      .crossfade(true)
-          //                      .build(),
-          //              placeholder = painterResource(ImageDrawable.ic_error),
-          //              contentDescription = plant.name,
-          //              contentScale = ContentScale.Crop,
-          //              modifier =
-          // Modifier.clip(CircleShape).size(64.dp).align(Alignment.CenterVertically))
-          Spacer(modifier = Modifier.size(8.dp))
-          Column(modifier = Modifier.weight(2f)) {
-            Text(
-                modifier = Modifier.testTag("Plant Name"),
-                text = plant.name,
-                style = (MaterialTheme.typography).titleSmall)
-            Text(
-                modifier = Modifier.testTag("Plant Known Names"),
-                text = nameString,
-                maxLines = 2,
-                overflow = TextOverflow.Clip,
-                style = (MaterialTheme.typography).bodyMedium)
-          }
-          Spacer(modifier = Modifier.size(8.dp))
-          Icon(Icons.Default.ArrowForwardIos, contentDescription = "click")
+fun PlantItem(plant: Plant, onClick: (String) -> Unit = {}) {
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .height(96.dp)
+        .clickable { onClick.invoke(plant.id) }) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            AsyncImage(
+                model =
+                ImageRequest.Builder(LocalContext.current)
+                    .data(plant.thumbnail)
+                    .crossfade(true)
+                    .build(),
+                placeholder = painterResource(ImageDrawable.ic_error),
+                contentDescription = plant.name,
+                contentScale = ContentScale.Crop,
+                modifier =
+                Modifier
+                    .clip(CircleShape)
+                    .size(64.dp)
+                    .align(Alignment.CenterVertically)
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Column(modifier = Modifier.weight(2f)) {
+                Text(
+                    modifier = Modifier.testTag("Plant Name"),
+                    text = plant.name,
+                    style = (MaterialTheme.typography).titleSmall
+                )
+                Text(
+                    modifier = Modifier.testTag("Plant Known Names"),
+                    text = plant.species,
+                    maxLines = 2,
+                    overflow = TextOverflow.Clip,
+                    style = (MaterialTheme.typography).bodyMedium
+                )
+            }
+            Spacer(modifier = Modifier.size(8.dp))
+            Icon(Icons.Default.ArrowForwardIos, contentDescription = "click")
         }
-  }
+    }
 }
 
 @Preview(
@@ -77,20 +94,20 @@ fun PlantItem(plant: Plant, onClick: (Plant) -> Unit = {}) {
 )
 @Composable
 private fun Preview() {
-  val plant =
-      Plant(
-          id = "1",
-          name = "Bird of Paradise",
-          species = "Strelizia reginae",
-          type = "bird",
-          images =
-              listOf(
-                  Image(
-                      attribution = "Creative Common",
-                      name = "Orchid",
-                      file =
-                          "https://upload.wikimedia.org/wikipedia/commons/3/30/Orchid_Phalaenopsis_hybrid.jpg")),
-          commonName = listOf("Strelizia reginae", "Crane flower", "Bird of Paradise"),
-      )
-  PlantScanTheme { PlantItem(plant) }
+    val plant =
+        Plant(
+            id = "1",
+            name = "Bird of Paradise",
+            species = "Strelizia reginae",
+            thumbnail = "https://upload.wikimedia.org/wikipedia/commons/3/30/Orchid_Phalaenopsis_hybrid.jpg",
+            description = "",
+            taxon = Taxonomy(
+                genus = "",
+                className = "",
+                family = "",
+                order = "",
+                phylum = ""
+            )
+        )
+    PlantScanTheme { PlantItem(plant) }
 }
