@@ -3,22 +3,23 @@ package com.github.andiim.plantscan.app.ui.screens.detect
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import com.github.andiim.plantscan.app.PlantScanViewModel
+import androidx.lifecycle.ViewModel
 import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.DetectResult
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.ConfigurationService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.MLService
+import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.io.BufferedReader
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.tensorflow.lite.Interpreter
 import timber.log.Timber
+import java.io.BufferedReader
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import javax.inject.Inject
 
 @HiltViewModel
 class DetectViewModel
@@ -26,8 +27,8 @@ class DetectViewModel
 constructor(
     private val mlService: MLService,
     private val config: ConfigurationService,
-    logService: LogService
-) : PlantScanViewModel(logService) {
+    private val logService: LogService
+) : ViewModel() {
 
     private val _interpreter: MutableStateFlow<Resource<Interpreter>> =
         MutableStateFlow(Resource.Loading)
@@ -38,7 +39,7 @@ constructor(
     val detectResult = _detectionResult.asStateFlow()
 
     fun loadInterpreter(context: Context) {
-        launchCatching {
+        launchCatching(logService) {
             val modelName = config.mlModelName
             mlService.getModel(context, modelName).collect { it ->
                 Timber.d("Type= ${it.javaClass} SAMPLING")

@@ -16,18 +16,19 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleOwner
-import com.github.andiim.plantscan.app.PlantScanViewModel
+import androidx.lifecycle.ViewModel
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
+import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
 import com.github.andiim.plantscan.app.ui.screens.camera.model.CameraState
 import com.github.andiim.plantscan.app.ui.screens.camera.model.CameraUiState
 import com.github.andiim.plantscan.app.ui.screens.camera.model.CaptureState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
 /**
  * View model for camera extensions. This manages all the operations on the camera. This includes
@@ -46,8 +47,8 @@ constructor(
     private val useCase: PlantUseCase,
     private val provider: ProcessCameraProvider,
     private val manager: ExtensionsManager,
-    log: LogService
-) : PlantScanViewModel(log) {
+    private val log: LogService
+) : ViewModel() {
   private var camera: Camera? = null
 
   private val imageCapture =
@@ -70,7 +71,7 @@ constructor(
    * can start the preview.
    */
   fun initializeCamera() {
-    launchCatching {
+    launchCatching(log) {
       val currentCameraUiState = _cameraUiState.value
 
       // get the camera selector for the select lens face
@@ -141,7 +142,7 @@ constructor(
     camera = provider.bindToLifecycle(lifecycleOwner, cameraSelector, useCaseGroup)
     preview.setSurfaceProvider(previewView.surfaceProvider)
 
-    launchCatching {
+    launchCatching(log) {
       _cameraUiState.emit(_cameraUiState.value.copy(cameraState = CameraState.READY))
       _captureUiState.emit(CaptureState.CaptureReady)
     }
@@ -150,7 +151,7 @@ constructor(
   /** Stops the preview stream. This should be invoked when the captured image is displayed. */
   fun stopPreview() {
     preview.setSurfaceProvider(null)
-    launchCatching {
+    launchCatching(log) {
       _cameraUiState.emit(_cameraUiState.value.copy(cameraState = CameraState.PREVIEW_STOPPED))
     }
   }
@@ -171,7 +172,7 @@ constructor(
             currentCameraUiState.copy(cameraLens = CameraSelector.LENS_FACING_BACK)
           }
 
-      launchCatching {
+      launchCatching(log) {
         _cameraUiState.emit(
             newCameraUiState.copy(
                 cameraState = CameraState.NOT_READY,
@@ -189,7 +190,7 @@ constructor(
    * reason for failure.
    */
   fun capturePhoto() {
-    launchCatching { _captureUiState.emit(CaptureState.CaptureStarted) }
+    launchCatching(log) { _captureUiState.emit(CaptureState.CaptureStarted) }
     val photoFile = useCase.createImageOutputFile()
     val metadata =
         ImageCapture.Metadata().apply {
@@ -205,26 +206,26 @@ constructor(
         object : ImageCapture.OnImageSavedCallback {
           override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
             useCase.notifyImageCreated(outputFileResults.savedUri ?: photoFile.toUri())
-            launchCatching { _captureUiState.emit(CaptureState.CaptureFinished(outputFileResults)) }
+            launchCatching(log) { _captureUiState.emit(CaptureState.CaptureFinished(outputFileResults)) }
           }
 
           override fun onError(exception: ImageCaptureException) {
-            launchCatching { _captureUiState.emit(CaptureState.CaptureFailed(exception)) }
+            launchCatching(log) { _captureUiState.emit(CaptureState.CaptureFailed(exception)) }
           }
         })
   }
 
   fun openGallery(uri: Uri?) {
-    launchCatching { _captureUiState.emit(CaptureState.OpenGallery) }
+    launchCatching(log) { _captureUiState.emit(CaptureState.OpenGallery) }
     /*if (uri != null) {
       useCase.notifyImageCreated(uri)
     }*/
-    launchCatching { _captureUiState.emit(CaptureState.ImageObtained(uri)) }
+    launchCatching(log) { _captureUiState.emit(CaptureState.ImageObtained(uri)) }
   }
 
   /** Sets the current extension mode. This will force the camera to rebind the use cases. */
   fun setExtensionMode(@ExtensionMode.Mode extensionMode: Int) {
-    launchCatching {
+    launchCatching(log) {
       _cameraUiState.emit(
           _cameraUiState.value.copy(
               cameraState = CameraState.NOT_READY, extensionMode = extensionMode))

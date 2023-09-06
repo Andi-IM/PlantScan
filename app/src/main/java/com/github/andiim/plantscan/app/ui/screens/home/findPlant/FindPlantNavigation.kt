@@ -14,7 +14,7 @@ fun PlantScanAppState.gotoMainNavRoute() {
 fun NavGraphBuilder.homeFindPlantElement(
     routeToDetail: (String) -> Unit,
     routeToCamera: () -> Unit,
-    routeToPlant: () -> Unit = {},
+    routeToList: () -> Unit = {},
 ) {
     composable(
         route = Direction.FindPlant.route,
@@ -25,7 +25,7 @@ fun NavGraphBuilder.homeFindPlantElement(
         FindPlantRoute(
             onDetails = routeToDetail,
             toDetect = routeToCamera,
-            toPlantType = routeToPlant,
+            toPlantType = routeToList,
         )
     }
 }

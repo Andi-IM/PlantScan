@@ -1,17 +1,11 @@
 package com.github.andiim.plantscan.app.ui.screens.home.history
 
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.github.andiim.plantscan.app.PlantScanAppState
 import com.github.andiim.plantscan.app.ui.navigation.Direction
 
-fun NavGraphBuilder.homeHistoryElement(appState: PlantScanAppState) {
+fun NavGraphBuilder.homeHistoryElement() {
     composable(route = Direction.MyGarden.route) {
-        val viewModel: MyGardenViewModel = hiltViewModel()
-        HistoryRoute(
-            toDetail = { appState.navigate(Direction.Detect.route) },
-            viewModel = viewModel
-        )
+        HistoryRoute(toDetail = { /* TODO: SOMETIMES IMPLEMENT TO DETECTION DETAIL */ })
     }
 }

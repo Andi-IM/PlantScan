@@ -20,6 +20,7 @@ import com.github.andiim.plantscan.app.ui.screens.home.findPlant.homeFindPlantEl
 import com.github.andiim.plantscan.app.ui.screens.home.history.homeHistoryElement
 import com.github.andiim.plantscan.app.ui.screens.home.settings.homeSettingsElement
 import com.github.andiim.plantscan.app.ui.screens.list.listScreen
+import com.github.andiim.plantscan.app.ui.screens.list.navigateToList
 import com.github.andiim.plantscan.app.ui.screens.splash.splashScreen
 import com.github.andiim.plantscan.app.ui.screens.web.navigateToWeb
 import com.github.andiim.plantscan.app.ui.screens.web.webViewScreen
@@ -46,16 +47,16 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
             homeFindPlantElement(
                 routeToDetail = appState::navigateToDetail,
                 routeToCamera = appState::navigateToCamera,
-                routeToPlant = { /* TODO */ }
+                routeToList = appState::navigateToList
             )
-            homeHistoryElement(appState)
+            homeHistoryElement()
             homeSettingsElement(
                 clearAndNavigate = appState::clearAndNavigate,
                 routeToLogin = appState::navigateToLogin,
             )
         }
 
-        listScreen(appState)
+        listScreen(onBackPressed = appState::popUp, routeToDetail = appState::navigateToDetail)
         splashScreen(navigateAndPopUp = appState::gotoMainNavRoute)
 
         cameraFragment(appState)
