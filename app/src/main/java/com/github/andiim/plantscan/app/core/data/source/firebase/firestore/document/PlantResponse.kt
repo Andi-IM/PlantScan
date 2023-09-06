@@ -3,7 +3,8 @@ package com.github.andiim.plantscan.app.core.data.source.firebase.firestore.docu
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.ServerTimestamp
-import kotlinx.datetime.Instant
+import java.util.Date
+import kotlinx.datetime.toInstant
 
 data class PlantResponse(
     @DocumentId val id: String = "",
@@ -13,7 +14,7 @@ data class PlantResponse(
     val images: List<ImageResponse> = listOf(),
     val commonName: List<String> = listOf(),
     val thumbnail: String = "",
-    @ServerTimestamp val updated: Instant,
+    @ServerTimestamp val updated: Date? = null,
     val description: String = "",
 ) {
     fun toModel(): Plant =
@@ -27,7 +28,7 @@ data class PlantResponse(
             },
             commonName = this.commonName,
             thumbnail = this.thumbnail,
-            updated = this.updated,
+            updated = this.updated?.toString()?.toInstant()!!,
             description = this.description,
         )
 }
