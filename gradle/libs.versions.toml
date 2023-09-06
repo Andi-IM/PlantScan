@@ -29,6 +29,7 @@ espresso_core = "3.5.1"
 firebase = "32.2.2"
 hilt = "2.47"
 junit = "4.13.2"
+jacoco = "0.8.7"
 ktlint = "0.45.2"
 ktlint_gradle = "10.2.1"
 lifecycle = "2.6.1"
@@ -44,7 +45,8 @@ tensorflow_support = "0.4.3"
 retrofit = "2.9.0"
 kotlinx-serialization = "1.0.0"
 kotlinx-serialization-json = "1.5.1"
-
+secrets = "2.0.1"
+okhttp = "4.10.0"
 
 [libraries]
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
@@ -75,6 +77,7 @@ camera-view = { module = "androidx.camera:camera-view", version.ref = "camerax_v
 camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "camerax_version" }
 coil = { module = "io.coil-kt:coil", version = "2.4.0" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-kt-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
 compose-material = { group = "androidx.compose.material3", name = "material3", version = "1.2.0-alpha02" }
@@ -91,7 +94,7 @@ detekt_formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", 
 espresso_core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso_core" }
 espresso_intent = { module = "androidx.test.espresso:espresso-intents", version.ref = "espresso_core" }
 espresso_idlingResource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "espresso_core" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 firebase-config = { group = "com.google.firebase", name = "firebase-config-ktx" }
@@ -136,10 +139,11 @@ play-services-auth = { group = "com.google.android.gms", name = "play-services-a
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlinx-serialization" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 
 [bundles]
-retrofit = ["retrofit-core", "retrofit-kotlin-serialization", "kotlinx-serialization-json"]
+retrofit = ["retrofit-core", "retrofit-kotlin-serialization", "kotlinx-serialization-json", "okhttp-logging"]
 camera = ["camera", "camera-core", "camera-lifecycle", "camera-extensions", "camera-video", "camera-view"]
 compose = ["coil-compose", "compose-activity", "compose-material", "compose-materialIcons", "compose-runtimeLivedata", "compose-ui", "compose-ui-graphics", "compose-ui-tooling-preview", "navigation-compose", "compose-ui-viewBinding"]
 compose-debug = ["compose-ui-tooling", "compose-ui-test-manifest"]

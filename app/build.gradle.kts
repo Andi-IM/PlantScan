@@ -5,7 +5,11 @@ plugins {
     id("plantscan.android.application.firebase")
     id("plantscan.android.application.compose")
     id("plantscan.android.application.flavors")
+    id("plantscan.android.application.jacoco")
     id("plantscan.android.hilt")
+    id("jacoco")
+    id("kotlinx-serialization")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -14,7 +18,12 @@ android {
         versionCode = AppCoordinates.APP_VERSION_CODE
         versionName = AppCoordinates.APP_VERSION_NAME
 
+        targetSdk = libs.versions.target.sdk.version.get().toInt()
+
         testInstrumentationRunner = "com.github.andiim.plantscan.app.PlantScanTestRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -55,6 +64,10 @@ android {
     namespace = "com.github.andiim.plantscan.app"
 }
 
+secrets {
+    defaultPropertiesFileName = "secrets.defaults.properties"
+}
+
 dependencies {
     // Logging
     implementation(libs.timber)
@@ -71,6 +84,7 @@ dependencies {
 
     // UI
     implementation(libs.coil)
+    implementation(libs.coil.kt.svg)
     implementation(libs.material)
     implementation(libs.bundles.paging)
 

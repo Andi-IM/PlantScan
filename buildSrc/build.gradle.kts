@@ -12,6 +12,8 @@ repositories {
     mavenCentral()
 }
 
+// Configure the build-logic plugins to target JDK 17
+// This matches the JDK used to build the project, and is not related to what is running on device.
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
@@ -45,6 +47,10 @@ gradlePlugin {
         register("androidFirebase"){
             id = "plantscan.android.application.firebase"
             implementationClass = "AndroidApplicationFirebaseConventionPlugin"
+        }
+        register("androidApplicationJacoco") {
+            id = "plantscan.android.application.jacoco"
+            implementationClass = "AndroidApplicationJacocoConventionPlugin"
         }
         register("androidCompose"){
             id = "plantscan.android.application.compose"

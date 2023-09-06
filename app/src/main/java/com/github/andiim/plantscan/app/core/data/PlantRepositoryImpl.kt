@@ -4,6 +4,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import com.github.andiim.plantscan.app.core.data.mediator.PlantPagingSource
 import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.DetectionHistoryDocument
+import com.github.andiim.plantscan.app.core.data.source.network.NetworkDataSource
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
 import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.core.domain.model.Plant
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.flow
 class PlantRepositoryImpl
 @Inject
 constructor(
+    private val network: NetworkDataSource,
     private val remote: FirestoreSource,
 ) : PlantRepository {
 
@@ -48,7 +50,12 @@ constructor(
     }
 
     override fun detect(image: File): Flow<Resource<ObjectDetection>> = flow {
-        TODO("Not yet implemented")
+        try {
+            val response = network.detect(image)
+            emit(Resource.Success(response.toModel()))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message.orEmpty()))
+        }
     }
 
     override fun getDetectionsList(): Flow<Resource<List<DetectionHistory>>> = flow {
