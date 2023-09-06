@@ -77,4 +77,8 @@
     <string name="notification_permission_settings">The notification permission is important for this app. Please navigate to your device settings and enable notifications for Make it So.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="fetch_image_error">Fetch image failed</string>
+    <string name="login_forgot_password_label">Forgot Password?</string>
+    <string name="no_account_question_label">Don\'t have an account?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="have_account_question_label">Already have an account?</string>
 </resources>

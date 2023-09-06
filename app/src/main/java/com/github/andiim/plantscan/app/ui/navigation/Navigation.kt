@@ -7,9 +7,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navigation
 import com.github.andiim.plantscan.app.PlantScanAppState
-import com.github.andiim.plantscan.app.ui.screens.auth.login.authLoginScreen
-import com.github.andiim.plantscan.app.ui.screens.auth.login.navigateToLogin
-import com.github.andiim.plantscan.app.ui.screens.auth.signUp.authSignUpScreen
+import com.github.andiim.plantscan.app.ui.screens.auth.authScreen
+import com.github.andiim.plantscan.app.ui.screens.auth.navigateFromAuthRoute
+import com.github.andiim.plantscan.app.ui.screens.auth.navigateToAuthRoute
 import com.github.andiim.plantscan.app.ui.screens.camera.cameraFragment
 import com.github.andiim.plantscan.app.ui.screens.camera.navigateToCamera
 import com.github.andiim.plantscan.app.ui.screens.detail.detailScreen
@@ -33,11 +33,10 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
         startDestination = Direction.Splash.route,
     ) {
         navigation(startDestination = Direction.Login.route, route = Direction.AccountNav.route) {
-            authLoginScreen(
+            authScreen(
                 routeToWeb = appState::navigateToWeb,
-                navigateAndPopUp = appState::navigateAndPopUp,
+                navigateAndPopUp = appState::navigateFromAuthRoute,
             )
-            authSignUpScreen(appState)
             webViewScreen(onBackPressed = appState::popUp)
         }
 
@@ -52,7 +51,7 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
             homeHistoryElement()
             homeSettingsElement(
                 clearAndNavigate = appState::clearAndNavigate,
-                routeToLogin = appState::navigateToLogin,
+                routeToLogin = appState::navigateToAuthRoute,
             )
         }
 

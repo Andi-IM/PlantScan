@@ -1,5 +1,7 @@
-package com.github.andiim.plantscan.app.ui.screens.auth.login
+package com.github.andiim.plantscan.app.ui.screens.auth
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,13 +16,17 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -33,46 +39,54 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.andiim.plantscan.app.R
 import com.github.andiim.plantscan.app.ui.common.composables.BasicButton
-import com.github.andiim.plantscan.app.ui.common.composables.BasicTextButton
 import com.github.andiim.plantscan.app.ui.common.composables.EmailField
 import com.github.andiim.plantscan.app.ui.common.composables.PasswordField
+import com.github.andiim.plantscan.app.ui.common.composables.RepeatPasswordField
 import com.github.andiim.plantscan.app.ui.common.extensions.basicButton
 import com.github.andiim.plantscan.app.ui.common.extensions.fieldModifier
-import com.github.andiim.plantscan.app.ui.common.extensions.textButton
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import com.github.andiim.plantscan.app.R.string as AppString
 
 @Composable
-fun LoginRoute(
+fun AuthRoute(
     openWeb: (String) -> Unit,
-    openAndPopUp: (String, String) -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
+    navigateFromLogin: () -> Unit,
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
-    val loginState by viewModel.state.collectAsState()
+    val loginState: AuthUiState by viewModel.state.collectAsState()
 
-    LoginScreen(
-        email = loginState.email,
-        password = loginState.password,
+    AuthScreen(
+        uiState = loginState,
         openWeb = openWeb,
-        openAndPopUp = openAndPopUp,
+        navigateFromLogin = navigateFromLogin,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
+        onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
         onSignInClick = viewModel::onSignInClick,
+        onSignUpClick = viewModel::onSignUpClick,
         onForgotPasswordClick = viewModel::onForgotPasswordClick
     )
 }
 
 @Composable
-fun LoginScreen(
-    email: String = "",
-    password: String = "",
+fun AuthScreen(
+    uiState: AuthUiState,
     openWeb: (String) -> Unit = {},
-    openAndPopUp: (String, String) -> Unit,
+    navigateFromLogin: () -> Unit,
     onEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
+    onRepeatPasswordChange: (String) -> Unit,
     onForgotPasswordClick: () -> Unit = {},
-    onSignInClick: ((String, String) -> Unit) -> Unit = {}
+    onSignInClick: (() -> Unit) -> Unit = {},
+    onSignUpClick: (() -> Unit) -> Unit = {}
 ) {
+    var isSignup by remember { mutableStateOf(false) }
+
+    val animatedResource: Int by animateIntAsState(
+        if (isSignup) R.string.label_create_account else R.string.label_sign_in,
+        label = "String Resources for Login"
+    )
+
     Box(
         modifier = Modifier
             .padding(24.dp)
@@ -87,37 +101,47 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             EmailField(
-                email,
-                onEmailChange,
-                Modifier
+                value = uiState.email,
+                onNewValue = onEmailChange,
+                modifier = Modifier
                     .fieldModifier()
                     .semantics(true) { contentDescription = "Email Field" })
             PasswordField(
-                password,
-                onPasswordChange,
-                Modifier
+                value = uiState.password,
+                onNewValue = onPasswordChange,
+                modifier = Modifier
                     .fieldModifier()
                     .semantics(true) { contentDescription = "Password Field" })
 
+            AnimatedVisibility(visible = !isSignup) {
+                ForgotPasswordButton(onClick = onForgotPasswordClick)
+            }
+
+            AnimatedVisibility(visible = isSignup) {
+                RepeatPasswordField(
+                    value = uiState.repeatPassword,
+                    onNewValue = onRepeatPasswordChange,
+                    modifier = Modifier
+                        .fieldModifier()
+                        .semantics(true) {
+                            contentDescription = "Repeat Password Field"
+                        })
+            }
+
             BasicButton(
-                R.string.label_sign_in,
-                Modifier
+                text = animatedResource,
+                modifier = Modifier
                     .basicButton()
                     .semantics(true) { contentDescription = "Sign In Button" },
-                action = { onSignInClick(openAndPopUp) })
-
-            BasicTextButton(
-                R.string.hint_forgot_password,
-                Modifier
-                    .textButton()
-                    .semantics(true) {
-                        contentDescription = "Forgot Password Button"
-                    },
-                action = onForgotPasswordClick
+                action = {
+                    if (!isSignup) onSignInClick(navigateFromLogin)
+                    else onSignUpClick(navigateFromLogin)
+                },
             )
+
+            ChangerButton(isSignUp = isSignup, onClick = { isSignup = !isSignup })
         }
         TermsAndPrivacyStatementText(
-            annotatedText = generateAnnotatedText(),
             openWeb = openWeb,
             modifier =
             Modifier
@@ -128,9 +152,59 @@ fun LoginScreen(
     }
 }
 
+
 @Composable
-private fun generateAnnotatedText(): AnnotatedString {
-    return buildAnnotatedString {
+private fun ChangerButton(isSignUp: Boolean, onClick: () -> Unit) {
+    val context = LocalContext.current
+
+    val annotatedText = buildAnnotatedString {
+        withStyle(style = SpanStyle()) {
+            append(context.getString(if (isSignUp) R.string.have_account_question_label else R.string.no_account_question_label))
+        }
+        append(" ")
+        withStyle(
+            style = SpanStyle(
+                color = (MaterialTheme.colorScheme).primary,
+                fontWeight = FontWeight.Bold
+            ),
+        ) {
+            append(context.getString(if (isSignUp) R.string.label_sign_in else R.string.sign_up))
+        }
+    }
+
+    ClickableText(
+        text = annotatedText,
+        onClick = { onClick() },
+        )
+}
+
+
+@Composable
+private fun ForgotPasswordButton(onClick: () -> Unit) {
+    val context = LocalContext.current
+
+    val annotatedText = buildAnnotatedString {
+        withStyle(style = ParagraphStyle(textAlign = TextAlign.End)) {
+            append(context.getString(AppString.login_forgot_password_label))
+        }
+    }
+
+    ClickableText(
+        text = annotatedText,
+        onClick = { onClick() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
+
+        )
+}
+
+@Composable
+private fun TermsAndPrivacyStatementText(
+    modifier: Modifier = Modifier,
+    openWeb: (String) -> Unit,
+) {
+    val annotatedText = buildAnnotatedString {
         withStyle(style = SpanStyle()) { append(stringResource(AppString.terms_label)) }
         pushStringAnnotation(tag = "URL_A", annotation = "support-orchid.web.app/terms.html")
         withStyle(
@@ -150,14 +224,7 @@ private fun generateAnnotatedText(): AnnotatedString {
         }
         pop()
     }
-}
 
-@Composable
-private fun TermsAndPrivacyStatementText(
-    annotatedText: AnnotatedString,
-    modifier: Modifier = Modifier,
-    openWeb: (String) -> Unit,
-) {
     ClickableText(
         text = annotatedText,
         modifier = modifier,
@@ -179,5 +246,18 @@ private fun TermsAndPrivacyStatementText(
 @Preview
 @Composable
 private fun Preview_LoginContent() {
-    PlantScanTheme { Surface { LoginScreen(openAndPopUp = { _, _ -> }) } }
+    PlantScanTheme {
+        Surface {
+            AuthScreen(
+                uiState = AuthUiState(),
+                openWeb = {},
+                navigateFromLogin = {},
+                onEmailChange = {},
+                onPasswordChange = {},
+                onRepeatPasswordChange = {},
+                onSignInClick = {},
+                onForgotPasswordClick = {}
+            )
+        }
+    }
 }
