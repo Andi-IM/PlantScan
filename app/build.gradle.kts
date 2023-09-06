@@ -103,7 +103,6 @@ dependencies {
     implementation(libs.constraintlayout)
 
     // Compose
-    // implementation(platform(libs.compose.bom))
     api(libs.bundles.compose)
     implementation(libs.bundles.lifecycle)
     implementation(libs.metrics.performance)
@@ -118,9 +117,10 @@ dependencies {
     implementation(libs.bundles.navigation)
 
     // Firebase
-    // implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
     implementation(libs.play.services.auth)
+    implementation(libs.integrity)
+    androidTestImplementation("com.google.firebase:firebase-appcheck-debug-testing")
 
     // compat
     implementation(libs.androidx.appcompat)
