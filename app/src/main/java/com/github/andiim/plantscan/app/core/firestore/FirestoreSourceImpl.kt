@@ -30,8 +30,8 @@ class FirestoreSourceImpl @Inject constructor(private val db: FirebaseFirestore)
             db.collection(DETECT_COLLECTION).add(detection).await().id
         }
 
-    override suspend fun getDetectionsList(): List<DetectionHistoryDocument> =
-        querySnapshotHandling(db.collection(DETECT_COLLECTION))
+    override suspend fun getDetectionsList(userId: String): List<DetectionHistoryDocument> =
+        querySnapshotHandling(db.collection(DETECT_COLLECTION).whereEqualTo(USER_ID_FIELD, userId))
 
 
     private suspend inline fun <reified T : Any> querySnapshotHandling(
@@ -50,11 +50,6 @@ class FirestoreSourceImpl @Inject constructor(private val db: FirebaseFirestore)
     ): List<T> {
         try {
             val snapshot = reference.get().await()
-
-            snapshot.documents.forEach {
-                Timber.d("Data=${it.data?.keys}")
-            }
-
             return snapshot.toObjects()
         } catch (e: FirebaseFirestoreException) {
             throw Exception(e.toString())
@@ -76,5 +71,6 @@ class FirestoreSourceImpl @Inject constructor(private val db: FirebaseFirestore)
         private const val PLANT_COLLECTION = "plants"
         private const val SAVE_DETECT_TRACE = "saveTask"
         private const val DETECT_COLLECTION = "detections"
+        private const val USER_ID_FIELD = "userId"
     }
 }

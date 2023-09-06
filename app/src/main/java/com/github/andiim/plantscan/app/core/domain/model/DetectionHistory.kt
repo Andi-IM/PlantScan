@@ -6,5 +6,6 @@ data class DetectionHistory(
     val id: String,
     val timestamp: Instant,
     val plantRef: String,
+    val userId: String,
     val accuracy: Float
 )

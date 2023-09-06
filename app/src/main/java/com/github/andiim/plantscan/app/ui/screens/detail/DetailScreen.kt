@@ -57,6 +57,7 @@ import com.github.andiim.plantscan.app.R
 import com.github.andiim.plantscan.app.core.domain.model.Image
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
+import com.github.andiim.plantscan.app.ui.TrackScreenViewEvent
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import com.github.andiim.plantscan.app.utils.PlantPreviewParameterProvider
 
@@ -68,6 +69,7 @@ fun DetailRoute(
 ) {
     val detailUiState: DetailUiState by viewModel.detailUiState.collectAsState()
 
+    TrackScreenViewEvent(screenName = "Plant: ${viewModel.plantId}")
     DetailScreen(
         detailUiState = detailUiState,
         onBackClick = popUpScreen,
@@ -95,6 +97,7 @@ internal fun DetailScreen(
                 DetailUiState.Error -> {
 
                 }
+
                 DetailUiState.Loading -> item {
                     CircularProgressIndicator()
                 }

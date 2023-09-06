@@ -35,7 +35,7 @@ class FakeRemoteDataSource @Inject constructor(
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun getDetectionsList(): List<DetectionHistoryDocument> =
+    override suspend fun getDetectionsList(userId: String): List<DetectionHistoryDocument> =
         withContext(ioDispatcher) {
             assets.open(DETECT_ASSET).use(networkJson::decodeFromStream)
         }

@@ -22,6 +22,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.andiim.plantscan.app.R
+import com.github.andiim.plantscan.app.ui.TrackScreenViewEvent
 import com.github.andiim.plantscan.app.ui.common.composables.BasicButton
 import com.github.andiim.plantscan.app.ui.common.extensions.basicButton
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
@@ -30,12 +31,12 @@ import kotlinx.coroutines.delay
 private const val SPLASH_TIMEOUT = 1000L
 
 @Composable
-fun SplashScreen(
+fun SplashRoute(
     modifier: Modifier = Modifier,
     openScreen: () -> Unit,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
-    SplashContent(
+    SplashScreen(
         modifier = modifier,
         openScreen = openScreen,
         onAppStart = viewModel::onAppStart,
@@ -44,7 +45,7 @@ fun SplashScreen(
 }
 
 @Composable
-fun SplashContent(
+fun SplashScreen(
     modifier: Modifier = Modifier,
     openScreen: () -> Unit = { },
     onAppStart: (() -> Unit) -> Unit = {},
@@ -83,10 +84,12 @@ fun SplashContent(
         delay(SPLASH_TIMEOUT)
         onAppStart(openScreen)
     }
+
+    TrackScreenViewEvent(screenName = "Splash")
 }
 
 @Preview
 @Composable
 private fun Preview_PlantListContent() {
-    PlantScanTheme { Surface { SplashContent() } }
+    PlantScanTheme { Surface { SplashScreen() } }
 }

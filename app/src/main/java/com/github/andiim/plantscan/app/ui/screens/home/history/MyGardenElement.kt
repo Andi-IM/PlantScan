@@ -1,4 +1,4 @@
-package com.github.andiim.plantscan.app.ui.screens.home.myGarden
+package com.github.andiim.plantscan.app.ui.screens.home.history
 
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable

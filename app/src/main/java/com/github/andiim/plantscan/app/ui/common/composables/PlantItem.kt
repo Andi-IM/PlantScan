@@ -31,17 +31,31 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.github.andiim.plantscan.app.core.analytics.LocalAnalyticsHelper
 import com.github.andiim.plantscan.app.core.domain.model.Plant
+import com.github.andiim.plantscan.app.ui.logPlantResourceOpened
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import com.github.andiim.plantscan.app.utils.PlantPreviewParameterProvider
 import com.github.andiim.plantscan.app.R.drawable as ImageDrawable
 
 @Composable
-fun PlantItem(plant: Plant, onClick: (String) -> Unit = {}) {
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .height(96.dp)
-        .clickable { onClick.invoke(plant.id) }) {
+fun PlantItem(
+    plant: Plant,
+    onClick: (String) -> Unit = {},
+) {
+    val analyticsHelper = LocalAnalyticsHelper.current
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(96.dp)
+            .clickable {
+                analyticsHelper.logPlantResourceOpened(
+                    plantResourceId = plant.id
+                )
+                onClick(plant.id)
+            },
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

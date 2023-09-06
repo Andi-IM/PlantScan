@@ -4,26 +4,26 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 sealed class Direction(val route: String) {
-    object MainNav : Direction("main_navigation")
-    object AccountNav : Direction("account_navigation")
-    object Splash : Direction("splash")
-    object FindPlant : Direction("find")
-    object MyGarden : Direction("my_garden")
-    object Settings : Direction("settings")
-    object Login : Direction("login")
-    object SignUp : Direction("signup")
-    object List : Direction("orchid")
-    object Web : Direction("web_screen/{url}") {
+    data object MainNav : Direction("main_navigation")
+    data object AccountNav : Direction("account_navigation")
+    data object Splash : Direction("splash")
+    data object FindPlant : Direction("find")
+    data object MyGarden : Direction("my_garden")
+    data object Settings : Direction("settings")
+    data object Login : Direction("login")
+    data object SignUp : Direction("signup")
+    data object List : Direction("plant")
+    data object Web : Direction("web_screen/{url}") {
         fun setUrl(url: String) = "web_screen/$url"
     }
 
-    object Detail : Direction("orchid/{orchid_id}") {
-        fun createRoute(id: String) = "orchid/$id"
+    data object Detail : Direction("plant/{plant_id}") {
+        fun createRoute(id: String) = "plant/$id"
     }
 
-    object Camera: Direction("camera")
+    data object Camera: Direction("camera")
 
-    object Detect : Direction("camera/{imageUri}") {
+    data object Detect : Direction("camera/{imageUri}") {
         fun createRoute(imageUri: String) : String {
             val encoder = URLEncoder.encode(imageUri, StandardCharsets.UTF_8.toString())
             return "camera/$encoder"

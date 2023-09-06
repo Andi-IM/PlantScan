@@ -6,6 +6,6 @@ import com.github.andiim.plantscan.app.ui.navigation.Direction
 
 fun NavGraphBuilder.splashScreen(navigateAndPopUp: () -> Unit) {
     composable(route = Direction.Splash.route) {
-        SplashScreen(openScreen = navigateAndPopUp)
+        SplashRoute(openScreen = navigateAndPopUp)
     }
 }

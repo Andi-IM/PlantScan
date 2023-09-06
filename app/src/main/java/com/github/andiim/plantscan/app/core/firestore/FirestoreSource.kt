@@ -10,8 +10,7 @@ interface FirestoreSource {
     ): List<PlantResponse>
 
     suspend fun getPlantById(id: String): PlantResponse
-
     suspend fun recordDetection(detection: DetectionHistoryDocument): String
-    suspend fun getDetectionsList(): List<DetectionHistoryDocument>
+    suspend fun getDetectionsList(userId: String): List<DetectionHistoryDocument>
 
 }

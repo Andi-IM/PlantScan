@@ -2,24 +2,26 @@ package com.github.andiim.plantscan.app.core.data
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
+import com.github.andiim.plantscan.app.core.auth.AccountService
 import com.github.andiim.plantscan.app.core.data.mediator.PlantPagingSource
-import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
 import com.github.andiim.plantscan.app.core.data.source.network.NetworkDataSource
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
 import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.repository.PlantRepository
 import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
+import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 @Singleton
 class PlantRepositoryImpl
 @Inject
 constructor(
+    private val auth: AccountService,
     private val network: NetworkDataSource,
     private val remote: FirestoreSource,
 ) : PlantRepository {
@@ -45,7 +47,8 @@ constructor(
     }
 
     override fun recordDetection(detection: DetectionHistory): Flow<String> = flow {
-        val result = remote.recordDetection(DetectionHistoryDocument.fromModel(detection))
+        val detectionWithUserId = detection.copy(userId = auth.currentUserId)
+        val result = remote.recordDetection(DetectionHistoryDocument.fromModel(detectionWithUserId))
         emit(result)
     }
 
@@ -60,7 +63,8 @@ constructor(
 
     override fun getDetectionsList(): Flow<Resource<List<DetectionHistory>>> = flow {
         try {
-            val response = remote.getDetectionsList()
+            val currentUserId = auth.currentUserId
+            val response = remote.getDetectionsList(currentUserId)
             emit(Resource.Success(response.map { it.toModel() }))
         } catch (e: Exception) {
             emit(Resource.Error(e.message.orEmpty()))

@@ -51,7 +51,7 @@ fun PlantListContent(
         },
         title = AppText.plants_label
     )
-    PlantPagedList(plants = plants, onItemClick = onItemClick)
+    PlantPagedList(plants = plants, onPlantClick = onItemClick)
 }
 
 @Preview

@@ -1,33 +1,33 @@
 package com.github.andiim.plantscan.app.ui.screens.detail
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.andiim.plantscan.app.PlantScanViewModel
 import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel
 @Inject
 constructor(
     savedStateHandle: SavedStateHandle,
-    private val useCase: PlantUseCase,
-    logService: LogService,
-) :
-    PlantScanViewModel(logService) {
+    useCase: PlantUseCase
+) : ViewModel() {
+
+    private val detailArgs: DetailArgs = DetailArgs(savedStateHandle)
+    val plantId = detailArgs.plantId
 
     val detailUiState: StateFlow<DetailUiState> =
         detailUiState(
-            plantId = "",
+            plantId = plantId,
             useCase = useCase
         ).stateIn(
             scope = viewModelScope,

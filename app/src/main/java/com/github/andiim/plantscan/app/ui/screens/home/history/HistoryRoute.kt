@@ -1,4 +1,4 @@
-package com.github.andiim.plantscan.app.ui.screens.home.myGarden
+package com.github.andiim.plantscan.app.ui.screens.home.history
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder

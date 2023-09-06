@@ -31,6 +31,7 @@ import com.github.andiim.plantscan.app.ui.navigation.NavigationObject
 fun BottomBar(
     navigate: (String) -> Unit,
     currentDestination: NavDestination?,
+    modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
 
@@ -55,7 +56,7 @@ fun BottomBar(
     AnimatedVisibility(visible = visible) {
         NavigationBar(
             modifier =
-            Modifier.animateEnterExit(
+            modifier.animateEnterExit(
                 enter = enterAnimation,
                 exit = exitAnimation
             )

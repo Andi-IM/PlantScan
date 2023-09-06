@@ -9,6 +9,7 @@ import kotlinx.datetime.Instant
 data class DetectionHistoryDocument(
     @DocumentId val id: String = "",
     @ServerTimestamp val timestamp: Instant = Clock.System.now(),
+    val userId: String = "",
     val plantRef: String = "",
     val accuracy: Float = 0f
 ) {
@@ -16,6 +17,7 @@ data class DetectionHistoryDocument(
         id = this.id,
         timestamp = this.timestamp,
         plantRef = this.plantRef,
+        userId = this.userId,
         accuracy = this.accuracy
     )
 
@@ -24,6 +26,7 @@ data class DetectionHistoryDocument(
             DetectionHistoryDocument(
                 id = detection.id,
                 timestamp = detection.timestamp,
+                userId = detection.userId,
                 plantRef = detection.plantRef,
                 accuracy = detection.accuracy,
             )

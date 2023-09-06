@@ -2,6 +2,7 @@ package com.github.andiim.plantscan.app.ui.screens.home.findPlant
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -39,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.github.andiim.plantscan.app.core.domain.model.Plant
+import com.github.andiim.plantscan.app.ui.TrackScreenViewEvent
 import com.github.andiim.plantscan.app.ui.common.composables.PlantPagedList
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import kotlinx.coroutines.flow.Flow
@@ -53,20 +55,20 @@ fun FindPlantRoute(
     toPlantType: () -> Unit,
     viewModel: FindPlantViewModel = hiltViewModel()
 ) {
-  val query by viewModel.query.collectAsState()
+    val query by viewModel.query.collectAsState()
 
-  FindPlantScreen(
-      modifier = modifier,
-      query = query,
-      data = viewModel.items,
-      onQueryChange = viewModel::onQueryChange,
-      onSearch = viewModel::onSearch,
-      toDetail = onDetails,
-      toDetect = toDetect,
-      toPlantType = toPlantType)
+    FindPlantScreen(
+        modifier = modifier,
+        query = query,
+        data = viewModel.items,
+        onQueryChange = viewModel::onQueryChange,
+        onSearch = viewModel::onSearch,
+        toDetail = onDetails,
+        toDetect = toDetect,
+        toPlantType = toPlantType
+    )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FindPlantScreen(
     modifier: Modifier = Modifier,
@@ -78,79 +80,117 @@ fun FindPlantScreen(
     toDetail: (String) -> Unit = {},
     toPlantType: () -> Unit = {},
 ) {
-  var active by rememberSaveable { mutableStateOf(false) }
-  val plants = data.collectAsLazyPagingItems()
-  Box(
-      contentAlignment = Alignment.Center,
-      modifier = modifier.fillMaxSize().testTag("Find Plant Content")) {
+    val plants = data.collectAsLazyPagingItems()
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .fillMaxSize()
+            .testTag("Find Plant Content")
+    ) {
         DetectButton(
             onClick = toDetect,
             modifier = Modifier.semantics(false) { contentDescription = "Detect Button" })
 
         Button(
             modifier =
-                Modifier.align(Alignment.BottomCenter).semantics(true) {
-                  contentDescription = "Manual Find Button"
+            Modifier
+                .align(Alignment.BottomCenter)
+                .semantics(true) {
+                    contentDescription = "Manual Find Button"
                 },
             onClick = toPlantType,
         ) {
-          Text(text = stringResource(AppText.search_find_by_type_button))
+            Text(text = stringResource(AppText.search_find_by_type_button))
         }
-
-        SearchBar(
-            modifier = Modifier.align(Alignment.TopCenter).testTag("Search Bar"),
+        /// HERE XXX
+        PsSearchBar(
             query = query,
             onQueryChange = onQueryChange,
-            onSearch = {
-              active = false
-              onSearch(it)
-            },
-            active = active,
-            onActiveChange = { active = it },
-            placeholder = { Text(stringResource(AppText.search_placeholder)) },
-            leadingIcon = {
-              Icon(
-                  Icons.Default.Search,
-                  contentDescription = stringResource(AppText.search_icon_description))
-            },
-            trailingIcon = {
-              if (active)
-                  IconButton(onClick = { active = false }) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = stringResource(AppText.search_icon_close_description))
-                  }
-            }) {
-              PlantPagedList(plants = plants, onItemClick = toDetail)
-            }
-      }
+            onSearch = onSearch,
+            modifier = modifier
+                .align(Alignment.TopCenter)
+                .testTag("Search Bar")
+        ) {
+            PlantPagedList(plants = plants, onPlantClick = toDetail)
+        }
+    }
+    TrackScreenViewEvent(screenName = "Home")
 }
 
 @Composable
 fun DetectButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-  IconButton(modifier = modifier.size(100.dp), onClick = onClick) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier =
+    IconButton(modifier = modifier.size(100.dp), onClick = onClick) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier =
             modifier
                 .fillMaxSize()
                 .background(
                     brush =
-                        Brush.radialGradient(
-                            colors = listOf(Color(0xFF789885), Color(0xFF7D8A82)),
-                            center = Offset(0.5f, 0.5f),
-                            radius = 0.2f))) {
-          Icon(
-              Icons.Default.CameraAlt,
-              tint = Color.White,
-              modifier = modifier.fillMaxSize().padding(30.dp).shadow(8.dp, shape = CircleShape),
-              contentDescription = stringResource(AppText.search_using_camera_icon_description))
+                    Brush.radialGradient(
+                        colors = listOf(Color(0xFF789885), Color(0xFF7D8A82)),
+                        center = Offset(0.5f, 0.5f),
+                        radius = 0.2f
+                    )
+                )
+        ) {
+            Icon(
+                Icons.Default.CameraAlt,
+                tint = Color.White,
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(30.dp)
+                    .shadow(8.dp, shape = CircleShape),
+                contentDescription = stringResource(AppText.search_using_camera_icon_description)
+            )
         }
-  }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PsSearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearch: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable (ColumnScope.() -> Unit)
+) {
+    var active by rememberSaveable { mutableStateOf(false) }
+
+    SearchBar(
+        modifier = modifier,
+        query = query,
+        onQueryChange = onQueryChange,
+        onSearch = {
+            active = false
+            onSearch(it)
+        },
+        active = active,
+        onActiveChange = { active = it },
+        placeholder = { Text(stringResource(AppText.search_placeholder)) },
+        leadingIcon = {
+            Icon(
+                Icons.Default.Search,
+                contentDescription = stringResource(AppText.search_icon_description)
+            )
+        },
+        trailingIcon = {
+            if (active)
+                IconButton(onClick = { active = false }) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = stringResource(AppText.search_icon_close_description)
+                    )
+                }
+        },
+        content = content
+    )
 }
 
 @Preview
 @Composable
 private fun Preview_FindPlantContent() {
-  PlantScanTheme { Surface { FindPlantScreen() } }
+    PlantScanTheme { Surface { FindPlantScreen() } }
 }
