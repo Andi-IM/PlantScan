@@ -92,7 +92,9 @@ internal fun DetailScreen(
                 Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
             }
             when (detailUiState) {
-                DetailUiState.Error -> TODO()
+                DetailUiState.Error -> {
+
+                }
                 DetailUiState.Loading -> item {
                     CircularProgressIndicator()
                 }

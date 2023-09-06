@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Plant Scan</string>
 
+    <string name="not_connected">⚠️ You aren’t connected to the internet</string>
+
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="repeat_password">Repeat password</string>

@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.github.andiim.plantscan.app.core.data.util.NetworkMonitor
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
+import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarMessage.Companion.getDuration
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarMessage.Companion.toMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,7 +30,7 @@ class PlantScanAppState(
         coroutineScope.launch {
             snackbarManager.snackbarMessages.filterNotNull().collect { snackbarMessage ->
                 val text = snackbarMessage.toMessage(context.resources)
-                snackbarHostState.showSnackbar(text)
+                snackbarHostState.showSnackbar(text, duration = snackbarMessage.getDuration())
             }
         }
     }

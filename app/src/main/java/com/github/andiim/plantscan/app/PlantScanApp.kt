@@ -9,17 +9,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -49,6 +53,18 @@ fun PlantScanApp(
             RequestNotificationPermissionDialog()
         }
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+
+            val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+
+            LaunchedEffect(isOffline) {
+                if (isOffline) {
+                    SnackbarManager.showMessage(
+                        R.string.not_connected,
+                        duration = SnackbarDuration.Indefinite
+                    )
+                }
+            }
+
             Scaffold(
                 snackbarHost = {
                     SnackbarHost(
@@ -61,7 +77,12 @@ fun PlantScanApp(
                             )
                         })
                 },
-                bottomBar = { BottomBar(state = appState) }
+                bottomBar = {
+                    BottomBar(
+                        navigate = appState::clearAndNavigate,
+                        currentDestination = appState.currentDestination,
+                    )
+                }
             ) { innerPadding ->
                 SetupRootNavGraph(appState, modifier = Modifier.padding(innerPadding))
             }
