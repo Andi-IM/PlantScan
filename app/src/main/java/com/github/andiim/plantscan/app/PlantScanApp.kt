@@ -20,8 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.github.andiim.plantscan.app.core.data.util.NetworkMonitor
+import com.github.andiim.plantscan.app.core.ui.TrackDisposableJank
 import com.github.andiim.plantscan.app.ui.common.composables.BottomBar
 import com.github.andiim.plantscan.app.ui.common.composables.PermissionDialog
 import com.github.andiim.plantscan.app.ui.common.composables.RationaleDialog
@@ -35,57 +38,100 @@ import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun PlantScanApp(appState: PlantScanAppState = rememberAppState()) {
-  PlantScanTheme {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      RequestNotificationPermissionDialog()
+fun PlantScanApp(
+    networkMonitor: NetworkMonitor,
+    appState: PlantScanAppState = rememberAppState(
+        networkMonitor = networkMonitor,
+    )
+) {
+    PlantScanTheme {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            RequestNotificationPermissionDialog()
+        }
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+            Scaffold(
+                snackbarHost = {
+                    SnackbarHost(
+                        hostState = appState.snackbarHostState,
+                        modifier = Modifier.padding(8.dp),
+                        snackbar = { snackbarData ->
+                            Snackbar(
+                                snackbarData,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
+                            )
+                        })
+                },
+                bottomBar = { BottomBar(state = appState) }
+            ) { innerPadding ->
+                SetupRootNavGraph(appState, modifier = Modifier.padding(innerPadding))
+            }
+        }
     }
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-      Scaffold(
-          snackbarHost = {
-            SnackbarHost(
-                hostState = appState.snackbarHostState,
-                modifier = Modifier.padding(8.dp),
-                snackbar = { snackbarData ->
-                  Snackbar(snackbarData, contentColor = MaterialTheme.colorScheme.onPrimary)
-                })
-          },
-          bottomBar = { BottomBar(state = appState) }
-      ) { innerPadding ->
-            SetupRootNavGraph(appState, modifier = Modifier.padding(innerPadding))
-          }
-    }
-  }
 }
 
 @Composable
 @ReadOnlyComposable
 fun getContext(): Context {
-  LocalConfiguration.current
-  return LocalContext.current
+    LocalConfiguration.current
+    return LocalContext.current
 }
 
 @Composable
 fun rememberAppState(
+    networkMonitor: NetworkMonitor,
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
     navController: NavHostController = rememberNavController(),
     snackbarManager: SnackbarManager = SnackbarManager,
     getContext: Context = getContext(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
-) =
-    remember(snackbarHostState, navController, snackbarManager, getContext, coroutineScope) {
-      PlantScanAppState(
-          snackbarHostState, navController, snackbarManager, getContext, coroutineScope)
+): PlantScanAppState {
+    NavigationTrackingSideEffect(navController)
+    return remember(
+        navController,
+        snackbarHostState,
+        snackbarManager,
+        getContext,
+        networkMonitor,
+        coroutineScope,
+    ) {
+        PlantScanAppState(
+            navController,
+            snackbarHostState,
+            snackbarManager,
+            getContext,
+            networkMonitor,
+            coroutineScope,
+        )
     }
+}
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RequestNotificationPermissionDialog() {
-  val permissionState = rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    val permissionState =
+        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
 
-  if (!permissionState.status.isGranted) {
-    if (permissionState.status.shouldShowRationale) RationaleDialog()
-    else PermissionDialog { permissionState.launchPermissionRequest() }
-  }
+    if (!permissionState.status.isGranted) {
+        if (permissionState.status.shouldShowRationale) RationaleDialog()
+        else PermissionDialog { permissionState.launchPermissionRequest() }
+    }
+}
+
+/**
+ * Stores information about navigation events to be used with JankStats
+ */
+@Composable
+private fun NavigationTrackingSideEffect(navController: NavHostController) {
+    TrackDisposableJank(navController) { metricsHolder ->
+        val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+            metricsHolder.state?.putState("Navigation", destination.route.toString())
+        }
+
+        navController.addOnDestinationChangedListener(listener)
+
+        onDispose {
+            navController.removeOnDestinationChangedListener(listener)
+        }
+    }
 }

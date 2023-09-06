@@ -76,6 +76,11 @@ dependencies {
     // GSON
     implementation(libs.gson)
 
+    // Profile Installer
+    implementation(libs.androidx.profileinstaller)
+    // Guava
+    implementation(libs.kotlinx.coroutines.guava)
+
     // Datetime
     implementation(libs.kotlinx.datetime)
 
@@ -101,6 +106,7 @@ dependencies {
     // implementation(platform(libs.compose.bom))
     api(libs.bundles.compose)
     implementation(libs.bundles.lifecycle)
+    implementation(libs.metrics.performance)
     androidTestImplementation(libs.compose.ui.test)
     debugImplementation(libs.bundles.compose.debug)
 
