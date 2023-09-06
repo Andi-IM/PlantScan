@@ -46,7 +46,7 @@ import kotlinx.coroutines.flow.flowOf
 import com.github.andiim.plantscan.app.R.string as AppText
 
 @Composable
-fun FindPlantElement(
+fun FindPlantRoute(
     modifier: Modifier = Modifier,
     onDetails: (String) -> Unit,
     toDetect: () -> Unit,
@@ -55,7 +55,7 @@ fun FindPlantElement(
 ) {
   val query by viewModel.query.collectAsState()
 
-  FindPlantContent(
+  FindPlantScreen(
       modifier = modifier,
       query = query,
       data = viewModel.items,
@@ -68,7 +68,7 @@ fun FindPlantElement(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FindPlantContent(
+fun FindPlantScreen(
     modifier: Modifier = Modifier,
     query: String = "",
     data: Flow<PagingData<Plant>> = flowOf(),
@@ -152,5 +152,5 @@ fun DetectButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun Preview_FindPlantContent() {
-  PlantScanTheme { Surface { FindPlantContent() } }
+  PlantScanTheme { Surface { FindPlantScreen() } }
 }

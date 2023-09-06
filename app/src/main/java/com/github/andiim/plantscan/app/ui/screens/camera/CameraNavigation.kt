@@ -7,6 +7,11 @@ import com.github.andiim.plantscan.app.PlantScanAppState
 import com.github.andiim.plantscan.app.databinding.FragmentContainerBinding
 import com.github.andiim.plantscan.app.ui.navigation.Direction
 
+fun PlantScanAppState.navigateToCamera() {
+    this.navigate(Direction.Camera.route, singleTopLaunch = false)
+}
+
+
 fun NavGraphBuilder.cameraFragment(appState: PlantScanAppState) {
     composable(route = Direction.Camera.route) {
         AndroidViewBinding(FragmentContainerBinding::inflate) {

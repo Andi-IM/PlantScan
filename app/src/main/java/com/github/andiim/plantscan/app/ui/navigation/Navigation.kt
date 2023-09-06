@@ -10,9 +10,11 @@ import com.github.andiim.plantscan.app.PlantScanAppState
 import com.github.andiim.plantscan.app.ui.screens.auth.login.authLoginScreen
 import com.github.andiim.plantscan.app.ui.screens.auth.signUp.authSignUpScreen
 import com.github.andiim.plantscan.app.ui.screens.camera.cameraFragment
+import com.github.andiim.plantscan.app.ui.screens.camera.navigateToCamera
 import com.github.andiim.plantscan.app.ui.screens.detail.detailScreen
 import com.github.andiim.plantscan.app.ui.screens.detail.navigateToDetail
 import com.github.andiim.plantscan.app.ui.screens.detect.detectFragment
+import com.github.andiim.plantscan.app.ui.screens.home.findPlant.gotoMainNavRoute
 import com.github.andiim.plantscan.app.ui.screens.home.findPlant.homeFindPlantElement
 import com.github.andiim.plantscan.app.ui.screens.home.myGarden.homeHistoryElement
 import com.github.andiim.plantscan.app.ui.screens.home.settings.homeSettingsElement
@@ -36,7 +38,11 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
         detailScreen(appState)
 
         navigation(startDestination = Direction.FindPlant.route, route = Direction.MainNav.route) {
-            homeFindPlantElement(routeToDetail = appState::navigateToDetail, appState)
+            homeFindPlantElement(
+                routeToDetail = appState::navigateToDetail,
+                routeToCamera = appState::navigateToCamera,
+                routeToPlant = { /* TODO */ }
+            )
             homeHistoryElement(appState)
             homeSettingsElement(appState)
         }
@@ -49,9 +55,6 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
     }
 }
 
-fun PlantScanAppState.gotoMainNavRoute() {
-    this.navigateAndPopUp(Direction.MainNav.route, Direction.Splash.route)
-}
 
 
 
