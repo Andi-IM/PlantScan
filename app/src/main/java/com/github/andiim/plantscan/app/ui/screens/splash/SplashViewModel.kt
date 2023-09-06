@@ -1,11 +1,11 @@
 package com.github.andiim.plantscan.app.ui.screens.splash
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
 import com.github.andiim.plantscan.app.core.auth.AccountService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.ConfigurationService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
-import com.github.andiim.plantscan.app.ui.navigation.Direction
-import com.github.andiim.plantscan.app.PlantScanViewModel
+import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -15,27 +15,29 @@ class SplashViewModel
 constructor(
     configurationService: ConfigurationService,
     private val accountService: AccountService,
-    logService: LogService
-) : PlantScanViewModel(logService) {
-  val showError = mutableStateOf(false)
+    private val logService: LogService,
+) : ViewModel() {
 
-  init {
-    launchCatching { configurationService.fetchConfiguration() }
-  }
+    val showError = mutableStateOf(false)
 
-  fun onAppStart(openAndPopup: (String, String) -> Unit) {
-    showError.value = false
-    if (accountService.hasUser) openAndPopup(Direction.MainNav.route, Direction.Splash.route)
-    else {
-      launchCatching(snackbar = true) {
-        try {
-          accountService.createAnonymousAccount()
-        } catch (ex: Exception) {
-          showError.value = true
-          throw ex
-        }
-        openAndPopup(Direction.MainNav.route, Direction.Splash.route)
-      }
+    init {
+        launchCatching(logService) { configurationService.fetchConfiguration() }
     }
-  }
+
+    fun onAppStart(openScreen: () -> Unit) {
+        showError.value = false
+        if (accountService.hasUser) openScreen()
+        else {
+            launchCatching(logService = logService, snackbar = true) {
+                try {
+                    accountService.createAnonymousAccount()
+                } catch (ex: Exception) {
+                    showError.value = true
+                    throw ex
+                }
+                openScreen()
+            }
+        }
+    }
 }
+

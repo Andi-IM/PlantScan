@@ -32,57 +32,61 @@ private const val SPLASH_TIMEOUT = 1000L
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier,
-    openAndPopUp: (String, String) -> Unit,
+    openScreen: () -> Unit,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
-  SplashContent(
-      modifier = modifier,
-      openAndPopUp = openAndPopUp,
-      onAppStart = viewModel::onAppStart,
-      isError = viewModel.showError.value)
+    SplashContent(
+        modifier = modifier,
+        openScreen = openScreen,
+        onAppStart = viewModel::onAppStart,
+        isError = viewModel.showError.value
+    )
 }
 
 @Composable
 fun SplashContent(
     modifier: Modifier = Modifier,
-    openAndPopUp: (String, String) -> Unit = { _, _ -> },
-    onAppStart: ((String, String) -> Unit) -> Unit = {},
+    openScreen: () -> Unit = { },
+    onAppStart: (() -> Unit) -> Unit = {},
     isError: Boolean = false
 ) {
-  Column(
-      modifier =
-          modifier
-              .fillMaxWidth()
-              .fillMaxHeight()
-              .background(color = MaterialTheme.colorScheme.background)
-              .semantics(false) {
-                  contentDescription = "Splash Screen Content"
-              }
-              .verticalScroll(rememberScrollState()),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier =
+        modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(color = MaterialTheme.colorScheme.background)
+            .semantics(false) {
+                contentDescription = "Splash Screen Content"
+            }
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
         if (isError) {
-          Text(text = stringResource(R.string.generic_error))
+            Text(text = stringResource(R.string.generic_error))
 
-          BasicButton(
-              text = R.string.try_again,
-              Modifier.basicButton().testTag("Reload Button"),
-              action = { onAppStart(openAndPopUp) })
+            BasicButton(
+                text = R.string.try_again,
+                Modifier
+                    .basicButton()
+                    .testTag("Reload Button"),
+                action = { onAppStart(openScreen) })
         } else {
-          CircularProgressIndicator(
-              modifier = Modifier.testTag("Progress"),
-              color = MaterialTheme.colorScheme.onBackground)
+            CircularProgressIndicator(
+                modifier = Modifier.testTag("Progress"),
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
-      }
+    }
 
-  LaunchedEffect(true) {
-    delay(SPLASH_TIMEOUT)
-    onAppStart(openAndPopUp)
-  }
+    LaunchedEffect(true) {
+        delay(SPLASH_TIMEOUT)
+        onAppStart(openScreen)
+    }
 }
 
 @Preview
 @Composable
 private fun Preview_PlantListContent() {
-  PlantScanTheme { Surface { SplashContent() } }
+    PlantScanTheme { Surface { SplashContent() } }
 }

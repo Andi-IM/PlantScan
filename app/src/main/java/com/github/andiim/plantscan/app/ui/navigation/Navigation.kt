@@ -42,11 +42,15 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
         }
 
         listScreen(appState)
-        splashScreen(navigateAndPopUp = appState::navigateAndPopUp)
+        splashScreen(navigateAndPopUp = appState::gotoMainNavRoute)
 
         cameraFragment(appState)
         detectFragment(appState)
     }
+}
+
+fun PlantScanAppState.gotoMainNavRoute() {
+    this.navigateAndPopUp(Direction.MainNav.route, Direction.Splash.route)
 }
 
 
