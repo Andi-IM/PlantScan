@@ -1,7 +1,7 @@
 package com.github.andiim.plantscan.app.ui.screens.splash
 
 import androidx.compose.runtime.mutableStateOf
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.AccountService
+import com.github.andiim.plantscan.app.core.auth.AccountService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.ConfigurationService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import com.github.andiim.plantscan.app.ui.navigation.Direction

@@ -1,9 +1,8 @@
-package com.github.andiim.plantscan.app.core.data.source.firebase
+package com.github.andiim.plantscan.app.core.firestore
 
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.DetectionHistoryDocument
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantResponse
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.FirestoreSource
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.trace
+import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
+import com.github.andiim.plantscan.app.core.firestore.model.PlantResponse
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -11,8 +10,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
-import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
+import javax.inject.Inject
 
 class FirestoreSourceImpl @Inject constructor(private val db: FirebaseFirestore) :
     FirestoreSource {
@@ -50,6 +50,11 @@ class FirestoreSourceImpl @Inject constructor(private val db: FirebaseFirestore)
     ): List<T> {
         try {
             val snapshot = reference.get().await()
+
+            snapshot.documents.forEach {
+                Timber.d("Data=${it.data?.keys}")
+            }
+
             return snapshot.toObjects()
         } catch (e: FirebaseFirestoreException) {
             throw Exception(e.toString())

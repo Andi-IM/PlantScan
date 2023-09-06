@@ -3,7 +3,7 @@ package com.github.andiim.plantscan.app.core.data.mediator
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.github.andiim.plantscan.app.core.domain.model.Plant
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.FirestoreSource
+import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
 
 class PlantPagingSource(private val remote: FirestoreSource, private val query: String = "") :
     PagingSource<Int, Plant>() {

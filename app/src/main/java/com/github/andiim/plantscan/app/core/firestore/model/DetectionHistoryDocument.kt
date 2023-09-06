@@ -1,4 +1,4 @@
-package com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document
+package com.github.andiim.plantscan.app.core.firestore.model
 
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
 import com.google.firebase.firestore.DocumentId

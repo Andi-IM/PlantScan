@@ -1,4 +1,4 @@
-package com.github.andiim.plantscan.app.core.domain.usecase.firebase_services
+package com.github.andiim.plantscan.app.core.auth
 
 import com.github.andiim.plantscan.app.core.domain.model.User
 import kotlinx.coroutines.flow.Flow

@@ -1,11 +1,11 @@
 package com.github.andiim.plantscan.app.utils
 
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.DetectionHistoryDocument
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantResponse
+import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
+import com.github.andiim.plantscan.app.core.firestore.model.PlantResponse
 import com.github.andiim.plantscan.app.core.data.source.network.Dispatcher
 import com.github.andiim.plantscan.app.core.data.source.network.PsDispatchers.IO
 import com.github.andiim.plantscan.app.core.data.source.network.fake.FakeAssetManager
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.FirestoreSource
+import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

@@ -1,10 +1,10 @@
 package com.github.andiim.plantscan.app.core.di
 
-import com.github.andiim.plantscan.app.core.data.source.firebase.AccountServiceImpl
+import com.github.andiim.plantscan.app.core.auth.AccountServiceImpl
 import com.github.andiim.plantscan.app.core.data.source.firebase.ConfigurationServiceImpl
 import com.github.andiim.plantscan.app.core.data.source.firebase.LogServiceImpl
 import com.github.andiim.plantscan.app.core.data.source.firebase.MLServiceImpl
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.AccountService
+import com.github.andiim.plantscan.app.core.auth.AccountService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.ConfigurationService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.MLService

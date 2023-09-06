@@ -1,4 +1,4 @@
-package com.github.andiim.plantscan.app.core.data.source.firebase.firestore
+package com.github.andiim.plantscan.app.core.firestore
 
 sealed class DbResponse<out R> {
   data class Success<out T>(val data: T) : DbResponse<T>()

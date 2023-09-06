@@ -1,12 +1,12 @@
 package com.github.andiim.plantscan.app.di
 
 import com.github.andiim.plantscan.app.core.data.PlantRepositoryImpl
-import com.github.andiim.plantscan.app.core.data.source.firebase.FirestoreSourceImpl
+import com.github.andiim.plantscan.app.core.firestore.FirestoreSourceImpl
 import com.github.andiim.plantscan.app.core.data.util.ConnectivityManagerNetworkMonitor
 import com.github.andiim.plantscan.app.core.data.util.NetworkMonitor
 import com.github.andiim.plantscan.app.core.domain.repository.CameraRepository
 import com.github.andiim.plantscan.app.core.domain.repository.PlantRepository
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.FirestoreSource
+import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
 import com.github.andiim.plantscan.app.ui.screens.camera.repository.CameraRepositoryImpl
 import dagger.Binds
 import dagger.Module

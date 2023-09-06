@@ -1,6 +1,6 @@
 package com.github.andiim.plantscan.app.ui.screens.home.settings
 
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.AccountService
+import com.github.andiim.plantscan.app.core.auth.AccountService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import com.github.andiim.plantscan.app.ui.navigation.Direction
 import com.github.andiim.plantscan.app.PlantScanViewModel

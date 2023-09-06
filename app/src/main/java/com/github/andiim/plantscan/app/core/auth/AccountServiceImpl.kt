@@ -1,7 +1,6 @@
-package com.github.andiim.plantscan.app.core.data.source.firebase
+package com.github.andiim.plantscan.app.core.auth
 
 import com.github.andiim.plantscan.app.core.domain.model.User
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.AccountService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.trace
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth

@@ -1,4 +1,4 @@
-package com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document
+package com.github.andiim.plantscan.app.core.firestore.model
 
 data class PlantDetailResponse(
     val classification: String = "",

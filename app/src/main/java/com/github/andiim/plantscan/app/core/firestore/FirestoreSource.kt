@@ -1,7 +1,7 @@
-package com.github.andiim.plantscan.app.core.domain.usecase.firebase_services
+package com.github.andiim.plantscan.app.core.firestore
 
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.DetectionHistoryDocument
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantResponse
+import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
+import com.github.andiim.plantscan.app.core.firestore.model.PlantResponse
 
 interface FirestoreSource {
     suspend fun getPlants(

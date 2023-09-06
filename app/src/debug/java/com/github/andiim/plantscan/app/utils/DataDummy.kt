@@ -1,16 +1,15 @@
 package com.github.andiim.plantscan.app.utils
 
 import androidx.paging.PagingData
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.ClassResponse
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.FamilyResponse
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.GenusResponse
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.OrderResponse
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PhylumResponse
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantDetailResponse
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantResponse
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
-import kotlinx.datetime.Clock
+import com.github.andiim.plantscan.app.core.firestore.model.ClassResponse
+import com.github.andiim.plantscan.app.core.firestore.model.FamilyResponse
+import com.github.andiim.plantscan.app.core.firestore.model.GenusResponse
+import com.github.andiim.plantscan.app.core.firestore.model.OrderResponse
+import com.github.andiim.plantscan.app.core.firestore.model.PhylumResponse
+import com.github.andiim.plantscan.app.core.firestore.model.PlantDetailResponse
+import com.github.andiim.plantscan.app.core.firestore.model.PlantResponse
 
 object DataDummy {
     const val ERROR_FAIL_MESSAGE = "fail"
@@ -29,7 +28,6 @@ object DataDummy {
                 thumbnail = "",
                 description = "",
                 taxon = Taxonomy("", "", "", "", ""),
-                updated = Clock.System.now(),
             )
         }
 

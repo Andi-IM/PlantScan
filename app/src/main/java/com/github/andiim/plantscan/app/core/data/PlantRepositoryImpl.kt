@@ -3,13 +3,13 @@ package com.github.andiim.plantscan.app.core.data
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import com.github.andiim.plantscan.app.core.data.mediator.PlantPagingSource
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.DetectionHistoryDocument
+import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
 import com.github.andiim.plantscan.app.core.data.source.network.NetworkDataSource
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
 import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.repository.PlantRepository
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.FirestoreSource
+import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton

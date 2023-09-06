@@ -1,6 +1,6 @@
 package com.github.andiim.plantscan.app.core.domain.model
 
-import com.github.andiim.plantscan.app.core.data.source.firebase.firestore.document.PlantDetailResponse
+import com.github.andiim.plantscan.app.core.firestore.model.PlantDetailResponse
 
 data class PlantDetail(val classification: Taxonomy? = null, val description: String? = null) {
   companion object {
