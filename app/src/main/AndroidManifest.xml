@@ -2,7 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- Permission declarations -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--
+    Firebase automatically adds the AD_ID permission, even though we don't use it. If you use this
+    permission you must declare how you're using it to Google Play, otherwise the app will be
+    rejected when publishing it. To avoid this we remove the permission entirely.
+    -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
+
+    <!-- Permission declarations -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -17,9 +25,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlantScan.Material3"
         tools:targetApi="31">
-        <activity
-            android:name=".detect.activity.DetectActivity"
-            android:exported="false" />
         <activity
             android:name=".PlantScanActivity"
             android:exported="true"
@@ -40,9 +45,8 @@
                     android:scheme="plantscan" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".detect.activity.CameraActivity"
-            android:exported="false" /> <!-- FileProvider used to share photos with other apps -->
+
+        <!-- FileProvider used to share photos with other apps -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -85,6 +89,12 @@
         <meta-data
             android:name="firebase_performance_logcat_enabled"
             android:value="true" />
+
+        <!-- Disable Firebase analytics by default. This setting is overwritten for the `prod`
+        flavor -->
+        <meta-data android:name="firebase_analytics_collection_deactivated" android:value="true" />
+        <!-- Disable collection of AD_ID for all build variants -->
+        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
     </application>
 
 </manifest>
