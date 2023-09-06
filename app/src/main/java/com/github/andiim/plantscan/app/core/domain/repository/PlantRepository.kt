@@ -13,5 +13,5 @@ interface PlantRepository {
     fun getPlantDetail(id: String): Flow<Resource<Plant>>
     fun detect(image: File): Flow<Resource<ObjectDetection>>
     fun recordDetection(detection: DetectionHistory): Flow<String>
-    fun getDetectionsList(): Flow<Resource<List<DetectionHistory>>>
+    fun getDetectionsList(userId: String): Flow<Resource<List<DetectionHistory>>>
 }

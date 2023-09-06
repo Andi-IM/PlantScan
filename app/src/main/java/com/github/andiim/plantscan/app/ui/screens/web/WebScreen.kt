@@ -15,18 +15,25 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.andiim.plantscan.app.ui.TrackScreenViewEvent
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WebScreen(url: String, name: String, popUpScreen: () -> Unit) {
-    val state = rememberWebViewState("https://$url")
+fun WebRoute(popUpScreen: () -> Unit, viewModel: WebViewModel = hiltViewModel()) {
+    val state = rememberWebViewState("https://${viewModel.webUrl}")
+    TrackScreenViewEvent(screenName = "Web")
     Scaffold(
         topBar = {
-            Column(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
                 TopAppBar(
-                    title = { Text(name) },
+                    title = { Text("${state.pageTitle ?: "Loading..."} ") },
                     navigationIcon = {
                         IconButton(onClick = popUpScreen) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "Back")

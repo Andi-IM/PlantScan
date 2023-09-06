@@ -45,9 +45,9 @@ fun RegularCardEditor(
     @DrawableRes icon: Int,
     content: String,
     modifier: Modifier,
-    onEditClick: () -> Unit
+    onClick: () -> Unit
 ) {
-  CardEditor(title, icon, content, onEditClick, MaterialTheme.colorScheme.onSurface, modifier)
+  CardEditor(title, icon, content, onClick, MaterialTheme.colorScheme.onSurface, modifier)
 }
 
 @Composable
@@ -125,7 +125,7 @@ private fun Preview() {
             icon = AppDrawable.ic_visibility_on,
             content = "something",
             modifier = Modifier,
-            onEditClick = {})
+            onClick = {})
         Spacer(Modifier.padding(8.dp))
         CardSelector(
             label = AppText.app_name,

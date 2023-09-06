@@ -1,12 +1,12 @@
 package com.github.andiim.plantscan.app.ui.screens.home.settings
 
+import com.github.andiim.plantscan.app.PlantScanViewModel
 import com.github.andiim.plantscan.app.core.auth.AccountService
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import com.github.andiim.plantscan.app.ui.navigation.Direction
-import com.github.andiim.plantscan.app.PlantScanViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -15,14 +15,6 @@ class SettingsViewModel @Inject constructor(
 ) :
     PlantScanViewModel(logService) {
     val uiState = accountService.currentUser.map { SettingsUiState(it.isAnonymous) }
-
-    fun onLoginClick(openScreen: (String) -> Unit) {
-        openScreen(Direction.Login.route)
-    }
-
-    fun onSignUpClick(openScreen: (String) -> Unit) {
-        openScreen(Direction.SignUp.route)
-    }
 
     fun onSignOutClick(restartApp: (String) -> Unit) {
         launchCatching { accountService.signOut() }

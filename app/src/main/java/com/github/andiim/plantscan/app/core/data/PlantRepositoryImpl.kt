@@ -2,7 +2,6 @@ package com.github.andiim.plantscan.app.core.data
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
-import com.github.andiim.plantscan.app.core.auth.AccountService
 import com.github.andiim.plantscan.app.core.data.mediator.PlantPagingSource
 import com.github.andiim.plantscan.app.core.data.source.network.NetworkDataSource
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
@@ -21,7 +20,6 @@ import javax.inject.Singleton
 class PlantRepositoryImpl
 @Inject
 constructor(
-    private val auth: AccountService,
     private val network: NetworkDataSource,
     private val remote: FirestoreSource,
 ) : PlantRepository {
@@ -47,8 +45,7 @@ constructor(
     }
 
     override fun recordDetection(detection: DetectionHistory): Flow<String> = flow {
-        val detectionWithUserId = detection.copy(userId = auth.currentUserId)
-        val result = remote.recordDetection(DetectionHistoryDocument.fromModel(detectionWithUserId))
+        val result = remote.recordDetection(DetectionHistoryDocument.fromModel(detection))
         emit(result)
     }
 
@@ -61,10 +58,9 @@ constructor(
         }
     }
 
-    override fun getDetectionsList(): Flow<Resource<List<DetectionHistory>>> = flow {
+    override fun getDetectionsList(userId: String): Flow<Resource<List<DetectionHistory>>> = flow {
         try {
-            val currentUserId = auth.currentUserId
-            val response = remote.getDetectionsList(currentUserId)
+            val response = remote.getDetectionsList(userId)
             emit(Resource.Success(response.map { it.toModel() }))
         } catch (e: Exception) {
             emit(Resource.Error(e.message.orEmpty()))

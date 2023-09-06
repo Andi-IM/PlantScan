@@ -1,6 +1,5 @@
 package com.github.andiim.plantscan.app.ui.screens.detail
 
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -34,7 +33,9 @@ fun PlantScanAppState.navigateToDetail(id: String) {
     this.navigate(Direction.Detail.createRoute(encodedId))
 }
 
-fun NavGraphBuilder.detailScreen(appState: PlantScanAppState) {
+fun NavGraphBuilder.detailScreen(
+    onBackPressed: () -> Unit,
+) {
     composable(
         route = Direction.Detail.route,
         arguments = listOf(navArgument(plantIdArg) { type = NavType.StringType }),
@@ -43,7 +44,6 @@ fun NavGraphBuilder.detailScreen(appState: PlantScanAppState) {
             uriPattern = "${NavigationConstants.APP_URI}/${Direction.Detail.route}/{$plantIdArg}"
         })
     ) {
-        val viewModel: DetailViewModel = hiltViewModel()
-        DetailRoute(popUpScreen = appState::popUp, viewModel = viewModel)
+        DetailRoute(popUpScreen = onBackPressed)
     }
 }

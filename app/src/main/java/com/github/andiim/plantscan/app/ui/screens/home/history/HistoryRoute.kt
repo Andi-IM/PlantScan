@@ -9,7 +9,7 @@ import com.github.andiim.plantscan.app.ui.navigation.Direction
 fun NavGraphBuilder.homeHistoryElement(appState: PlantScanAppState) {
     composable(route = Direction.MyGarden.route) {
         val viewModel: MyGardenViewModel = hiltViewModel()
-        MyGardenElement(
+        HistoryRoute(
             toDetail = { appState.navigate(Direction.Detect.route) },
             viewModel = viewModel
         )

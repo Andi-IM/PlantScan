@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navigation
 import com.github.andiim.plantscan.app.PlantScanAppState
 import com.github.andiim.plantscan.app.ui.screens.auth.login.authLoginScreen
+import com.github.andiim.plantscan.app.ui.screens.auth.login.navigateToLogin
 import com.github.andiim.plantscan.app.ui.screens.auth.signUp.authSignUpScreen
 import com.github.andiim.plantscan.app.ui.screens.camera.cameraFragment
 import com.github.andiim.plantscan.app.ui.screens.camera.navigateToCamera
@@ -20,6 +21,7 @@ import com.github.andiim.plantscan.app.ui.screens.home.history.homeHistoryElemen
 import com.github.andiim.plantscan.app.ui.screens.home.settings.homeSettingsElement
 import com.github.andiim.plantscan.app.ui.screens.list.listScreen
 import com.github.andiim.plantscan.app.ui.screens.splash.splashScreen
+import com.github.andiim.plantscan.app.ui.screens.web.navigateToWeb
 import com.github.andiim.plantscan.app.ui.screens.web.webViewScreen
 
 @Composable
@@ -30,12 +32,15 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
         startDestination = Direction.Splash.route,
     ) {
         navigation(startDestination = Direction.Login.route, route = Direction.AccountNav.route) {
-            authLoginScreen(appState)
+            authLoginScreen(
+                routeToWeb = appState::navigateToWeb,
+                navigateAndPopUp = appState::navigateAndPopUp,
+            )
             authSignUpScreen(appState)
-            webViewScreen(appState)
+            webViewScreen(onBackPressed = appState::popUp)
         }
 
-        detailScreen(appState)
+        detailScreen(onBackPressed = appState::popUp)
 
         navigation(startDestination = Direction.FindPlant.route, route = Direction.MainNav.route) {
             homeFindPlantElement(
@@ -44,7 +49,10 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
                 routeToPlant = { /* TODO */ }
             )
             homeHistoryElement(appState)
-            homeSettingsElement(appState)
+            homeSettingsElement(
+                clearAndNavigate = appState::clearAndNavigate,
+                routeToLogin = appState::navigateToLogin,
+            )
         }
 
         listScreen(appState)

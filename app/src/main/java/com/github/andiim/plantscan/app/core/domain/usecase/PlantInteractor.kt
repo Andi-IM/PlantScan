@@ -23,8 +23,8 @@ constructor(private val plantRepo: PlantRepository, private val cameraRepo: Came
     override fun recordDetection(detection: DetectionHistory): Flow<String> =
         plantRepo.recordDetection(detection)
 
-    override fun getDetectionsList(): Flow<Resource<List<DetectionHistory>>> =
-        plantRepo.getDetectionsList()
+    override fun getDetectionsList(userId: String): Flow<Resource<List<DetectionHistory>>> =
+        plantRepo.getDetectionsList(userId)
 
     override fun notifyImageCreated(savedUri: Uri) = cameraRepo.notifyImageCreated(savedUri)
     override fun createImageOutputFile(): File = cameraRepo.createImageOutputFile()
