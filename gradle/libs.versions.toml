@@ -4,7 +4,8 @@ compile_sdk_version = "33"
 gson = "2.10.1"
 integrity = "1.2.0"
 kotlinxDatetime = "0.4.1"
-min_sdk_version = "21"
+min_sdk_version = "27"
+objectDetection = "17.0.0"
 target_sdk_version = "33"
 compose_compilerextension = "1.5.0"
 kotlin = "1.9.0"
@@ -29,7 +30,7 @@ detekt = "1.23.0"
 dokka = "1.8.20"
 espresso_core = "3.5.1"
 firebase = "32.2.2"
-hilt = "2.47"
+hilt = "2.48"
 junit = "4.13.2"
 jacoco = "0.8.7"
 ktlint = "0.45.2"
@@ -42,17 +43,17 @@ timber = "5.0.1"
 truth = "1.1.5"
 org-jetbrains-kotlin-android = "1.8.0"
 constraintlayout = "2.1.4"
-tensorflow = "2.12.0"
-tensorflow_support = "0.4.3"
 retrofit = "2.9.0"
 kotlinx-serialization = "1.0.0"
 kotlinx-serialization-json = "1.5.1"
 secrets = "2.0.1"
 okhttp = "4.10.0"
+window = "1.0.0"
+ksp = "1.9.0-1.0.11"
 
 [libraries]
-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
+androidx-window = { module = "androidx.window:window-java", version.ref = "window" }
+androidx-window-extension = { module = "androidx.window.extensions.core:core", version.ref = "window" }
 junit = { module = "junit:junit", version.ref = "junit" }
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version = "0.30.1" }
 accompanist_permission = { module = "com.google.accompanist:accompanist-permissions", version = "0.30.1" }
@@ -109,11 +110,7 @@ firebase-perf-plugin = { group = "com.google.firebase", name = "perf-plugin", ve
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
 firebase-perf = { group = "com.google.firebase", name = "firebase-perf-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
-firebase-app-check = { module = "com.google.firebase:firebase-appcheck-ktx" }
 firebase-storage = { module = "com.google.firebase:firebase-storage-ktx" }
-firebase-app-check-debug = { module = "com.google.firebase:firebase-appcheck-debug" }
-firebase-app-check-debug-testing = { module = "com.google.firebase:firebase-appcheck-debug-testing" }
-firebase-app-check-playintegrity = { group = "com.google.firebase", name = "firebase-appcheck-playintegrity", version = "17.0.1" }
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlin-coroutines-test-turbine = { module = "app.cash.turbine:turbine", version = "1.0.0" }
@@ -127,13 +124,12 @@ navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version = "2
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version = "2.6.0" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigation" }
-tensorflow = { module = "org.tensorflow:tensorflow-lite-gpu", version.ref = "tensorflow" }
-tensorflow-downloader = { module = "com.google.firebase:firebase-ml-modeldownloader-ktx" }
-tensorflow-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflow_support" }
-tensorflow-metadata = { module = "org.tensorflow:tensorflow-lite-metadata", version.ref = "tensorflow_support" }
+
 agp = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kgp = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 dhp = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
+ksp-plugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+
 dokka_gradle_plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 dokka_core = { module = "org.jetbrains.dokka:dokka-core", version.ref = "dokka" }
 paging-common = { module = "androidx.paging:paging-common-ktx", version = "3.2.0" }
@@ -141,7 +137,7 @@ paging-compose = { module = "androidx.paging:paging-compose", version = "3.2.0" 
 paging-testing = { module = "androidx.paging:paging-testing", version = "3.2.0" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version = "20.6.0" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version = "20.7.0" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlinx-serialization" }
@@ -155,11 +151,9 @@ camera = ["camera", "camera-core", "camera-lifecycle", "camera-extensions", "cam
 compose = ["coil-compose", "compose-activity", "compose-material", "compose-materialIcons", "compose-runtimeLivedata", "compose-ui", "compose-ui-graphics", "compose-ui-tooling-preview", "navigation-compose", "compose-ui-viewBinding", "androidx-lifecycle-runtimeCompose"]
 compose-debug = ["compose-ui-tooling", "compose-ui-test-manifest"]
 navigation = ["navigation-ui", "navigation-fragment-ktx"]
-tensorflow = ["tensorflow", "tensorflow-metadata", "tensorflow-support", "tensorflow-downloader"]
-firebase = ["firebase-auth", "firebase-config", "firebase-crashlytics", "firebase-firestore", "firebase-analytics", "firebase-perf", "firebase-messaging", "firebase-app-check", "firebase-app-check-debug", "firebase-storage", "firebase-app-check-playintegrity"]
+firebase = ["firebase-auth", "firebase-config", "firebase-crashlytics", "firebase-firestore", "firebase-analytics", "firebase-perf", "firebase-messaging", "firebase-storage"]
 lifecycle = ["lifecycle-livedata", "lifecycle-runtime", "lifecycle-viewmodel-compose"]
 paging = ["paging-common", "paging-compose"]
-
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

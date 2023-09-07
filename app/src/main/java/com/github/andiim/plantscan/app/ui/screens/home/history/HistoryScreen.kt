@@ -45,7 +45,7 @@ internal fun HistoryRoute(
 internal fun HistoryScreen(
     modifier: Modifier = Modifier,
     historyUiState: HistoryUiState,
-    onItemClick: (String) -> Unit = {} /* TODO: SOMETIMES CAN SHOW DETAIL */,
+    onItemClick: (String) -> Unit = {}, /* TODO: SOMETIMES CAN SHOW DETAIL */
 ) {
     val state = rememberLazyListState()
     TrackScrollJank(scrollableState = state, stateName = "detections")
@@ -77,7 +77,7 @@ internal fun HistoryScreen(
                 is HistoryUiState.Success -> {
                     items(
                         items = historyUiState.detections,
-                        key = { it.id },
+                        key = { "${it.id}${it.plantRef}" },
                         itemContent = { history ->
                             ListItem(
                                 headlineContent = { Text(history.plantRef) },

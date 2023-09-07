@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import org.tensorflow.lite.Interpreter
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -179,12 +178,6 @@ private fun getImage(
 
     // return Bitmap.createScaledBitmap(image, width, height, true)
     return image
-}
-
-sealed interface InterpreterUiState {
-    data class Success(val interpreter: Interpreter) : InterpreterUiState
-    data class Error(val message: String? = null) : InterpreterUiState
-    data object Loading : InterpreterUiState
 }
 
 sealed interface DetectUiState {

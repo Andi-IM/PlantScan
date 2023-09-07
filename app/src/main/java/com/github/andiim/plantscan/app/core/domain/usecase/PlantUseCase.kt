@@ -1,5 +1,6 @@
 package com.github.andiim.plantscan.app.core.domain.usecase
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.paging.PagingSource
 import com.github.andiim.plantscan.app.core.data.Resource
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 interface PlantUseCase {
     fun getPlants(query: String = ""): PagingSource<Int, Plant>
     fun getPlantDetail(id: String): Flow<Resource<Plant>>
-    fun detect(image: File): Flow<Resource<ObjectDetection>>
+    fun detect(image: Bitmap): Flow<Resource<ObjectDetection>>
     fun recordDetection(detection: DetectionHistory): Flow<String>
     fun getDetectionsList(userId: String): Flow<Resource<List<DetectionHistory>>>
     fun notifyImageCreated(savedUri: Uri)

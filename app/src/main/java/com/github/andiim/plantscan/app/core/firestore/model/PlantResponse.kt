@@ -13,7 +13,7 @@ data class PlantResponse(
     val description: String = "",
     @[Exclude ServerTimestamp] var date: Date? = null,
     val species: String = "",
-    @[Exclude ServerTimestamp] var Updated: Date? = null,
+    @[Exclude ServerTimestamp] var updated: Date? = null,
     val name: String = "",
     val images: List<ImageResponse> = listOf(),
     val thumbnail: String = "",

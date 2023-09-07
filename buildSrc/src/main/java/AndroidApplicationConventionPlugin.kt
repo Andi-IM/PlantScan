@@ -22,7 +22,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     libs.findVersion("target.sdk.version").get().toString().toInt()
             }
 
-            extensions.configure<ApplicationAndroidComponentsExtension>() {
+            extensions.configure<ApplicationAndroidComponentsExtension> {
                 configurePrintApksTask(this)
             }
         }

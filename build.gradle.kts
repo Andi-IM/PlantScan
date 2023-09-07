@@ -5,6 +5,7 @@ plugins {
     id("com.android.library") apply false
     kotlin("android") apply false
     kotlin("kapt") apply false
+    id("com.google.devtools.ksp") apply false
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0" apply false
     id("com.google.gms.google-services") version "4.3.15" apply false
     id("com.google.dagger.hilt.android") apply false

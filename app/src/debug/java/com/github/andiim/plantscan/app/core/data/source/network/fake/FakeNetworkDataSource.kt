@@ -1,11 +1,11 @@
 package com.github.andiim.plantscan.app.core.data.source.network.fake
 
+import android.graphics.Bitmap
 import com.github.andiim.plantscan.app.core.data.source.network.Dispatcher
 import com.github.andiim.plantscan.app.core.data.source.network.NetworkDataSource
 import com.github.andiim.plantscan.app.core.data.source.network.PsDispatchers.IO
 import com.github.andiim.plantscan.app.core.data.source.network.model.DetectionResponse
 import com.github.andiim.plantscan.app.utils.JvmUnitTestFakeAssetManager
-import java.io.File
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -19,7 +19,7 @@ class FakeNetworkDataSource @Inject constructor(
     private val assets: FakeAssetManager = JvmUnitTestFakeAssetManager,
 ) : NetworkDataSource {
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun detect(image: File): DetectionResponse =
+    override suspend fun detect(image: Bitmap): DetectionResponse =
         withContext(ioDispatcher) {
             assets.open(DETECT_ASSET).use(networkJson::decodeFromStream)
         }

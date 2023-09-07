@@ -1,9 +1,6 @@
 package com.github.andiim.plantscan.app.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.unit.dp
 
@@ -14,7 +11,7 @@ data class Shape(
     val large: RoundedCornerShape = RoundedCornerShape(16.dp)
 )
 
-val LocalShape = compositionLocalOf { Shape() }
+// val LocalShape = compositionLocalOf { Shape() }
 
-val MaterialTheme.shapeScheme: Shape
-  @Composable @ReadOnlyComposable get() = LocalShape.current
+//val MaterialTheme.shapeScheme: Shape
+//  @Composable @ReadOnlyComposable get() = LocalShape.current

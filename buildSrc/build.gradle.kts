@@ -29,6 +29,7 @@ dependencies {
     implementation(libs.kgp)
     implementation(libs.agp)
     implementation(libs.dhp)
+    implementation(libs.ksp.plugin)
     implementation(libs.firebase.crashlytics.plugin)
     implementation(libs.firebase.perf.plugin)
 }

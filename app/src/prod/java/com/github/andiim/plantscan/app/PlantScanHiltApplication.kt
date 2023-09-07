@@ -12,11 +12,6 @@ import timber.log.Timber
 class PlantScanHiltApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-
-        Firebase.appCheck.installAppCheckProviderFactory(
-            PlayIntegrityAppCheckProviderFactory.getInstance(),
-        )
-
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugModule.provideTimberTree())
         }

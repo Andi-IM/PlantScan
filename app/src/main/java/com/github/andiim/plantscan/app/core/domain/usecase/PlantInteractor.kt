@@ -1,5 +1,6 @@
 package com.github.andiim.plantscan.app.core.domain.usecase
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.paging.PagingSource
 import com.github.andiim.plantscan.app.core.data.Resource
@@ -19,7 +20,7 @@ constructor(private val plantRepo: PlantRepository, private val cameraRepo: Came
     override fun getPlants(query: String): PagingSource<Int, Plant> = plantRepo.getPlants(query)
 
     override fun getPlantDetail(id: String): Flow<Resource<Plant>> = plantRepo.getPlantDetail(id)
-    override fun detect(image: File): Flow<Resource<ObjectDetection>> = plantRepo.detect(image)
+    override fun detect(image: Bitmap): Flow<Resource<ObjectDetection>> = plantRepo.detect(image)
     override fun recordDetection(detection: DetectionHistory): Flow<String> =
         plantRepo.recordDetection(detection)
 

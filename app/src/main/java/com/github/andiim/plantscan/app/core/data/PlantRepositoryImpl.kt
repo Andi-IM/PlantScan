@@ -1,5 +1,6 @@
 package com.github.andiim.plantscan.app.core.data
 
+import android.graphics.Bitmap
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import com.github.andiim.plantscan.app.core.data.mediator.PlantPagingSource
@@ -12,7 +13,6 @@ import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
 import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,12 +49,12 @@ constructor(
         emit(result)
     }
 
-    override fun detect(image: File): Flow<Resource<ObjectDetection>> = flow {
+    override fun detect(image: Bitmap): Flow<Resource<ObjectDetection>> = flow {
         try {
             val response = network.detect(image)
             emit(Resource.Success(response.toModel()))
         } catch (e: Exception) {
-            emit(Resource.Error(e.message.orEmpty()))
+            emit(Resource.Error(e.localizedMessage.orEmpty()))
         }
     }
 

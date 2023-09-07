@@ -36,16 +36,16 @@ sealed class CaptureState {
    * Capture capability isn't ready. This could be because the camera isn't initialized, or the
    * camera is changing the lens, or the camera is switching to a new extension mode.
    */
-  object CaptureNotReady : CaptureState()
+  data object CaptureNotReady : CaptureState()
 
   /** Capture capability is ready. */
-  object CaptureReady : CaptureState()
+  data object CaptureReady : CaptureState()
 
   /** Capture process has started. */
-  object CaptureStarted : CaptureState()
+  data object CaptureStarted : CaptureState()
 
   /** Open Image Gallery instead from Capture */
-  object OpenGallery : CaptureState()
+  data object OpenGallery : CaptureState()
 
   /** Image obtained successfully */
   data class ImageObtained(val uri: Uri?) : CaptureState()

@@ -6,7 +6,9 @@ plugins {
     id("plantscan.android.application.compose")
     id("plantscan.android.application.flavors")
     id("plantscan.android.application.jacoco")
-    id("plantscan.android.hilt")
+    id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.kapt")
+    id("dagger.hilt.android.plugin")
     id("jacoco")
     id("kotlinx-serialization")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
@@ -31,7 +33,7 @@ android {
             applicationIdSuffix = PsBuildType.DEBUG.applicationIdSuffix
         }
         val release by getting {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             applicationIdSuffix = PsBuildType.RELEASE.applicationIdSuffix
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -39,14 +41,14 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
         }
-        create("benchmark") {
+        /*create("benchmark") {
             initWith(release)
             matchingFallbacks.add("release")
             signingConfig = signingConfigs.getByName("debug")
             proguardFiles("benchmark-rules.pro")
             isMinifyEnabled = true
             applicationIdSuffix = PsBuildType.BENCHMARK.applicationIdSuffix
-        }
+        }*/
     }
 
     lint {
@@ -73,9 +75,6 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.espresso.idlingResource)
 
-    // GSON
-    implementation(libs.gson)
-
     // Profile Installer
     implementation(libs.androidx.profileinstaller)
     // Guava
@@ -93,17 +92,17 @@ dependencies {
     implementation(libs.material)
     implementation(libs.bundles.paging)
 
-    // Tensorflow
-    implementation(libs.bundles.tensorflow)
     // Camera
     implementation(libs.bundles.camera)
 
     // Hilt
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.android)
     implementation(libs.dagger.hilt.navigation.compose)
     implementation(libs.constraintlayout)
 
     // Compose
-    api(libs.bundles.compose)
+    implementation(libs.bundles.compose)
     implementation(libs.bundles.lifecycle)
     implementation(libs.metrics.performance)
     androidTestImplementation(libs.compose.ui.test)
@@ -112,6 +111,8 @@ dependencies {
     // Accompanist
     implementation(libs.accompanist.permission)
     implementation(libs.accompanist.webview)
+    implementation(libs.androidx.window)
+    implementation(libs.androidx.window.extension)
 
     // Navigation
     implementation(libs.bundles.navigation)
@@ -119,8 +120,6 @@ dependencies {
     // Firebase
     implementation(libs.bundles.firebase)
     implementation(libs.play.services.auth)
-    implementation(libs.integrity)
-    androidTestImplementation("com.google.firebase:firebase-appcheck-debug-testing")
 
     // compat
     implementation(libs.androidx.appcompat)
