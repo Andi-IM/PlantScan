@@ -120,7 +120,6 @@ dependencies {
     // Firebase
     implementation(libs.bundles.firebase)
     implementation(libs.play.services.auth)
-
     // compat
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)

@@ -8,7 +8,7 @@ import kotlinx.datetime.toInstant
 import java.util.Date
 
 
-data class ImageResponse(
+data class ImageDocument(
     val url: String = "",
     @ServerTimestamp val date: Date? = null,
     val attribution: String = "",

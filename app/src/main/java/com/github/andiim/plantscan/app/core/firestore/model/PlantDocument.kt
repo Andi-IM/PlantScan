@@ -7,15 +7,15 @@ import com.google.firebase.firestore.PropertyName
 import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
-data class PlantResponse(
+data class PlantDocument(
     @DocumentId val id: String = "",
-    var taxonomy: TaxonomyResponse? = null,
+    var taxonomy: TaxonomyDocument? = null,
     val description: String = "",
     @[Exclude ServerTimestamp] var date: Date? = null,
     val species: String = "",
     @[Exclude ServerTimestamp] var updated: Date? = null,
     val name: String = "",
-    val images: List<ImageResponse> = listOf(),
+    val images: List<ImageDocument> = listOf(),
     val thumbnail: String = "",
 ) {
     @get:PropertyName("common_name")

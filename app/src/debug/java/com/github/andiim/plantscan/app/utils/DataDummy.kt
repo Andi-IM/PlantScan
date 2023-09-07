@@ -6,7 +6,7 @@ import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.model.Prediction
 import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
-import com.github.andiim.plantscan.app.core.firestore.model.PlantResponse
+import com.github.andiim.plantscan.app.core.firestore.model.PlantDocument
 
 object DataDummy {
     var OBJECT_DETECTIONS =
@@ -62,7 +62,7 @@ object DataDummy {
         }
 
 
-    fun getPlants(list: List<PlantResponse>): PagingData<PlantResponse> = PagingData.from(list)
+    fun getPlants(list: List<PlantDocument>): PagingData<PlantDocument> = PagingData.from(list)
 
     fun searchPlant(query: String) =
         PLANTS.filter { plant ->

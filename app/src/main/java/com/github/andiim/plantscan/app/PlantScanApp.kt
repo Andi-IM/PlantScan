@@ -1,9 +1,6 @@
 package com.github.andiim.plantscan.app
 
-import android.Manifest
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -35,15 +32,9 @@ import androidx.navigation.compose.rememberNavController
 import com.github.andiim.plantscan.app.core.data.util.NetworkMonitor
 import com.github.andiim.plantscan.app.core.ui.TrackDisposableJank
 import com.github.andiim.plantscan.app.ui.common.composables.BottomBar
-import com.github.andiim.plantscan.app.ui.common.composables.PermissionDialog
-import com.github.andiim.plantscan.app.ui.common.composables.RationaleDialog
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.plantscan.app.ui.navigation.SetupRootNavGraph
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -55,9 +46,6 @@ fun PlantScanApp(
     )
 ) {
     PlantScanTheme {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            RequestNotificationPermissionDialog()
-        }
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 
             val isOffline by appState.isOffline.collectAsStateWithLifecycle()
@@ -135,19 +123,6 @@ fun rememberAppState(
             networkMonitor,
             coroutineScope,
         )
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun RequestNotificationPermissionDialog() {
-    val permissionState =
-        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-
-    if (!permissionState.status.isGranted) {
-        if (permissionState.status.shouldShowRationale) RationaleDialog()
-        else PermissionDialog { permissionState.launchPermissionRequest() }
     }
 }
 

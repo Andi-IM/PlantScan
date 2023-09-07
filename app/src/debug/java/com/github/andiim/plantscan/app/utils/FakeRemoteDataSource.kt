@@ -1,11 +1,12 @@
 package com.github.andiim.plantscan.app.utils
 
 import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
-import com.github.andiim.plantscan.app.core.firestore.model.PlantResponse
+import com.github.andiim.plantscan.app.core.firestore.model.PlantDocument
 import com.github.andiim.plantscan.app.core.data.source.network.Dispatcher
 import com.github.andiim.plantscan.app.core.data.source.network.PsDispatchers.IO
 import com.github.andiim.plantscan.app.core.data.source.network.fake.FakeAssetManager
 import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
+import com.github.andiim.plantscan.app.core.firestore.model.SuggestionDocument
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -19,13 +20,13 @@ class FakeRemoteDataSource @Inject constructor(
     private val assets: FakeAssetManager = JvmUnitTestFakeAssetManager,
 ) : FirestoreSource {
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun getPlants(query: String, limit: Long): List<PlantResponse> =
+    override suspend fun getPlants(query: String, limit: Long): List<PlantDocument> =
         withContext(ioDispatcher) {
             assets.open(PLANTS_ASSET).use(networkJson::decodeFromStream)
         }
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun getPlantById(id: String): PlantResponse =
+    override suspend fun getPlantById(id: String): PlantDocument =
         withContext(ioDispatcher) {
             assets.open(PLANT_ASSET).use(networkJson::decodeFromStream)
         }
@@ -39,6 +40,10 @@ class FakeRemoteDataSource @Inject constructor(
         withContext(ioDispatcher) {
             assets.open(DETECT_ASSET).use(networkJson::decodeFromStream)
         }
+
+    override suspend fun sendASuggestions(suggestion: SuggestionDocument): String {
+        TODO("Not yet implemented")
+    }
 
     companion object {
         private const val PLANTS_ASSET = "plants.json"
