@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -292,7 +294,10 @@ private fun LazyListScope.imageCard(image: List<Image>) {
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             border = BorderStroke(width = 1.dp, color = Color.Gray)
         ) {
+            if (image.size > 1)
+                LazyVerticalGrid(columns = GridCells.FixedSize(2.dp)) {
 
+                }
         }
     }
 }

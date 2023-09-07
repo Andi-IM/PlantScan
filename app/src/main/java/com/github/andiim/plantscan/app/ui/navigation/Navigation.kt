@@ -15,6 +15,7 @@ import com.github.andiim.plantscan.app.ui.screens.camera.navigateToCamera
 import com.github.andiim.plantscan.app.ui.screens.detail.detailScreen
 import com.github.andiim.plantscan.app.ui.screens.detail.navigateToDetail
 import com.github.andiim.plantscan.app.ui.screens.detect.detectFragment
+import com.github.andiim.plantscan.app.ui.screens.detect.navigateToDetect
 import com.github.andiim.plantscan.app.ui.screens.home.findPlant.gotoMainNavRoute
 import com.github.andiim.plantscan.app.ui.screens.home.findPlant.homeFindPlantElement
 import com.github.andiim.plantscan.app.ui.screens.home.history.homeHistoryElement
@@ -55,11 +56,17 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
             )
         }
 
-        listScreen(onBackPressed = appState::popUp, routeToDetail = appState::navigateToDetail)
+        listScreen(
+            onBackPressed = appState::popUp,
+            routeToDetail = appState::navigateToDetail,
+        )
         splashScreen(navigateAndPopUp = appState::gotoMainNavRoute)
 
-        cameraFragment(appState)
-        detectFragment(appState)
+        cameraFragment(
+            onBackPressed = appState::popUp,
+            routeToDetect = appState::navigateToDetect
+        )
+        detectFragment()
     }
 }
 

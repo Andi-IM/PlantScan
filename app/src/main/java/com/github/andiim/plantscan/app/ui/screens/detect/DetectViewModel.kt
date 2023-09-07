@@ -3,6 +3,9 @@ package com.github.andiim.plantscan.app.ui.screens.detect
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
+import androidx.core.net.toUri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.DetectResult
@@ -25,10 +28,14 @@ import javax.inject.Inject
 class DetectViewModel
 @Inject
 constructor(
+    savedStateHandle: SavedStateHandle,
     private val mlService: MLService,
     private val config: ConfigurationService,
     private val logService: LogService
 ) : ViewModel() {
+
+    private val detectArgs: DetectArgs = DetectArgs(savedStateHandle)
+    val imageUri: Uri = detectArgs.uri.toUri()
 
     private val _interpreter: MutableStateFlow<Resource<Interpreter>> =
         MutableStateFlow(Resource.Loading)

@@ -1,7 +1,6 @@
 package com.github.andiim.plantscan.app.ui.screens.detect
 
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.compose.foundation.layout.Box
@@ -29,19 +28,19 @@ import java.io.InputStreamReader
 import java.text.DecimalFormat
 
 @Composable
-fun DetectScreen(imageUri: Uri, viewModel: DetectViewModel = hiltViewModel()) {
+fun DetectScreen(viewModel: DetectViewModel = hiltViewModel()) {
     val context = LocalContext.current
 
     val image =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val source = ImageDecoder.createSource(context.contentResolver, imageUri)
+            val source = ImageDecoder.createSource(context.contentResolver, viewModel.imageUri)
             ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
                 decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
                 decoder.isMutableRequired = true
             }
         } else {
             @Suppress("DEPRECATION")
-            MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+            MediaStore.Images.Media.getBitmap(context.contentResolver, viewModel.imageUri)
         }
 
     when (val state = viewModel.interpreter.collectAsState().value) {

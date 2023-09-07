@@ -19,7 +19,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.github.andiim.plantscan.app.R
 import com.github.andiim.plantscan.app.databinding.FragmentCameraBinding
-import com.github.andiim.plantscan.app.ui.navigation.Direction
 import com.github.andiim.plantscan.app.ui.screens.camera.adapter.CameraExtensionItem
 import com.github.andiim.plantscan.app.ui.screens.camera.model.CameraState
 import com.github.andiim.plantscan.app.ui.screens.camera.model.CameraUiAction
@@ -37,8 +36,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CameraFragment : Fragment() {
-  var onBackPressed: (() -> Unit)? = null
-  var toDetect: ((String, Boolean) -> Unit)? = null
+  var popUpScreen: (() -> Unit)? = null
+  var toDetect: ((String) -> Unit)? = null
 
   private val extensionName =
       mapOf(
@@ -147,7 +146,7 @@ class CameraFragment : Fragment() {
           }
           is CameraUiAction.ActionDetect -> {
             val uri = action.uri
-            toDetect?.invoke(Direction.Detect.createRoute(uri), false)
+            toDetect?.invoke(uri)
           }
           CameraUiAction.CloseCameraClick -> {
             closeCamera()
@@ -311,7 +310,7 @@ class CameraFragment : Fragment() {
   }
 
   private fun closeCamera() {
-    onBackPressed?.invoke()
+    popUpScreen?.invoke()
   }
 
   private suspend fun closePhotoPreview() {

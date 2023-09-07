@@ -12,12 +12,15 @@ fun PlantScanAppState.navigateToCamera() {
 }
 
 
-fun NavGraphBuilder.cameraFragment(appState: PlantScanAppState) {
+fun NavGraphBuilder.cameraFragment(
+    onBackPressed: () -> Unit,
+    routeToDetect: (String) -> Unit
+) {
     composable(route = Direction.Camera.route) {
         AndroidViewBinding(FragmentContainerBinding::inflate) {
             root.getFragment<CameraFragment>().apply {
-                onBackPressed = appState::popUp
-                toDetect = appState::navigate
+                popUpScreen = onBackPressed
+                toDetect = routeToDetect
             }
         }
     }
