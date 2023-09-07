@@ -1,78 +1,175 @@
 package com.github.andiim.plantscan.app.ui.screens.detect
 
-import android.graphics.ImageDecoder
-import android.os.Build
-import android.provider.MediaStore
+import android.content.Context
+import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Dangerous
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.github.andiim.plantscan.app.core.data.Resource
-import com.github.andiim.plantscan.app.core.domain.model.DetectResult
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
+import com.github.andiim.plantscan.app.R
+import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.text.DecimalFormat
+import com.github.andiim.plantscan.app.utils.DetectScreenPreviewParameterProvider
 
 @Composable
-fun DetectScreen(viewModel: DetectViewModel = hiltViewModel()) {
+fun DetectRoute(viewModel: DetectViewModel = hiltViewModel()) {
+    val detectState: DetectUiState by viewModel.detectResult.collectAsState()
+    DetectScreen(
+        // interpreterState = interpreterState,
+        detectState = detectState,
+        detectRobo = viewModel::detect
+    )
+
     val context = LocalContext.current
+    LaunchedEffect(viewModel) {
+        viewModel.detect(context)
+    }
+}
 
-    val image =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val source = ImageDecoder.createSource(context.contentResolver, viewModel.imageUri)
-            ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
-                decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
-                decoder.isMutableRequired = true
+@Composable
+fun DetectScreen(
+    detectState: DetectUiState,
+    detectRobo: (Context) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+
+
+    var selected by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    Box(modifier = modifier) {
+        when (detectState) {
+            is DetectUiState.Error -> {
+                ErrorState(detectState.message ?: "", onClick = { detectRobo(context) })
             }
-        } else {
-            @Suppress("DEPRECATION")
-            MediaStore.Images.Media.getBitmap(context.contentResolver, viewModel.imageUri)
-        }
 
-    when (val state = viewModel.interpreter.collectAsState().value) {
-        is Resource.Loading -> {
-            LoadingState("Getting Model ")
-        }
+            DetectUiState.Loading -> {
+                LoadingState("Detecting... ")
+            }
 
-        is Resource.Error -> {
-            ErrorState(state.message)
-        }
-
-        is Resource.Success -> {
-            val labels = BufferedReader(InputStreamReader(context.assets.open("labels.txt")))
-            viewModel.detect(labels, image, state.data)
-
-            when (val detectionState = viewModel.detectResult.collectAsState().value) {
-                Resource.Loading -> LoadingState("Trying to Detect...")
-                is Resource.Success -> DetectContent(detectionState.data)
-                else -> {}
+            is DetectUiState.Success -> {
+                DetectContent(detectState.detection as ObjectDetection)
             }
         }
     }
-
-    LaunchedEffect(viewModel) { viewModel.loadInterpreter(context) }
 }
 
 @Composable
-fun DetectContent(detectResult: DetectResult) {
-    val dec = DecimalFormat("#.##")
-    val percentage = dec.format(detectResult.prob * 100)
-    Column { Text("${detectResult.label} : ${percentage}%") }
+fun DetectContent(result: ObjectDetection) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val predictionList = result.predictions.map {
+            DetectionResult(it.jsonMemberClass, it.confidence.times(100))
+        }
+
+        item {
+            var enabled by remember { mutableStateOf(true) }
+            val alpha: Int by animateIntAsState(if (enabled) 1 else 10, label = "")
+
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(result.image.data)
+                    .size(32)
+                    .crossfade(true)
+                    .build(),
+                loading = {
+                    if (LocalInspectionMode.current) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
+                            contentAlignment = Alignment.Center
+                        )
+                        {
+                            Image(
+                                painter = painterResource(R.drawable.orchid),
+                                contentScale = ContentScale.FillHeight,
+                                contentDescription = null
+                            )
+                        }
+                    } else {
+                        Box(
+                            modifier = Modifier.height(30.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(modifier = Modifier.width(24.dp))
+                        }
+                    }
+                },
+                error = {
+                    Box(
+                        modifier = Modifier.height(30.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Dangerous,
+                            contentDescription = stringResource(R.string.fetch_image_error)
+                        )
+                    }
+                },
+                contentDescription = "image",
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize()
+                    .clickable { enabled = !enabled }
+            )
+        }
+
+        item {
+            Text(text = "Results")
+        }
+        predictionList.forEach {
+            item {
+                ListItem(
+                    headlineContent = { Text(it.name) },
+                    trailingContent = { Text(text = "${it.conf}%") })
+            }
+        }
+    }
 }
+
+fun getRes(@DrawableRes id: Int): Int = id
+
+data class DetectionResult(val name: String, val conf: Float)
 
 @Composable
 private fun LoadingState(message: String? = null, percent: Float? = null) {
@@ -89,10 +186,13 @@ private fun LoadingState(message: String? = null, percent: Float? = null) {
 }
 
 @Composable
-private fun ErrorState(message: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Error: $message")
-        Button(onClick = {}) { Text("Try Again") }
+private fun ErrorState(message: String, onClick: () -> Unit = {}) {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("Error: $message")
+            Button(onClick = onClick) { Text("Try Again") }
+        }
+
     }
 }
 
@@ -104,8 +204,10 @@ private fun Preview_LoadingContent() {
 
 @Preview
 @Composable
-private fun Preview_DetectContent() {
-    PlantScanTheme { Surface { DetectContent(DetectResult("Testing", 0.5f)) } }
+private fun Preview_DetectContent(
+    @PreviewParameter(DetectScreenPreviewParameterProvider::class) detection: ObjectDetection
+) {
+    PlantScanTheme { Surface { DetectContent(detection) } }
 }
 
 @Preview

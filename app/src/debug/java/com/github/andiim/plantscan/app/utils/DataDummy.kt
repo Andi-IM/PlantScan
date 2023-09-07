@@ -1,17 +1,47 @@
 package com.github.andiim.plantscan.app.utils
 
 import androidx.paging.PagingData
+import com.github.andiim.plantscan.app.core.domain.model.Imgz
+import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.core.domain.model.Plant
+import com.github.andiim.plantscan.app.core.domain.model.Prediction
 import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
-import com.github.andiim.plantscan.app.core.firestore.model.ClassResponse
-import com.github.andiim.plantscan.app.core.firestore.model.FamilyResponse
-import com.github.andiim.plantscan.app.core.firestore.model.GenusResponse
-import com.github.andiim.plantscan.app.core.firestore.model.OrderResponse
-import com.github.andiim.plantscan.app.core.firestore.model.PhylumResponse
-import com.github.andiim.plantscan.app.core.firestore.model.PlantDetailResponse
 import com.github.andiim.plantscan.app.core.firestore.model.PlantResponse
 
 object DataDummy {
+    var OBJECT_DETECTIONS =
+        List(10) {
+            ObjectDetection(
+                image = Imgz(
+                    width = 100.0f,
+                    height = 100.0f
+                ),
+                predictions = listOf(
+                    Prediction(
+                        confidence = 10.0f,
+                        x = 10.0f,
+                        y = 10.0f,
+                        width = 10.0f,
+                        height = 10.0f,
+                        jsonMemberClass = "Something $it"
+                    )
+                )
+            )
+        }
+
+    /*var PREDICTIONS =
+        List(10) {
+            Prediction(
+                confidence = 10.0f,
+                x = 10.0f,
+                y = 10.0f,
+                width = 10.0f,
+                height = 10.0f,
+                jsonMemberClass = "Something $it"
+            )
+        }*/
+
+
     const val ERROR_FAIL_MESSAGE = "fail"
 
     private fun String.removeWhitespace() = filterNot { it.isWhitespace() }
@@ -33,21 +63,6 @@ object DataDummy {
 
 
     fun getPlants(list: List<PlantResponse>): PagingData<PlantResponse> = PagingData.from(list)
-
-    var PLANT_DETAIL = PlantDetailResponse(classification = "something", description = "something")
-    var PHYLUM = PhylumResponse(name = "phylum")
-    var CLASSNAME = ClassResponse(name = "class", orders = listOf("order1", "order2"))
-    var ORDER = OrderResponse(name = "order")
-    var FAMILY = FamilyResponse(name = "family", genuses = listOf("genus1", "genus2"))
-    var GENUS =
-        GenusResponse(
-            id = "1",
-            name = "genus",
-            classRef = "class",
-            familyRef = "family",
-            orderRef = "order",
-            phylumRef = "phylum"
-        )
 
     fun searchPlant(query: String) =
         PLANTS.filter { plant ->

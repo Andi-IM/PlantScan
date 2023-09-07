@@ -33,6 +33,6 @@ fun NavGraphBuilder.detectFragment() {
         route = Direction.Detect.route,
         arguments = listOf(navArgument(detectUriArg) { type = NavType.StringType })
     ) {
-        DetectScreen()
+        DetectRoute()
     }
 }

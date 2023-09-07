@@ -23,10 +23,10 @@ data class DetectionResponse(
 data class PredictionResponse(
     val confidence: Float,
     val x: Float,
-    val width: Int,
+    val width: Float,
     val y: Float,
     @SerialName("class") val jsonMemberClass: String,
-    val height: Int
+    val height: Float
 ) {
     fun toModel(): Prediction {
         return Prediction(
@@ -42,8 +42,8 @@ data class PredictionResponse(
 
 @Serializable
 data class ImgzResponse(
-    val width: Int,
-    val height: Int
+    val width: Float,
+    val height: Float
 ) {
     fun toModel(): Imgz {
         return Imgz(
