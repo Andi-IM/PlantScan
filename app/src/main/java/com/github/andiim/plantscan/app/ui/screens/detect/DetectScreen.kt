@@ -259,7 +259,15 @@ private fun Preview_LoadingContent() {
 private fun Preview_DetectContent(
     @PreviewParameter(DetectScreenPreviewParameterProvider::class) detection: ObjectDetection
 ) {
-    // PlantScanTheme { Surface { DetectContent(detection) } }
+    PlantScanTheme {
+        Surface {
+            DetectContent(
+                onBackClick = {},
+                onSuggestClick = {},
+                result = detection
+            )
+        }
+    }
 }
 
 @Preview

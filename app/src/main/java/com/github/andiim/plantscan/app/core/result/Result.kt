@@ -16,7 +16,7 @@ suspend fun UploadTask.asResult(): Task<Result<String>> {
     return suspendCancellableCoroutine {
         val progressListener = OnProgressListener<UploadTask.TaskSnapshot> { taskSnapshot ->
             val progress =
-                (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toInt()
+                (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toFloat()
             Result.Loading(progress.toString())
             return@OnProgressListener
         }

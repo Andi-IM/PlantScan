@@ -28,11 +28,11 @@ class SuggestViewModel @Inject constructor(
     private val auth: AccountService
 ) : ViewModel() {
 
-    private val _suggestData = MutableStateFlow(Suggestion())
-    val data = _suggestData.asStateFlow()
-
     private val suggestArgs: SuggestArgs = SuggestArgs(savedStateHandle)
     val plantId = suggestArgs.plantId
+
+    private val _suggestData = MutableStateFlow(Suggestion())
+    val data = _suggestData.asStateFlow()
 
     private val _suggestUiState: MutableStateFlow<SuggestUiState> =
         MutableStateFlow(SuggestUiState.Initial)

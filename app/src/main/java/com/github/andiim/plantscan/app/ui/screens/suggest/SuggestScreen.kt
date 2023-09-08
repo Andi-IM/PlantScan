@@ -7,6 +7,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickMultipleVisualMedia
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,12 +21,16 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -70,12 +77,13 @@ internal fun SuggestScreen(
     onSendClick: () -> Unit
 ) {
     val context = LocalContext.current
+    var openAlertDialog by remember { mutableStateOf(false) }
+    if (state is SuggestUiState.Loading) openAlertDialog = true
 
     val launcher = rememberLauncherForActivityResult(
         contract = PickMultipleVisualMedia(5)
     ) { uris -> if (uris.isNotEmpty()) onImageSet(context, uris) }
 
-    val openAlertDialog by remember { mutableStateOf(false) }
 
     Button(onClick = popUpScreen) {
         Text("Back")
@@ -120,16 +128,27 @@ internal fun SuggestScreen(
     }
 
 
-    when (state) {
-        is SuggestUiState.Error -> TODO()
-        SuggestUiState.Initial -> TODO()
-        is SuggestUiState.Loading -> TODO()
-        SuggestUiState.Success -> TODO()
+
+    if (openAlertDialog) {
+        MinimalDialog(
+            state = state,
+            onDismissRequest = { openAlertDialog = !openAlertDialog },
+        )
     }
 }
 
 @Composable
-fun MinimalDialog(onDismissRequest: () -> Unit) {
+fun MinimalDialog(
+    state: SuggestUiState,
+    onDismissRequest: () -> Unit,
+) {
+    var progress by remember { mutableFloatStateOf(0.1f) }
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress,
+        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
+        label = "Loading Progress"
+    )
+
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -138,13 +157,39 @@ fun MinimalDialog(onDismissRequest: () -> Unit) {
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
-            Text(
-                text = "This is a minimal dialog",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center),
-                textAlign = TextAlign.Center,
-            )
+            when (state) {
+                is SuggestUiState.Error -> {
+                    Text(
+                        text = "This is a minimal dialog",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(Alignment.Center),
+                        textAlign = TextAlign.Center,
+                    )
+                }
+
+                SuggestUiState.Initial -> onDismissRequest.invoke()
+                is SuggestUiState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        state.progress?.let {
+                            if (state.progress.toFloatOrNull() != null) {
+                                progress = state.progress.toFloat()
+                                Column {
+                                    CircularProgressIndicator(progress = animatedProgress)
+                                    Text("Uploading image ${animatedProgress}%")
+                                }
+                            } else {
+                                Column {
+                                    CircularProgressIndicator()
+                                    Text(state.progress)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                SuggestUiState.Success -> onDismissRequest.invoke()
+            }
         }
     }
 }

@@ -1,12 +1,12 @@
 package com.github.andiim.plantscan.app.utils
 
-import android.graphics.Bitmap
 import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.data.source.network.Dispatcher
 import com.github.andiim.plantscan.app.core.data.source.network.PsDispatchers.IO
 import com.github.andiim.plantscan.app.core.data.source.network.fake.FakeAssetManager
 import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
 import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
+import com.github.andiim.plantscan.app.core.firestore.model.ImageContent
 import com.github.andiim.plantscan.app.core.firestore.model.PlantDocument
 import com.github.andiim.plantscan.app.core.firestore.model.SuggestionDocument
 import kotlinx.coroutines.CoroutineDispatcher
@@ -52,7 +52,7 @@ class FakeRemoteDataSource @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun uploadSuggestionImage(image: Bitmap, ref: String): Flow<Resource<String>> {
+    override fun uploadSuggestionImage(content: ImageContent): Flow<Resource<String>> {
         TODO("Not yet implemented")
     }
 
