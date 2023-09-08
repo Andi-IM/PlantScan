@@ -14,10 +14,10 @@ fun PlantScanAppState.navigateToAuthRoute() {
 }
 
 fun NavGraphBuilder.authScreen(
-    navigateAndPopUp: () -> Unit,
-    routeToWeb: (String) -> Unit,
+    onAuthClick: () -> Unit,
+    onLinkClick: (String) -> Unit,
 ) {
     composable(route = Direction.Login.route) {
-        AuthRoute(navigateFromLogin = navigateAndPopUp, openWeb = routeToWeb)
+        AuthRoute(navigateFromLogin = onAuthClick, openWeb = onLinkClick)
     }
 }
