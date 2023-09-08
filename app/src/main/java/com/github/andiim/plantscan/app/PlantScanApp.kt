@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -11,6 +12,8 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
@@ -33,6 +36,7 @@ import com.github.andiim.plantscan.app.core.data.util.NetworkMonitor
 import com.github.andiim.plantscan.app.core.ui.TrackDisposableJank
 import com.github.andiim.plantscan.app.ui.common.composables.BottomBar
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
+import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarVisualsWithError
 import com.github.andiim.plantscan.app.ui.navigation.SetupRootNavGraph
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import kotlinx.coroutines.CoroutineScope
@@ -67,14 +71,39 @@ fun PlantScanApp(
                 contentWindowInsets = WindowInsets(0, 0, 0, 0),
                 snackbarHost = {
                     SnackbarHost(
-                        hostState = appState.snackbarHostState,
-                        modifier = Modifier.padding(8.dp),
-                        snackbar = { snackbarData ->
-                            Snackbar(
-                                snackbarData,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
+                        hostState = appState.snackbarHostState
+                    ) { snackbarData ->
+                        val isError =
+                            (snackbarData.visuals as? SnackbarVisualsWithError)?.isError
+                                ?: false
+
+                        val buttonColor = if (isError) {
+                            ButtonDefaults.textButtonColors(
+                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                contentColor = MaterialTheme.colorScheme.error
                             )
-                        })
+                        } else {
+                            ButtonDefaults.textButtonColors(
+                                contentColor = MaterialTheme.colorScheme.inversePrimary
+                            )
+                        }
+
+                        Snackbar(
+                            modifier = Modifier
+                                .padding(12.dp),
+                            action = {
+                                if (isError) {
+                                    TextButton(
+                                        onClick = { snackbarData.performAction() },
+                                        colors = buttonColor,
+                                        modifier = Modifier.padding(2.dp)
+                                    ) { Text(snackbarData.visuals.actionLabel ?: "") }
+                                }
+                            }
+                        ) {
+                            Text(snackbarData.visuals.message)
+                        }
+                    }
                 },
                 bottomBar = {
                     BottomBar(

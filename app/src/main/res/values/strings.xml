@@ -85,4 +85,7 @@
     <string name="suggestion_button_label">Not sure for the result?</string>
     <string name="suggestion_action_label">give a suggestion</string>
     <string name="camera_error_label">Couldn\'t take photo</string>
+    <string name="suggestion_title_screen">Give a suggestion</string>
+    <string name="suggest_send_label">Send</string>
+    <string name="suggest_deny_message">Sorry, you must login to access this feature</string>
 </resources>

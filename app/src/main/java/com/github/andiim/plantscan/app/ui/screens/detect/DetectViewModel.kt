@@ -107,6 +107,7 @@ constructor(
 
     fun onSuggestClick(onClick: (String) -> Unit) {
         val id = authService.currentUserId
+        // TODO : MUST LOGIN FOR SEND A SUGGEST
         onClick.invoke(id)
     }
 }

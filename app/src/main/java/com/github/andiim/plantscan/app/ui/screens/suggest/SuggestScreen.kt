@@ -19,13 +19,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,7 +44,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,22 +58,37 @@ import coil.request.ImageRequest
 import com.github.andiim.plantscan.app.R
 import com.github.andiim.plantscan.app.core.domain.model.Suggestion
 import com.github.andiim.plantscan.app.ui.TrackScreenViewEvent
-import com.github.andiim.plantscan.app.ui.common.composables.BasicField
-import com.github.andiim.plantscan.app.ui.screens.detail.Toolbar
+import com.github.andiim.plantscan.app.ui.common.composables.BasicToolbar
+import com.github.andiim.plantscan.app.ui.common.composables.PsCard
+import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 
 @Composable
 internal fun SuggestRoute(
     popUpScreen: () -> Unit,
+    onAuthClick: () -> Unit,
     viewModel: SuggestViewModel = hiltViewModel()
 ) {
-    val uiState: SuggestUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState: SendingState by viewModel.uiState.collectAsStateWithLifecycle()
+    val status: UiState by viewModel.status.collectAsState()
     val data: Suggestion by viewModel.data.collectAsState()
 
+    if (status is UiState.Denied) {
+        SnackbarManager.showMessage(
+            message = stringResource(R.string.suggest_deny_message),
+            label = "Login",
+            isError = true,
+            action = onAuthClick
+        )
+        popUpScreen.invoke()
+    }
+
     TrackScreenViewEvent(screenName = "Suggesting: ${viewModel.plantId}")
+
+
     SuggestScreen(
         state = uiState,
-        popUpScreen = popUpScreen,
+        onBackClick = popUpScreen,
         description = data.description,
         onSetDescription = viewModel::onDescriptionChange,
         image = data.image,
@@ -76,79 +99,126 @@ internal fun SuggestRoute(
 
 @Composable
 internal fun SuggestScreen(
-    state: SuggestUiState,
+    state: SendingState,
     description: String,
     image: List<Bitmap>,
-    onImageSet: (Context, List<Uri>) -> Unit,
-    popUpScreen: () -> Unit,
+    onImageSet: (Context, List<Uri>, Int) -> Unit,
+    onBackClick: () -> Unit,
     onSetDescription: (String) -> Unit,
     onSendClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val maxItems = 3
     val context = LocalContext.current
     val listState = rememberLazyListState()
     var openAlertDialog by remember { mutableStateOf(false) }
-    if (state is SuggestUiState.Loading) openAlertDialog = true
+    if (state is SendingState.Loading) openAlertDialog = true
 
     val launcher = rememberLauncherForActivityResult(
-        contract = PickMultipleVisualMedia(5)
-    ) { uris -> if (uris.isNotEmpty()) onImageSet(context, uris) }
+        contract = PickMultipleVisualMedia(maxItems)
+    ) { uris -> if (uris.isNotEmpty()) onImageSet(context, uris, maxItems) }
 
 
     Box(modifier = modifier) {
 
         LazyColumn(
-            state = listState,
-            horizontalAlignment = Alignment.CenterHorizontally,
+            state = listState, horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                Toolbar(onBackClick = popUpScreen)
+                BasicToolbar(
+                    title = R.string.suggestion_title_screen,
+                    leading = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = null)
+                        }
+                    },
+                )
             }
 
             item {
-                BasicField(
-                    text = R.string.description,
+
+                Text(
+                    text = "Help developer to make better plant detection",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+
+                OutlinedTextField(
                     value = description,
-                    onNewValue = onSetDescription,
+                    label = {
+                        Text(
+                            text = stringResource(R.string.description),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                    },
+                    onValueChange = onSetDescription,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    minLines = 4,
+                    maxLines = 7
                 )
             }
 
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                LazyHorizontalGrid(
-                    rows = GridCells.Fixed(3),
+                Text(
+                    "Place some image ${image.size}/$maxItems",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.height(176.dp)
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .height(100.dp)
+                        .padding(horizontal = 16.dp)
                 ) {
                     image.forEachIndexed { index, data ->
                         item {
                             AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(data)
-                                    .crossfade(true)
-                                    .build(),
+                                model = ImageRequest.Builder(LocalContext.current).data(data)
+                                    .crossfade(true).build(),
                                 modifier = Modifier.size(100.dp),
+                                contentScale = ContentScale.Crop,
                                 contentDescription = "image@${image[index]}",
                             )
                         }
                     }
 
-                    item {
-                        Button(
-                            onClick = {
-                                launcher.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
-                            },
-                        ) {
-                            Text("Add Image")
+                    if (image.size != maxItems) {
+                        item {
+                            PsCard(
+                                onClick = {
+                                    launcher.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
+                                }, modifier = Modifier.size(100.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(Icons.Default.Add, contentDescription = null)
+                                }
+                            }
                         }
                     }
                 }
             }
 
             item {
-                Button(onClick = onSendClick) {
-                    Text("Send")
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = onSendClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                ) {
+                    Text(stringResource(R.string.suggest_send_label))
                 }
             }
 
@@ -167,7 +237,7 @@ internal fun SuggestScreen(
 
 @Composable
 fun MinimalDialog(
-    state: SuggestUiState,
+    state: SendingState,
     onDismissRequest: () -> Unit,
 ) {
     var progress by remember { mutableFloatStateOf(0.1f) }
@@ -186,7 +256,7 @@ fun MinimalDialog(
             shape = RoundedCornerShape(16.dp),
         ) {
             when (state) {
-                is SuggestUiState.Error -> {
+                is SendingState.Error -> {
                     Text(
                         text = "This is a minimal dialog",
                         modifier = Modifier
@@ -196,8 +266,8 @@ fun MinimalDialog(
                     )
                 }
 
-                SuggestUiState.Initial -> onDismissRequest.invoke()
-                is SuggestUiState.Loading -> {
+                SendingState.Initial -> onDismissRequest.invoke()
+                is SendingState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         state.progress?.let {
                             if (state.progress.toFloatOrNull() != null) {
@@ -216,7 +286,7 @@ fun MinimalDialog(
                     }
                 }
 
-                SuggestUiState.Success -> onDismissRequest.invoke()
+                SendingState.Success -> onDismissRequest.invoke()
             }
         }
     }
@@ -227,15 +297,13 @@ fun MinimalDialog(
 fun Preview_SuggestScreen() {
     PlantScanTheme {
         Surface {
-            SuggestScreen(
-                state = SuggestUiState.Initial,
+            SuggestScreen(state = SendingState.Initial,
                 description = "",
                 image = listOf(),
-                onImageSet = { _, _ -> },
-                popUpScreen = { /*TODO*/ },
+                onImageSet = { _, _, _ -> },
+                onBackClick = { /*TODO*/ },
                 onSetDescription = {},
-                onSendClick = {}
-            )
+                onSendClick = {})
         }
     }
 }

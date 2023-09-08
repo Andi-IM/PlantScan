@@ -31,13 +31,14 @@ fun PlantScanAppState.navigateToSuggest(id: String) {
     this.navigate(Direction.Suggest.createRoute(encodedId))
 }
 
-fun NavGraphBuilder.suggetScreen(
+fun NavGraphBuilder.suggestScreen(
     onBackClick: () -> Unit,
+    onAuthClick: () -> Unit,
 ) {
     composable(
         route = Direction.Suggest.route,
         arguments = listOf(navArgument(plantIdArg) { type = NavType.StringType }),
     ) {
-        SuggestRoute(popUpScreen = onBackClick)
+        SuggestRoute(popUpScreen = onBackClick, onAuthClick = onAuthClick)
     }
 }

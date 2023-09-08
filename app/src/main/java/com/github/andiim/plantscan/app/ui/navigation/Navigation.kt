@@ -24,7 +24,7 @@ import com.github.andiim.plantscan.app.ui.screens.list.listScreen
 import com.github.andiim.plantscan.app.ui.screens.list.navigateToList
 import com.github.andiim.plantscan.app.ui.screens.splash.splashScreen
 import com.github.andiim.plantscan.app.ui.screens.suggest.navigateToSuggest
-import com.github.andiim.plantscan.app.ui.screens.suggest.suggetScreen
+import com.github.andiim.plantscan.app.ui.screens.suggest.suggestScreen
 import com.github.andiim.plantscan.app.ui.screens.web.navigateToWeb
 import com.github.andiim.plantscan.app.ui.screens.web.webViewScreen
 
@@ -77,7 +77,11 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
             },
             onSuggestClick = appState::navigateToSuggest
         )
-        suggetScreen(onBackClick = appState::popUp)
+
+        suggestScreen(
+            onBackClick = appState::popUp,
+            onAuthClick = appState::navigateToAuthRoute
+        )
     }
 }
 

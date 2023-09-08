@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,7 +37,7 @@ fun DangerousCardEditor(
     modifier: Modifier,
     onEditClick: () -> Unit
 ) {
-  CardEditor(title, icon, content, onEditClick, MaterialTheme.colorScheme.primary, modifier)
+    CardEditor(title, icon, content, onEditClick, MaterialTheme.colorScheme.primary, modifier)
 }
 
 @Composable
@@ -47,7 +48,7 @@ fun RegularCardEditor(
     modifier: Modifier,
     onClick: () -> Unit
 ) {
-  CardEditor(title, icon, content, onClick, MaterialTheme.colorScheme.onSurface, modifier)
+    CardEditor(title, icon, content, onClick, MaterialTheme.colorScheme.onSurface, modifier)
 }
 
 @Composable
@@ -60,27 +61,46 @@ fun CardEditor(
     highlightColor: Color,
     modifier: Modifier
 ) {
-  Card(
-      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
-      modifier = modifier,
-      onClick = onEditClick) {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
+        modifier = modifier,
+        onClick = onEditClick
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-              Column(modifier = Modifier.weight(1f)) {
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(stringResource(title), color = highlightColor)
-              }
-
-              if (content.isNotBlank()) {
-                Text(text = content, modifier = Modifier.padding(16.dp, 0.dp))
-              }
-
-              Icon(
-                  painter = painterResource(icon),
-                  contentDescription = "Icon",
-                  tint = highlightColor)
             }
-      }
+
+            if (content.isNotBlank()) {
+                Text(text = content, modifier = Modifier.padding(16.dp, 0.dp))
+            }
+
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = "Icon",
+                tint = highlightColor
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PsCard(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable() ColumnScope.() -> Unit,
+) {
+    Card(
+        onClick = onClick,
+        modifier = modifier,
+        content = content
+    )
 }
 
 @Composable
@@ -91,49 +111,51 @@ fun CardSelector(
     modifier: Modifier,
     onNewValue: (String) -> Unit
 ) {
-  Card(
-      colors =
-          CardDefaults.cardColors(
-              containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-          ),
-      modifier = modifier) {
+    Card(
+        colors =
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        ),
+        modifier = modifier
+    ) {
         DropdownSelector(
             label = label,
             options = options,
             selection = selection,
             modifier = Modifier.dropdownSelector(),
-            onNewValue = onNewValue)
-      }
+            onNewValue = onNewValue
+        )
+    }
 }
 
 @Preview(name = "Night Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(name = "Day Mode", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun Preview() {
-  PlantScanTheme {
-    Surface {
-      Column(modifier = Modifier.padding(16.dp)) {
-        DangerousCardEditor(
-            title = AppText.app_name,
-            icon = AppDrawable.ic_visibility_on,
-            content = "something",
-            modifier = Modifier,
-            onEditClick = {})
-        Spacer(Modifier.padding(8.dp))
-        RegularCardEditor(
-            title = AppText.app_name,
-            icon = AppDrawable.ic_visibility_on,
-            content = "something",
-            modifier = Modifier,
-            onClick = {})
-        Spacer(Modifier.padding(8.dp))
-        CardSelector(
-            label = AppText.app_name,
-            options = listOf("Hello", "World!"),
-            selection = "select this?",
-            modifier = Modifier,
-            onNewValue = {})
-      }
+    PlantScanTheme {
+        Surface {
+            Column(modifier = Modifier.padding(16.dp)) {
+                DangerousCardEditor(
+                    title = AppText.app_name,
+                    icon = AppDrawable.ic_visibility_on,
+                    content = "something",
+                    modifier = Modifier,
+                    onEditClick = {})
+                Spacer(Modifier.padding(8.dp))
+                RegularCardEditor(
+                    title = AppText.app_name,
+                    icon = AppDrawable.ic_visibility_on,
+                    content = "something",
+                    modifier = Modifier,
+                    onClick = {})
+                Spacer(Modifier.padding(8.dp))
+                CardSelector(
+                    label = AppText.app_name,
+                    options = listOf("Hello", "World!"),
+                    selection = "select this?",
+                    modifier = Modifier,
+                    onNewValue = {})
+            }
+        }
     }
-  }
 }
