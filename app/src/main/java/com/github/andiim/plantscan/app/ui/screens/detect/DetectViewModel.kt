@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,7 +60,7 @@ constructor(
                         _detectionResult.update { DetectUiState.Error(error) }
                     }
 
-                    Resource.Loading -> {
+                    is Resource.Loading -> {
                         _detectionResult.update { DetectUiState.Loading }
                     }
 
@@ -78,8 +77,7 @@ constructor(
                             )
 
                         }
-                        val not = useCase.recordDetection(history).first()
-                        Timber.d("NOOT=$not")
+                        useCase.recordDetection(history)
 
                         val detectedObjects = data.predictions.map { results ->
                             with(results) {

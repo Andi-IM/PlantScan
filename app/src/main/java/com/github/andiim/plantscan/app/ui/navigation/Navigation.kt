@@ -23,6 +23,8 @@ import com.github.andiim.plantscan.app.ui.screens.home.settings.homeSettingsElem
 import com.github.andiim.plantscan.app.ui.screens.list.listScreen
 import com.github.andiim.plantscan.app.ui.screens.list.navigateToList
 import com.github.andiim.plantscan.app.ui.screens.splash.splashScreen
+import com.github.andiim.plantscan.app.ui.screens.suggest.navigateToSuggest
+import com.github.andiim.plantscan.app.ui.screens.suggest.suggetScreen
 import com.github.andiim.plantscan.app.ui.screens.web.navigateToWeb
 import com.github.andiim.plantscan.app.ui.screens.web.webViewScreen
 
@@ -35,38 +37,47 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
     ) {
         navigation(startDestination = Direction.Login.route, route = Direction.AccountNav.route) {
             authScreen(
-                routeToWeb = appState::navigateToWeb,
-                navigateAndPopUp = appState::navigateFromAuthRoute,
+                onLinkClick = appState::navigateToWeb,
+                onAuthClick = appState::navigateFromAuthRoute,
             )
-            webViewScreen(onBackPressed = appState::popUp)
+            webViewScreen(onBackClick = appState::popUp)
         }
 
-        detailScreen(onBackPressed = appState::popUp)
+        detailScreen(onBackClick = appState::popUp)
 
         navigation(startDestination = Direction.FindPlant.route, route = Direction.MainNav.route) {
             homeFindPlantElement(
-                routeToDetail = appState::navigateToDetail,
-                routeToCamera = appState::navigateToCamera,
-                routeToList = appState::navigateToList
+                onItemClick = appState::navigateToDetail,
+                onCameraClick = appState::navigateToCamera,
+                onListClick = appState::navigateToList
             )
             homeHistoryElement()
             homeSettingsElement(
                 clearAndNavigate = appState::clearAndNavigate,
-                routeToLogin = appState::navigateToAuthRoute,
+                onLoginClick = appState::navigateToAuthRoute,
             )
         }
 
         listScreen(
-            onBackPressed = appState::popUp,
-            routeToDetail = appState::navigateToDetail,
+            onBackClick = appState::popUp,
+            onDetailClick = appState::navigateToDetail,
         )
-        splashScreen(navigateAndPopUp = appState::gotoMainNavRoute)
+        splashScreen(onLoadingFinished = appState::gotoMainNavRoute)
 
         cameraFragment(
-            onBackPressed = appState::popUp,
-            routeToDetect = appState::navigateToDetect
+            onBackClick = appState::popUp,
+            onDetectionClick = appState::navigateToDetect
         )
-        detectFragment()
+        detectFragment(
+            backToTop = {
+                appState.navigateAndPopUp(
+                    Direction.MainNav.route,
+                    Direction.Detect.route
+                )
+            },
+            onSuggestClick = appState::navigateToSuggest
+        )
+        suggetScreen(onBackClick = appState::popUp)
     }
 }
 

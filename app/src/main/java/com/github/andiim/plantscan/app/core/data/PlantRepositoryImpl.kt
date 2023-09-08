@@ -8,10 +8,13 @@ import com.github.andiim.plantscan.app.core.data.source.network.NetworkDataSourc
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
 import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.core.domain.model.Plant
+import com.github.andiim.plantscan.app.core.domain.model.Suggestion
 import com.github.andiim.plantscan.app.core.domain.repository.PlantRepository
 import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
 import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
+import com.github.andiim.plantscan.app.core.firestore.model.SuggestionDocument
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -67,4 +70,28 @@ constructor(
         }
     }
 
+    override fun sendSuggestion(suggestion: Suggestion): Flow<Resource<String>> = flow {
+        val id = remote.sendASuggestions(SuggestionDocument.fromModel(suggestion))
+
+        if (suggestion.image != null) {
+            val suggestionWithId = suggestion.copy(id = id)
+            val status = remote.uploadSuggestionImage(
+                suggestionWithId.image!!,
+                "${suggestionWithId.id}/${suggestionWithId.userId}"
+            ).first()
+
+            when (status) {
+                is Resource.Error -> emit(Resource.Error(status.message))
+                is Resource.Loading -> emit(Resource.Loading(status.progress))
+                is Resource.Success -> {
+                    val downloadUrl = status.data
+                    val uploadData = suggestionWithId.copy(imageUrl = downloadUrl)
+                    remote.updateASuggestion(SuggestionDocument.fromModel(uploadData))
+                    emit(Resource.Success("Success"))
+                }
+            }
+        } else {
+            emit(Resource.Success("Success"))
+        }
+    }
 }

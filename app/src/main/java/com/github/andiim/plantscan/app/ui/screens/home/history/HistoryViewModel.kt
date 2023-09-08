@@ -54,7 +54,7 @@ private fun historyUiState(
     return useCase.getDetectionsList(user.id).map {
         when (it) {
             is Resource.Error -> HistoryUiState.Error(it.message)
-            Resource.Loading -> HistoryUiState.Loading
+            is Resource.Loading -> HistoryUiState.Loading
             is Resource.Success -> {
                 val data = it.data
                 HistoryUiState.Success(data)

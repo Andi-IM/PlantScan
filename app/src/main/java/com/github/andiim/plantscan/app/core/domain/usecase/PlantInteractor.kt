@@ -7,11 +7,12 @@ import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
 import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.core.domain.model.Plant
+import com.github.andiim.plantscan.app.core.domain.model.Suggestion
 import com.github.andiim.plantscan.app.core.domain.repository.CameraRepository
 import com.github.andiim.plantscan.app.core.domain.repository.PlantRepository
+import kotlinx.coroutines.flow.Flow
 import java.io.File
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
 
 class PlantInteractor
 @Inject
@@ -26,6 +27,9 @@ constructor(private val plantRepo: PlantRepository, private val cameraRepo: Came
 
     override fun getDetectionsList(userId: String): Flow<Resource<List<DetectionHistory>>> =
         plantRepo.getDetectionsList(userId)
+
+    override fun sendSuggestion(suggestion: Suggestion): Flow<Resource<String>> =
+        plantRepo.sendSuggestion(suggestion)
 
     override fun notifyImageCreated(savedUri: Uri) = cameraRepo.notifyImageCreated(savedUri)
     override fun createImageOutputFile(): File = cameraRepo.createImageOutputFile()

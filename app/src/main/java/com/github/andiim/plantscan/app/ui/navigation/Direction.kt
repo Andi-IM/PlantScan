@@ -11,7 +11,9 @@ sealed class Direction(val route: String) {
     data object MyGarden : Direction("my_garden")
     data object Settings : Direction("settings")
     data object Login : Direction("login")
-    data object SignUp : Direction("signup")
+    data object Suggest : Direction("suggest/{plantId}"){
+        fun createRoute(id: String) = "suggest/$id"
+    }
     data object List : Direction("plant")
     data object Web : Direction("web_screen/{url}") {
         fun setUrl(url: String) = "web_screen/$url"

@@ -1,18 +1,21 @@
 package com.github.andiim.plantscan.app.utils
 
-import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
-import com.github.andiim.plantscan.app.core.firestore.model.PlantDocument
+import android.graphics.Bitmap
+import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.data.source.network.Dispatcher
 import com.github.andiim.plantscan.app.core.data.source.network.PsDispatchers.IO
 import com.github.andiim.plantscan.app.core.data.source.network.fake.FakeAssetManager
 import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
+import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
+import com.github.andiim.plantscan.app.core.firestore.model.PlantDocument
 import com.github.andiim.plantscan.app.core.firestore.model.SuggestionDocument
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import javax.inject.Inject
 
 class FakeRemoteDataSource @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
@@ -42,6 +45,14 @@ class FakeRemoteDataSource @Inject constructor(
         }
 
     override suspend fun sendASuggestions(suggestion: SuggestionDocument): String {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateASuggestion(suggestion: SuggestionDocument) {
+        TODO("Not yet implemented")
+    }
+
+    override fun uploadSuggestionImage(image: Bitmap, ref: String): Flow<Resource<String>> {
         TODO("Not yet implemented")
     }
 
