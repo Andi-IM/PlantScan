@@ -1,7 +1,6 @@
 package com.github.andiim.plantscan.app.ui.screens.detect
 
 import android.content.Context
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -13,12 +12,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dangerous
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +36,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -53,13 +58,17 @@ fun DetectRoute(
     viewModel: DetectViewModel = hiltViewModel()
 ) {
     val detectState: DetectUiState by viewModel.detectResult.collectAsState()
+    val context = LocalContext.current
+
     DetectScreen(
-        // interpreterState = interpreterState,
+        context = context,
         detectState = detectState,
-        detectRobo = viewModel::detect
+        detect = viewModel::detect,
+        onBackClick = backToTop,
+        onSuggestClick = { viewModel.onSuggestClick(onSuggestClick) },
     )
 
-    val context = LocalContext.current
+
     LaunchedEffect(viewModel) {
         viewModel.detect(context)
     }
@@ -67,19 +76,17 @@ fun DetectRoute(
 
 @Composable
 fun DetectScreen(
+    context: Context,
+    onBackClick: () -> Unit,
+    onSuggestClick: () -> Unit,
     detectState: DetectUiState,
-    detectRobo: (Context) -> Unit,
+    detect: (Context) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
-
-    var selected by remember { mutableStateOf(false) }
-
-    val context = LocalContext.current
     Box(modifier = modifier) {
         when (detectState) {
             is DetectUiState.Error -> {
-                ErrorState(detectState.message ?: "", onClick = { detectRobo(context) })
+                ErrorState(detectState.message ?: "", onClick = { detect(context) })
             }
 
             DetectUiState.Loading -> {
@@ -87,20 +94,34 @@ fun DetectScreen(
             }
 
             is DetectUiState.Success -> {
-                DetectContent(detectState.detection as ObjectDetection)
+                DetectContent(
+                    result = detectState.detection,
+                    onBackClick = onBackClick,
+                    onSuggestClick = onSuggestClick,
+                )
             }
         }
     }
 }
 
 @Composable
-fun DetectContent(result: ObjectDetection) {
+fun DetectContent(
+    result: ObjectDetection,
+    onBackClick: () -> Unit,
+    onSuggestClick: () -> Unit,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val predictionList = result.predictions.map {
             DetectionResult(it.jsonMemberClass, it.confidence.times(100))
+        }
+
+        item {
+            Button(onClick = onBackClick) {
+                Text(text = "Back")
+            }
         }
 
         item {
@@ -166,10 +187,39 @@ fun DetectContent(result: ObjectDetection) {
                     trailingContent = { Text(text = "${it.conf}%") })
             }
         }
+
+        item {
+            SuggestButton(onClick = onSuggestClick)
+        }
     }
 }
 
-fun getRes(@DrawableRes id: Int): Int = id
+@Composable
+fun SuggestButton(onClick: () -> Unit) {
+    val context = LocalContext.current
+
+    val annotatedText = buildAnnotatedString {
+        withStyle(style = SpanStyle()) {
+            append(context.getString(R.string.suggestion_button_label))
+        }
+        append(" ")
+        withStyle(
+            style = SpanStyle(
+                color = (MaterialTheme.colorScheme).primary,
+                fontWeight = FontWeight.Bold
+            ),
+        ) {
+            append(context.getString(R.string.suggestion_action_label))
+        }
+    }
+
+    ClickableText(
+        text = annotatedText,
+        onClick = { onClick() },
+    )
+
+}
+
 
 data class DetectionResult(val name: String, val conf: Float)
 
@@ -209,7 +259,7 @@ private fun Preview_LoadingContent() {
 private fun Preview_DetectContent(
     @PreviewParameter(DetectScreenPreviewParameterProvider::class) detection: ObjectDetection
 ) {
-    PlantScanTheme { Surface { DetectContent(detection) } }
+    // PlantScanTheme { Surface { DetectContent(detection) } }
 }
 
 @Preview

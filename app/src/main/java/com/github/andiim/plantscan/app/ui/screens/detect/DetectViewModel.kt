@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import com.github.andiim.plantscan.app.core.auth.AccountService
 import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
+import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import com.github.andiim.plantscan.app.ui.common.extensions.getImage
@@ -103,6 +104,11 @@ constructor(
             }
         }
     }
+
+    fun onSuggestClick(onClick: (String) -> Unit) {
+        val id = authService.currentUserId
+        onClick.invoke(id)
+    }
 }
 
 data class BoxWithText(val box: Rect, val text: String)
@@ -155,7 +161,7 @@ private fun drawDetectionResult(
 
 
 sealed interface DetectUiState {
-    data class Success(val detection: Any?) : DetectUiState
+    data class Success(val detection: ObjectDetection) : DetectUiState
     data class Error(val message: String? = null) : DetectUiState
     data object Loading : DetectUiState
 }

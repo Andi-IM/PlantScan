@@ -82,4 +82,6 @@
     <string name="sign_up">Sign Up</string>
     <string name="have_account_question_label">Already have an account?</string>
     <string name="description">Description</string>
+    <string name="suggestion_button_label">Not sure for the result?</string>
+    <string name="suggestion_action_label">give a suggestion</string>
 </resources>
