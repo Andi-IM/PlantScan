@@ -48,7 +48,11 @@ import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import com.github.andiim.plantscan.app.utils.DetectScreenPreviewParameterProvider
 
 @Composable
-fun DetectRoute(viewModel: DetectViewModel = hiltViewModel()) {
+fun DetectRoute(
+    backToTop: () -> Unit,
+    onSuggestClick: (String) -> Unit,
+    viewModel: DetectViewModel = hiltViewModel()
+) {
     val detectState: DetectUiState by viewModel.detectResult.collectAsState()
     DetectScreen(
         // interpreterState = interpreterState,

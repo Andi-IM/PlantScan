@@ -28,11 +28,17 @@ fun PlantScanAppState.navigateToDetect(uri: String) {
     this.navigate(Direction.Detect.createRoute(encodedId), false)
 }
 
-fun NavGraphBuilder.detectFragment() {
+fun NavGraphBuilder.detectFragment(
+    backToTop: () -> Unit,
+    onSuggestClick: (String) -> Unit,
+) {
     composable(
         route = Direction.Detect.route,
         arguments = listOf(navArgument(detectUriArg) { type = NavType.StringType })
     ) {
-        DetectRoute()
+        DetectRoute(
+            backToTop = backToTop,
+            onSuggestClick = onSuggestClick
+        )
     }
 }
