@@ -6,6 +6,7 @@ import com.github.andiim.plantscan.app.core.data.source.network.Dispatcher
 import com.github.andiim.plantscan.app.core.data.source.network.PsDispatchers.IO
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.trace
 import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
+import com.github.andiim.plantscan.app.core.firestore.model.ImageContent
 import com.github.andiim.plantscan.app.core.firestore.model.PlantDocument
 import com.github.andiim.plantscan.app.core.firestore.model.SuggestionDocument
 import com.github.andiim.plantscan.app.core.result.Result
@@ -35,7 +36,8 @@ class FirestoreSourceImpl @Inject constructor(
 
     override suspend fun getPlants(query: String, limit: Long): List<PlantDocument> =
         querySnapshotHandling(
-            db.collection(PLANT_COLLECTION).whereGreaterThanOrEqualTo("name", query).limit(limit)
+            db.collection(PLANT_COLLECTION).whereGreaterThanOrEqualTo(NAME_FIELD, query)
+                .limit(limit)
         )
 
     override suspend fun getPlantById(id: String): PlantDocument =
@@ -51,8 +53,7 @@ class FirestoreSourceImpl @Inject constructor(
 
     override suspend fun sendASuggestions(suggestion: SuggestionDocument): String =
         trace(SAVE_SUGGESTION_TRACE) {
-            val emptyImage = suggestion.copy(image = null)
-            db.collection(SUGGESTION_COLLECTION).add(emptyImage).await().id
+            db.collection(SUGGESTION_COLLECTION).add(suggestion).await().id
         }
 
     override suspend fun updateASuggestion(suggestion: SuggestionDocument): Unit =
@@ -60,14 +61,14 @@ class FirestoreSourceImpl @Inject constructor(
             db.collection(SUGGESTION_COLLECTION).document().set(suggestion, SetOptions.merge())
         }
 
-    override fun uploadSuggestionImage(image: Bitmap, ref: String): Flow<Resource<String>> = flow {
+    override fun uploadSuggestionImage(content: ImageContent): Flow<Resource<String>> = flow {
         val storageRef =
-            storage.reference.child("${SUGGESTION_COLLECTION}/${ref}.jpg")
+            storage.reference.child("${SUGGESTION_COLLECTION}/${content.ref}.jpg")
 
         val byteArray = ByteArrayOutputStream()
         val data =
             byteArray.also {
-                image.compress(Bitmap.CompressFormat.JPEG, 100, it)
+                content.image.compress(Bitmap.CompressFormat.JPEG, 100, it)
             }.toByteArray()
 
         when (val uploadTask = storageRef.putBytes(data).asResult().await()) {
@@ -107,5 +108,6 @@ class FirestoreSourceImpl @Inject constructor(
         private const val SAVE_SUGGESTION_TRACE = "saveSuggestion"
         private const val DETECT_COLLECTION = "detections"
         private const val USER_ID_FIELD = "userId"
+        private const val NAME_FIELD = "name"
     }
 }

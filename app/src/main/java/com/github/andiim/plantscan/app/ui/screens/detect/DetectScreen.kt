@@ -3,7 +3,6 @@ package com.github.andiim.plantscan.app.ui.screens.detect
 import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -106,7 +105,6 @@ fun DetectContent(result: ObjectDetection) {
 
         item {
             var enabled by remember { mutableStateOf(true) }
-            val alpha: Int by animateIntAsState(if (enabled) 1 else 10, label = "")
 
             SubcomposeAsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)

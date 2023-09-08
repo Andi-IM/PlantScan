@@ -1,6 +1,8 @@
 package com.github.andiim.plantscan.app.ui.screens.suggest
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.github.andiim.plantscan.app.core.auth.AccountService
@@ -8,6 +10,7 @@ import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.Suggestion
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
+import com.github.andiim.plantscan.app.ui.common.extensions.getImage
 import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +43,8 @@ class SuggestViewModel @Inject constructor(
         _suggestData.value = _suggestData.value.copy(description = newValue)
     }
 
-    fun onImageSet(newValue: Bitmap) {
+    fun onImageSet(context: Context, uris: List<Uri>) {
+        val newValue: List<Bitmap> = uris.map { getImage(context, it) }
         _suggestData.value = _suggestData.value.copy(image = newValue)
     }
 

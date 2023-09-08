@@ -8,12 +8,12 @@ import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
 data class SuggestionDocument(
-    @DocumentId val id: String? = "",
+    @DocumentId val id: String = "",
     val userId: String = "",
     @ServerTimestamp val date: Date? = null,
     val description: String = "",
-    @Exclude val image: Bitmap? = null,
-    val imageUrl: String? = null,
+    val imageUrl: List<String>? = null,
+    @Exclude val image: List<Bitmap> = listOf(),
 ) {
     companion object {
         fun fromModel(suggestion: Suggestion) = SuggestionDocument(
@@ -21,8 +21,8 @@ data class SuggestionDocument(
             suggestion.userId,
             suggestion.date,
             suggestion.description,
+            suggestion.imageUrl,
             suggestion.image,
-            suggestion.imageUrl
         )
     }
 }

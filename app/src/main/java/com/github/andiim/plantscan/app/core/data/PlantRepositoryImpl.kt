@@ -12,6 +12,7 @@ import com.github.andiim.plantscan.app.core.domain.model.Suggestion
 import com.github.andiim.plantscan.app.core.domain.repository.PlantRepository
 import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
 import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
+import com.github.andiim.plantscan.app.core.firestore.model.ImageContent
 import com.github.andiim.plantscan.app.core.firestore.model.SuggestionDocument
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -72,24 +73,35 @@ constructor(
 
     override fun sendSuggestion(suggestion: Suggestion): Flow<Resource<String>> = flow {
         val id = remote.sendASuggestions(SuggestionDocument.fromModel(suggestion))
+        if (suggestion.image.isNotEmpty()) {
+            val suggestWithId = suggestion.copy(id = id)
+            val downloadUrls = mutableListOf<String>()
 
-        if (suggestion.image != null) {
-            val suggestionWithId = suggestion.copy(id = id)
-            val status = remote.uploadSuggestionImage(
-                suggestionWithId.image!!,
-                "${suggestionWithId.id}/${suggestionWithId.userId}"
-            ).first()
+            // Uploading an images
+            suggestion.image.forEachIndexed { index, data ->
+                emit(Resource.Loading("Uploading Image ${index + 1} of ${suggestion.image.size}"))
+                val content = ImageContent(
+                    data,
+                    "${suggestWithId.id}/${suggestWithId.userId}_$index"
+                )
 
-            when (status) {
-                is Resource.Error -> emit(Resource.Error(status.message))
-                is Resource.Loading -> emit(Resource.Loading(status.progress))
-                is Resource.Success -> {
-                    val downloadUrl = status.data
-                    val uploadData = suggestionWithId.copy(imageUrl = downloadUrl)
-                    remote.updateASuggestion(SuggestionDocument.fromModel(uploadData))
-                    emit(Resource.Success("Success"))
+                when (val status = remote.uploadSuggestionImage(content).first()) {
+                    is Resource.Loading -> emit(Resource.Loading(status.progress))
+                    is Resource.Error -> {
+                        emit(Resource.Error(status.message))
+                        return@flow
+                    }
+
+                    is Resource.Success -> {
+                        val downloadUrl = status.data
+                        downloadUrls.add(downloadUrl)
+                    }
                 }
             }
+
+            val newSuggest = suggestWithId.copy(imageUrl = downloadUrls)
+            remote.updateASuggestion(SuggestionDocument.fromModel(newSuggest))
+            emit(Resource.Success("Success"))
         } else {
             emit(Resource.Success("Success"))
         }

@@ -4,14 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.ImageDecoder.ALLOCATOR_SOFTWARE
-import android.graphics.ImageDecoder.createSource
-import android.graphics.ImageDecoder.decodeBitmap
 import android.graphics.Paint
 import android.graphics.Rect
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -20,6 +15,7 @@ import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
+import com.github.andiim.plantscan.app.ui.common.extensions.getImage
 import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -157,26 +153,6 @@ private fun drawDetectionResult(
     return outputBitmap
 }
 
-private fun getImage(
-    context: Context,
-    imageUri: Uri,
-    // width: Int = 224,
-    // height: Int = 224,
-): Bitmap {
-    val image =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            decodeBitmap(createSource(context.contentResolver, imageUri)) { decoder, _, _ ->
-                decoder.allocator = ALLOCATOR_SOFTWARE
-                decoder.isMutableRequired = true
-            }
-        } else {
-            @Suppress("DEPRECATION")
-            MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
-        }
-
-    // return Bitmap.createScaledBitmap(image, width, height, true)
-    return image
-}
 
 sealed interface DetectUiState {
     data class Success(val detection: Any?) : DetectUiState

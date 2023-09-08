@@ -4,16 +4,16 @@ import android.graphics.Bitmap
 import java.util.Date
 
 data class Suggestion(
-    val id: String?,
+    val id: String,
     val userId: String,
     val date: Date?,
     val description: String,
-    val image: Bitmap?,
-    val imageUrl: String?,
+    val imageUrl: List<String>? = null,
+    val image: List<Bitmap>,
 ) {
     constructor(
         userId: String = "",
         description: String = "",
-        image: Bitmap? = null,
-    ) : this(null, userId, null, description, image, null)
+        image: List<Bitmap> = listOf(),
+    ) : this("", userId, null, description, null, image)
 }
