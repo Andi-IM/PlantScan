@@ -19,8 +19,8 @@ fun NavGraphBuilder.cameraFragment(
     composable(route = Direction.Camera.route) {
         AndroidViewBinding(FragmentContainerBinding::inflate) {
             root.getFragment<CameraFragment>().apply {
-                popUpScreen = onBackClick
-                toDetect = onDetectionClick
+                this.onBackClick = onBackClick
+                onDetectClick = onDetectionClick
             }
         }
     }

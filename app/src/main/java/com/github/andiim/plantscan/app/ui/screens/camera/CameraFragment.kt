@@ -33,12 +33,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class CameraFragment : Fragment() {
-    var popUpScreen: (() -> Unit)? = null
-    var toDetect: ((String) -> Unit)? = null
+    var onBackClick: (() -> Unit)? = null
+    var onDetectClick: ((String) -> Unit)? = null
 
     private val extensionName =
         mapOf(
@@ -114,7 +113,6 @@ class CameraFragment : Fragment() {
 
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                Timber.d("URI = $uri")
                 lifecycleScope.launch {
                     viewModel.openGallery(uri)
                 }
@@ -158,7 +156,7 @@ class CameraFragment : Fragment() {
 
                     is CameraUiAction.ActionDetect -> {
                         val uri = action.uri
-                        toDetect?.invoke(uri)
+                        onDetectClick?.invoke(uri)
                     }
 
                     CameraUiAction.CloseCameraClick -> {
@@ -266,7 +264,7 @@ class CameraFragment : Fragment() {
                     }
 
                     is CaptureState.CaptureFailed -> {
-                        extensionsScreen.showCaptureError("Couldn't take photo")
+                        extensionsScreen.showCaptureError(getString(R.string.camera_error_label))
                         viewModel.startPreview(viewLifecycleOwner, extensionsScreen.previewView)
                         captureScreenViewState.emit(
                             captureScreenViewState.value.updateCameraScreen {
@@ -297,7 +295,14 @@ class CameraFragment : Fragment() {
 
                         is PermissionState.Denied -> {
                             if (cameraUiState.cameraState != CameraState.PREVIEW_STOPPED) {
-                                extensionsScreen.showPermissionsRequest(permissionState.shouldShowRationale)
+                                extensionsScreen.showPermissionsRequest(
+                                    shouldShowRationale = permissionState.shouldShowRationale,
+                                    galleryClicked = {
+                                        pickMedia.launch(
+                                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                        )
+                                    },
+                                )
                                 return@collectLatest
                             }
                         }
@@ -345,7 +350,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun closeCamera() {
-        popUpScreen?.invoke()
+        onBackClick?.invoke()
     }
 
     private suspend fun closePhotoPreview() {

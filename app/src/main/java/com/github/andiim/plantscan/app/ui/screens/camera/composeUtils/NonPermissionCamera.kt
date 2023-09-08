@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,28 +22,44 @@ import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import com.github.andiim.plantscan.app.R.string as AppText
 
 @Composable
-fun NonPermissionScreen(shouldShowRationale: Boolean, onClick: () -> Unit = {}) {
+fun NonPermissionScreen(
+    shouldShowRationale: Boolean,
+    showPermission: () -> Unit,
+    openGallery: () -> Unit
+) {
 
-  val stringResource =
-      if (shouldShowRationale) R.string.camera_permissions_request_with_rationale
-      else R.string.camera_permissions_request
+    val stringResource =
+        if (shouldShowRationale) R.string.camera_permissions_request_with_rationale
+        else R.string.camera_permissions_request
 
-  Column(
-      modifier = Modifier.fillMaxSize().background(color = Color.Black).padding(32.dp),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.Black)
+            .padding(32.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             stringResource(stringResource),
             style = (MaterialTheme.typography).bodyMedium,
             color = Color.White,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = 16.dp))
-        Button(onClick = onClick) { Text(stringResource(AppText.camera_permissions_action)) }
-      }
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        Button(onClick = showPermission) { Text(stringResource(AppText.camera_permissions_action)) }
+        OutlinedButton(onClick = openGallery) { Text("Show gallery instead") }
+    }
 }
 
 @Preview
 @Composable
 fun Preview_NonPermission() {
-  PlantScanTheme { NonPermissionScreen(false) }
+    PlantScanTheme {
+        NonPermissionScreen(
+            shouldShowRationale = false,
+            showPermission = {},
+            openGallery = {},
+        )
+    }
 }

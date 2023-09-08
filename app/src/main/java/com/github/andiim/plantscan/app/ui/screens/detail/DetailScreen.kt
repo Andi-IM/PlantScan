@@ -106,7 +106,7 @@ internal fun DetailScreen(
 
                 is DetailUiState.Success -> {
                     item {
-                        DetailToolbar(
+                        Toolbar(
                             onBackClick = onBackClick,
                         )
                     }
@@ -126,7 +126,7 @@ internal fun DetailScreen(
 }
 
 @Composable
-fun DetailToolbar(
+fun Toolbar(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -323,7 +323,7 @@ private fun Preview_DetailContent(
 @Composable
 private fun Preview_TopContent() {
     PlantScanTheme {
-        DetailToolbar(
+        Toolbar(
             onBackClick = {},
         )
     }
