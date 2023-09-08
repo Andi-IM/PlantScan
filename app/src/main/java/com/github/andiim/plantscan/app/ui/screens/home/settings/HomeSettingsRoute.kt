@@ -6,12 +6,12 @@ import com.github.andiim.plantscan.app.ui.navigation.Direction
 
 fun NavGraphBuilder.homeSettingsElement(
     clearAndNavigate: (String) -> Unit,
-    routeToLogin: () -> Unit,
+    onLoginClick: () -> Unit,
 ) {
     composable(route = Direction.Settings.route) {
         SettingsElement(
             restartApp = clearAndNavigate,
-            routeToLogin = routeToLogin
+            routeToLogin = onLoginClick
         )
     }
 }

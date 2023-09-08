@@ -31,12 +31,12 @@ fun PlantScanAppState.navigateToWeb(url: String) {
 }
 
 fun NavGraphBuilder.webViewScreen(
-    onBackPressed: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     composable(
         route = Direction.Web.route,
         arguments = listOf(navArgument(urlArg) { type = NavType.StringType })
     ) {
-        WebRoute(popUpScreen = onBackPressed)
+        WebRoute(popUpScreen = onBackClick)
     }
 }

@@ -34,7 +34,7 @@ fun PlantScanAppState.navigateToDetail(id: String) {
 }
 
 fun NavGraphBuilder.detailScreen(
-    onBackPressed: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     composable(
         route = Direction.Detail.route,
@@ -44,6 +44,6 @@ fun NavGraphBuilder.detailScreen(
             uriPattern = "${NavigationConstants.APP_URI}/${Direction.Detail.route}/{$plantIdArg}"
         })
     ) {
-        DetailRoute(popUpScreen = onBackPressed)
+        DetailRoute(popUpScreen = onBackClick)
     }
 }

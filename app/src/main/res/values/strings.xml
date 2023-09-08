@@ -81,4 +81,5 @@
     <string name="no_account_question_label">Don\'t have an account?</string>
     <string name="sign_up">Sign Up</string>
     <string name="have_account_question_label">Already have an account?</string>
+    <string name="description">Description</string>
 </resources>

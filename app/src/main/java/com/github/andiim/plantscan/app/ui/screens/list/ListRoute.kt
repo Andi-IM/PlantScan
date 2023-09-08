@@ -9,8 +9,8 @@ fun PlantScanAppState.navigateToList() {
     this.navigate(Direction.List.route)
 }
 
-fun NavGraphBuilder.listScreen(onBackPressed: () -> Unit, routeToDetail: (String) -> Unit) {
+fun NavGraphBuilder.listScreen(onBackClick: () -> Unit, onDetailClick: (String) -> Unit) {
     composable(route = Direction.List.route) {
-        PlantListScreen(toDetails = routeToDetail, popUpScreen = onBackPressed)
+        PlantListScreen(toDetails = onDetailClick, popUpScreen = onBackClick)
     }
 }
