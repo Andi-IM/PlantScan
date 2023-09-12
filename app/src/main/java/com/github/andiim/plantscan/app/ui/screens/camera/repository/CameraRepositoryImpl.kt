@@ -23,28 +23,30 @@ import javax.inject.Singleton
 class CameraRepositoryImpl @Inject constructor(@ApplicationContext context: Context) :
     CameraRepository {
 
-  private val appContext = context
-  private var rootDirectory: File
-  companion object {
-    private const val PHOTO_EXTENSION = ".jpg"
-  }
+    private val appContext = context
+    private var rootDirectory: File
 
-  init {
-    val mediaDir =
-        context.externalMediaDirs.firstOrNull()?.let {
-          File(it, appContext.resources.getString(R.string.app_name)).apply { mkdirs() }
-        }
-    rootDirectory = if (mediaDir?.exists() == true) mediaDir else appContext.filesDir
-  }
-  override fun notifyImageCreated(savedUri: Uri) {
-    val file = savedUri.toFile()
-    val fileProviderUri =
-        FileProvider.getUriForFile(appContext, appContext.packageName + ".provider", file)
-    appContext.sendBroadcast(Intent(ACTION_NEW_PICTURE, fileProviderUri))
-  }
+    companion object {
+        private const val PHOTO_EXTENSION = ".jpg"
+    }
 
-  override fun createImageOutputFile(): File =
-      File(rootDirectory, PHOTO_EXTENSION.generateFilename())
+    init {
+        val mediaDir =
+            context.externalMediaDirs.firstOrNull()?.let {
+                File(it, appContext.resources.getString(R.string.app_name)).apply { mkdirs() }
+            }
+        rootDirectory = if (mediaDir?.exists() == true) mediaDir else appContext.filesDir
+    }
 
-  private fun String.generateFilename() = UUID.randomUUID().toString() + this
+    override fun notifyImageCreated(savedUri: Uri) {
+        val file = savedUri.toFile()
+        val fileProviderUri =
+            FileProvider.getUriForFile(appContext, appContext.packageName + ".provider", file)
+        appContext.sendBroadcast(Intent(ACTION_NEW_PICTURE, fileProviderUri))
+    }
+
+    override fun createImageOutputFile(): File =
+        File(rootDirectory, PHOTO_EXTENSION.generateFilename())
+
+    private fun String.generateFilename() = UUID.randomUUID().toString() + this
 }

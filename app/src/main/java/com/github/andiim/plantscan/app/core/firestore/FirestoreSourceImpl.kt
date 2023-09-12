@@ -9,13 +9,10 @@ import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocu
 import com.github.andiim.plantscan.app.core.firestore.model.ImageContent
 import com.github.andiim.plantscan.app.core.firestore.model.PlantDocument
 import com.github.andiim.plantscan.app.core.firestore.model.SuggestionDocument
-import com.github.andiim.plantscan.app.core.result.Result
-import com.github.andiim.plantscan.app.core.result.asResult
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.storage.FirebaseStorage
@@ -24,6 +21,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
@@ -34,7 +32,7 @@ class FirestoreSourceImpl @Inject constructor(
 ) :
     FirestoreSource {
 
-    override suspend fun getPlants(query: String, limit: Long): List<PlantDocument> =
+    override suspend fun getPlants(limit: Long, query: String): List<PlantDocument> =
         querySnapshotHandling(
             db.collection(PLANT_COLLECTION).whereGreaterThanOrEqualTo(NAME_FIELD, query)
                 .limit(limit)
@@ -51,19 +49,14 @@ class FirestoreSourceImpl @Inject constructor(
     override suspend fun getDetectionsList(userId: String): List<DetectionHistoryDocument> =
         querySnapshotHandling(db.collection(DETECT_COLLECTION).whereEqualTo(USER_ID_FIELD, userId))
 
-    override suspend fun sendASuggestions(suggestion: SuggestionDocument): String =
+    override suspend fun sendASuggestion(suggestion: SuggestionDocument): String =
         trace(SAVE_SUGGESTION_TRACE) {
             db.collection(SUGGESTION_COLLECTION).add(suggestion).await().id
         }
 
-    override suspend fun updateASuggestion(suggestion: SuggestionDocument): Unit =
-        trace(UPDATE_DETECT_TRACE) {
-            db.collection(SUGGESTION_COLLECTION).document().set(suggestion, SetOptions.merge())
-        }
-
-    override fun uploadSuggestionImage(content: ImageContent): Flow<Resource<String>> = flow {
+    override fun uploadSuggestionImage(content: ImageContent): Flow<String> = flow {
         val storageRef =
-            storage.reference.child("${SUGGESTION_COLLECTION}/${content.ref}.jpg")
+            storage.reference.child("$SUGGESTION_COLLECTION/${content.ref}.jpg")
 
         val byteArray = ByteArrayOutputStream()
         val data =
@@ -71,12 +64,16 @@ class FirestoreSourceImpl @Inject constructor(
                 content.image.compress(Bitmap.CompressFormat.JPEG, 100, it)
             }.toByteArray()
 
-        when (val uploadTask = storageRef.putBytes(data).asResult().await()) {
-            is Result.Error -> emit(Resource.Error(uploadTask.exception?.localizedMessage.orEmpty()))
-            is Result.Loading -> emit(Resource.Loading(uploadTask.progress))
-            is Result.Success -> emit(Resource.Success(uploadTask.data))
-        }
+        val downloadUrl = storageRef.putBytes(data)
+            .await()
+            .storage
+            .downloadUrl
+            .await()
+            .toString()
+
+        emit(downloadUrl)
     }.flowOn(ioDispatcher)
+
 
     private suspend inline fun <reified T : Any> querySnapshotHandling(
         reference: Query
@@ -103,7 +100,6 @@ class FirestoreSourceImpl @Inject constructor(
     companion object {
         private const val PLANT_COLLECTION = "plants"
         private const val SAVE_DETECT_TRACE = "saveDetect"
-        private const val UPDATE_DETECT_TRACE = "updateDetect"
         private const val SUGGESTION_COLLECTION = "suggestions"
         private const val SAVE_SUGGESTION_TRACE = "saveSuggestion"
         private const val DETECT_COLLECTION = "detections"

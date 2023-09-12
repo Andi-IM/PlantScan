@@ -1,8 +1,7 @@
 package com.github.andiim.plantscan.app.core.data
 
-import android.graphics.Bitmap
-import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
+import com.github.andiim.plantscan.app.BuildConfig
 import com.github.andiim.plantscan.app.core.data.mediator.PlantPagingSource
 import com.github.andiim.plantscan.app.core.data.source.network.NetworkDataSource
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
@@ -15,8 +14,9 @@ import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocu
 import com.github.andiim.plantscan.app.core.firestore.model.ImageContent
 import com.github.andiim.plantscan.app.core.firestore.model.SuggestionDocument
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,19 +25,11 @@ class PlantRepositoryImpl
 @Inject
 constructor(
     private val network: NetworkDataSource,
-    private val remote: FirestoreSource,
+    private val remote: FirestoreSource
 ) : PlantRepository {
-
-    companion object {
-        fun getDefaultPageConfig(): PagingConfig {
-            return PagingConfig(
-                pageSize = PlantPagingSource.NETWORK_PAGE_SIZE, enablePlaceholders = false
-            )
-        }
+    override fun getPlants(query: String): PagingSource<Int, Plant> {
+        return PlantPagingSource(remote).apply { setQuery(query) }
     }
-
-    override fun getPlants(query: String): PagingSource<Int, Plant> =
-        PlantPagingSource(remote = remote, query = query)
 
     override fun getPlantDetail(id: String): Flow<Resource<Plant>> = flow {
         try {
@@ -53,9 +45,9 @@ constructor(
         emit(result)
     }
 
-    override fun detect(image: Bitmap): Flow<Resource<ObjectDetection>> = flow {
+    override fun detect(base64ImageData: String): Flow<Resource<ObjectDetection>> = flow {
         try {
-            val response = network.detect(image)
+            val response = network.detect(base64ImageData)
             emit(Resource.Success(response.toModel()))
         } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage.orEmpty()))
@@ -71,39 +63,32 @@ constructor(
         }
     }
 
-    override fun sendSuggestion(suggestion: Suggestion): Flow<Resource<String>> = flow {
-        val id = remote.sendASuggestions(SuggestionDocument.fromModel(suggestion))
-        if (suggestion.image.isNotEmpty()) {
-            val suggestWithId = suggestion.copy(id = id)
-            val downloadUrls = mutableListOf<String>()
-
-            // Uploading an images
-            suggestion.image.forEachIndexed { index, data ->
-                emit(Resource.Loading("Uploading Image ${index + 1} of ${suggestion.image.size}"))
-                val content = ImageContent(
-                    data,
-                    "${suggestWithId.id}/${suggestWithId.userId}_$index"
-                )
-
-                when (val status = remote.uploadSuggestionImage(content).first()) {
-                    is Resource.Loading -> emit(Resource.Loading(status.progress))
-                    is Resource.Error -> {
-                        emit(Resource.Error(status.message))
-                        return@flow
-                    }
-
-                    is Resource.Success -> {
-                        val downloadUrl = status.data
-                        downloadUrls.add(downloadUrl)
+    override fun sendSuggestion(suggestion: Suggestion): Flow<String> = flow {
+        try {
+            var data = suggestion
+            if (suggestion.image.isNotEmpty()) {
+                val downloadUrls = mutableListOf<String>()
+                suggestion.image.forEachIndexed { index, bitmap ->
+                    remote.uploadSuggestionImage(
+                        ImageContent(
+                            bitmap,
+                            "${suggestion.userId}/${suggestion.userId}_$index"
+                        )
+                    ).collectLatest {
+                        downloadUrls.add(it)
                     }
                 }
+
+                data = suggestion.copy(imageUrl = downloadUrls)
             }
 
-            val newSuggest = suggestWithId.copy(imageUrl = downloadUrls)
-            remote.updateASuggestion(SuggestionDocument.fromModel(newSuggest))
-            emit(Resource.Success("Success"))
-        } else {
-            emit(Resource.Success("Success"))
+            val id = remote.sendASuggestion(SuggestionDocument.fromModel(data))
+            emit(id)
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG) {
+                Timber.d("Error $e")
+            }
         }
     }
 }
+

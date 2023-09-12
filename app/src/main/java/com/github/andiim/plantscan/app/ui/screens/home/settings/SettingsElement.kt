@@ -113,7 +113,8 @@ private fun SignOutCard(signOut: () -> Unit) {
                     signOut()
                     showWarningDialog = false
                 }
-            })
+            }
+        )
     }
 }
 
@@ -144,7 +145,8 @@ private fun DeleteMyAccountCard(deleteMyAccount: () -> Unit) {
                     deleteMyAccount()
                     showWarningDialog = false
                 }
-            })
+            }
+        )
     }
 }
 

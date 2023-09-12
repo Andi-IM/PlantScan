@@ -38,12 +38,14 @@ fun WebRoute(popUpScreen: () -> Unit, viewModel: WebViewModel = hiltViewModel())
                         IconButton(onClick = popUpScreen) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                         }
-                    })
+                    }
+                )
                 if (state.isLoading) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
             }
-        }) {
+        }
+    ) {
         WebView(state, Modifier.padding(it))
     }
 }

@@ -12,35 +12,35 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object CameraProvider {
-  @Provides
-  @Singleton
-  fun provideCameraXConfig(): CameraXConfig =
-      CameraXConfig.Builder.fromConfig(Camera2Config.defaultConfig())
-          .setCameraExecutor(Dispatchers.IO.asExecutor())
-          .setMinimumLoggingLevel(Log.ERROR)
-          .build()
+    @Provides
+    @Singleton
+    fun provideCameraXConfig(): CameraXConfig =
+        CameraXConfig.Builder.fromConfig(Camera2Config.defaultConfig())
+            .setCameraExecutor(Dispatchers.IO.asExecutor())
+            .setMinimumLoggingLevel(Log.ERROR)
+            .build()
 
-  @Provides
-  @Singleton
-  fun provideCamera(@ApplicationContext context: Context): ProcessCameraProvider =
-      ProcessCameraProvider.getInstance(context).get()
+    @Provides
+    @Singleton
+    fun provideCamera(@ApplicationContext context: Context): ProcessCameraProvider =
+        ProcessCameraProvider.getInstance(context).get()
 
-  @Provides
-  @Singleton
-  fun provideCameraExtensions(
-      @ApplicationContext context: Context,
-      provider: ProcessCameraProvider
-  ): ExtensionsManager = ExtensionsManager.getInstanceAsync(context, provider).get()
+    @Provides
+    @Singleton
+    fun provideCameraExtensions(
+        @ApplicationContext context: Context,
+        provider: ProcessCameraProvider
+    ): ExtensionsManager = ExtensionsManager.getInstanceAsync(context, provider).get()
 
-  @Provides
-  @Singleton
-  fun provideImageLoader(@ApplicationContext context: Context): ImageLoader =
-      ImageLoader.Builder(context).crossfade(true).build()
+    @Provides
+    @Singleton
+    fun provideImageLoader(@ApplicationContext context: Context): ImageLoader =
+        ImageLoader.Builder(context).crossfade(true).build()
 }

@@ -51,7 +51,6 @@ fun PlantScanApp(
 ) {
     PlantScanTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-
             val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
             LaunchedEffect(isOffline) {

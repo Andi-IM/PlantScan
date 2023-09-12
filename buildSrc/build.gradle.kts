@@ -32,6 +32,7 @@ dependencies {
     implementation(libs.ksp.plugin)
     implementation(libs.firebase.crashlytics.plugin)
     implementation(libs.firebase.perf.plugin)
+    implementation(libs.firebase.appdistribution.plugin)
 }
 
 gradlePlugin {

@@ -67,7 +67,8 @@ fun PlantPagedList(
                     errorItem(
                         message = e.error.localizedMessage!!,
                         modifier = Modifier.fillMaxSize(),
-                        onClickRetry = { retry() })
+                        onClickRetry = { retry() }
+                    )
                 }
             }
         }

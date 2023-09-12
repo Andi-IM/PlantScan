@@ -139,7 +139,8 @@ class CameraExtensionsScreen(
                                 }
                             extensionsAdapter.submitList(data)
                         }
-                    })
+                    }
+                )
             }
 
             snapHelper.attachToRecyclerView(extensionSelector)
@@ -186,7 +187,8 @@ class CameraExtensionsScreen(
                             scope?.launch {
                                 _action.emit(CameraUiAction.ClosePhotoPreviewClick)
                             }
-                        })
+                        }
+                    )
                 }
             }
 
@@ -231,7 +233,8 @@ class CameraExtensionsScreen(
                             switchLens(rootView, switchLensButton)
                             return true
                         }
-                    })
+                    }
+                )
 
             val scaleGestureDetector =
                 ScaleGestureDetector(
@@ -243,7 +246,8 @@ class CameraExtensionsScreen(
                             }
                             return true
                         }
-                    })
+                    }
+                )
 
             previewView.setOnTouchListener { _, event ->
                 var didConsume = scaleGestureDetector.onTouchEvent(event)
@@ -325,7 +329,8 @@ class CameraExtensionsScreen(
                     override fun onAnimationEnd(animation: Animator) {
                         switchLensButton.rotation = 0f
                     }
-                })
+                }
+            )
             start()
         }
     }

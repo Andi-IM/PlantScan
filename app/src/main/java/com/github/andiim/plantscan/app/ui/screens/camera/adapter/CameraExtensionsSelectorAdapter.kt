@@ -31,27 +31,28 @@ import com.github.andiim.plantscan.app.R.layout as AppLayout
 class CameraExtensionsSelectorAdapter(private val onItemClick: (view: View) -> Unit) :
     ListAdapter<CameraExtensionItem, CameraExtensionItemViewHolder>(ItemCallback()) {
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CameraExtensionItemViewHolder =
-      CameraExtensionItemViewHolder(
-          LayoutInflater.from(parent.context).inflate(AppLayout.view_extension_type, parent, false)
-              as TextView,
-          onItemClick)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CameraExtensionItemViewHolder =
+        CameraExtensionItemViewHolder(
+            LayoutInflater.from(parent.context).inflate(AppLayout.view_extension_type, parent, false)
+                as TextView,
+            onItemClick
+        )
 
-  override fun onBindViewHolder(holder: CameraExtensionItemViewHolder, position: Int) {
-    holder.bind(getItem(position))
-  }
+    override fun onBindViewHolder(holder: CameraExtensionItemViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
 
-  internal class ItemCallback : DiffUtil.ItemCallback<CameraExtensionItem>() {
-    override fun areItemsTheSame(
-        oldItem: CameraExtensionItem,
-        newItem: CameraExtensionItem
-    ): Boolean = oldItem.extensionMode == newItem.extensionMode
+    internal class ItemCallback : DiffUtil.ItemCallback<CameraExtensionItem>() {
+        override fun areItemsTheSame(
+            oldItem: CameraExtensionItem,
+            newItem: CameraExtensionItem
+        ): Boolean = oldItem.extensionMode == newItem.extensionMode
 
-    override fun areContentsTheSame(
-        oldItem: CameraExtensionItem,
-        newItem: CameraExtensionItem
-    ): Boolean = oldItem.selected == newItem.selected
-  }
+        override fun areContentsTheSame(
+            oldItem: CameraExtensionItem,
+            newItem: CameraExtensionItem
+        ): Boolean = oldItem.selected == newItem.selected
+    }
 }
 
 class CameraExtensionItemViewHolder
@@ -60,18 +61,18 @@ internal constructor(
     private val onItemClick: (view: View) -> Unit
 ) : RecyclerView.ViewHolder(extensionView) {
 
-  init {
-    extensionView.setOnClickListener { onItemClick(it) }
-  }
-
-  internal fun bind(extensionModel: CameraExtensionItem) {
-    extensionView.text = extensionModel.name
-    if (extensionModel.selected) {
-      extensionView.setBackgroundResource(AppBackground.pill_selected_background)
-      extensionView.setTextColor(Color.BLACK)
-    } else {
-      extensionView.setBackgroundResource(AppBackground.pill_unselected_background)
-      extensionView.setTextColor(Color.WHITE)
+    init {
+        extensionView.setOnClickListener { onItemClick(it) }
     }
-  }
+
+    internal fun bind(extensionModel: CameraExtensionItem) {
+        extensionView.text = extensionModel.name
+        if (extensionModel.selected) {
+            extensionView.setBackgroundResource(AppBackground.pill_selected_background)
+            extensionView.setTextColor(Color.BLACK)
+        } else {
+            extensionView.setBackgroundResource(AppBackground.pill_unselected_background)
+            extensionView.setTextColor(Color.WHITE)
+        }
+    }
 }

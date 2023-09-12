@@ -30,36 +30,39 @@ data class CameraPreviewScreenViewState(
     val extensionsSelectorViewState: CameraExtensionSelectorViewState =
         CameraExtensionSelectorViewState()
 ) {
-  fun hideCameraControls(): CameraPreviewScreenViewState =
-      copy(
-          backButtonViewState = backButtonViewState.copy(isVisible = false),
-          shutterButtonViewState = shutterButtonViewState.copy(isVisible = false),
-          switchLensButtonViewState = switchLensButtonViewState.copy(isVisible = false),
-          addFromGalleryButtonViewState = addFromGalleryButtonViewState.copy(isVisible = false),
-          extensionsSelectorViewState = extensionsSelectorViewState.copy(isVisible = false))
+    fun hideCameraControls(): CameraPreviewScreenViewState =
+        copy(
+            backButtonViewState = backButtonViewState.copy(isVisible = false),
+            shutterButtonViewState = shutterButtonViewState.copy(isVisible = false),
+            switchLensButtonViewState = switchLensButtonViewState.copy(isVisible = false),
+            addFromGalleryButtonViewState = addFromGalleryButtonViewState.copy(isVisible = false),
+            extensionsSelectorViewState = extensionsSelectorViewState.copy(isVisible = false)
+        )
 
-  fun showCameraControls(): CameraPreviewScreenViewState =
-      copy(
-          backButtonViewState = backButtonViewState.copy(isVisible = true),
-          shutterButtonViewState = shutterButtonViewState.copy(isVisible = true),
-          switchLensButtonViewState = switchLensButtonViewState.copy(isVisible = true),
-          addFromGalleryButtonViewState = addFromGalleryButtonViewState.copy(isVisible = false),
-          extensionsSelectorViewState = extensionsSelectorViewState.copy(isVisible = true))
+    fun showCameraControls(): CameraPreviewScreenViewState =
+        copy(
+            backButtonViewState = backButtonViewState.copy(isVisible = true),
+            shutterButtonViewState = shutterButtonViewState.copy(isVisible = true),
+            switchLensButtonViewState = switchLensButtonViewState.copy(isVisible = true),
+            addFromGalleryButtonViewState = addFromGalleryButtonViewState.copy(isVisible = false),
+            extensionsSelectorViewState = extensionsSelectorViewState.copy(isVisible = true)
+        )
 
-  fun enableGalleryButton(isEnabled: Boolean): CameraPreviewScreenViewState =
-      copy(
-          addFromGalleryButtonViewState = addFromGalleryButtonViewState.copy(isEnabled = isEnabled))
-  fun enableBackButton(isEnabled: Boolean): CameraPreviewScreenViewState =
-      copy(backButtonViewState = backButtonViewState.copy(isEnabled = isEnabled))
+    fun enableGalleryButton(isEnabled: Boolean): CameraPreviewScreenViewState =
+        copy(
+            addFromGalleryButtonViewState = addFromGalleryButtonViewState.copy(isEnabled = isEnabled)
+        )
+    fun enableBackButton(isEnabled: Boolean): CameraPreviewScreenViewState =
+        copy(backButtonViewState = backButtonViewState.copy(isEnabled = isEnabled))
 
-  fun enableCameraShutter(isEnabled: Boolean): CameraPreviewScreenViewState =
-      copy(shutterButtonViewState = shutterButtonViewState.copy(isEnabled = isEnabled))
+    fun enableCameraShutter(isEnabled: Boolean): CameraPreviewScreenViewState =
+        copy(shutterButtonViewState = shutterButtonViewState.copy(isEnabled = isEnabled))
 
-  fun enableSwitchLens(isEnabled: Boolean): CameraPreviewScreenViewState =
-      copy(switchLensButtonViewState = switchLensButtonViewState.copy(isEnabled = isEnabled))
+    fun enableSwitchLens(isEnabled: Boolean): CameraPreviewScreenViewState =
+        copy(switchLensButtonViewState = switchLensButtonViewState.copy(isEnabled = isEnabled))
 
-  fun setAvailableExtensions(extensions: List<CameraExtensionItem>): CameraPreviewScreenViewState =
-      copy(extensionsSelectorViewState = extensionsSelectorViewState.copy(extensions = extensions))
+    fun setAvailableExtensions(extensions: List<CameraExtensionItem>): CameraPreviewScreenViewState =
+        copy(extensionsSelectorViewState = extensionsSelectorViewState.copy(extensions = extensions))
 }
 
 data class CameraExtensionSelectorViewState(

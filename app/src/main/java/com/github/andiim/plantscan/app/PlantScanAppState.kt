@@ -64,8 +64,6 @@ class PlantScanAppState(
                         action?.invoke()
                     }
                 }
-
-
             }
         }
     }
@@ -81,7 +79,6 @@ class PlantScanAppState(
     val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
-
 
     fun popUp() {
         navController.popBackStack()

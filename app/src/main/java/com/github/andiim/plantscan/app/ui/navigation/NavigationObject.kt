@@ -17,7 +17,7 @@ object NavigationObject {
             NavigationItem(
                 title = AppText.label_garden_screen,
                 icon = Icons.Outlined.LocalFlorist,
-                direction = Direction.MyGarden
+                direction = Direction.History
             ),
             NavigationItem(
                 title = AppText.label_settings,

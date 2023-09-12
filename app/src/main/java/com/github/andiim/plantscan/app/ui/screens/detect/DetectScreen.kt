@@ -1,23 +1,31 @@
 package com.github.andiim.plantscan.app.ui.screens.detect
 
-import android.content.Context
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dangerous
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -48,8 +56,9 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.github.andiim.plantscan.app.R
 import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
+import com.github.andiim.plantscan.app.ui.common.DetectScreenPreviewParameterProvider
+import com.github.andiim.plantscan.app.ui.common.composables.BasicToolbar
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
-import com.github.andiim.plantscan.app.utils.DetectScreenPreviewParameterProvider
 
 @Composable
 fun DetectRoute(
@@ -61,13 +70,11 @@ fun DetectRoute(
     val context = LocalContext.current
 
     DetectScreen(
-        context = context,
         detectState = detectState,
-        detect = viewModel::detect,
+        detect = { viewModel.detect(context) },
         onBackClick = backToTop,
         onSuggestClick = { viewModel.onSuggestClick(onSuggestClick) },
     )
-
 
     LaunchedEffect(viewModel) {
         viewModel.detect(context)
@@ -76,121 +83,128 @@ fun DetectRoute(
 
 @Composable
 fun DetectScreen(
-    context: Context,
     onBackClick: () -> Unit,
     onSuggestClick: () -> Unit,
     detectState: DetectUiState,
-    detect: (Context) -> Unit,
+    detect: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier) {
+    val scrollState = rememberLazyListState()
+    Box(modifier = modifier.fillMaxSize()) {
         when (detectState) {
             is DetectUiState.Error -> {
-                ErrorState(detectState.message ?: "", onClick = { detect(context) })
+                ErrorState(detectState.message ?: "", onClick = { detect() })
             }
 
             DetectUiState.Loading -> {
-                LoadingState("Detecting... ")
+                LoadingState(
+                    stringResource(R.string.detect_loading_state),
+                    modifier = modifier.align(Alignment.Center)
+                )
             }
 
             is DetectUiState.Success -> {
-                DetectContent(
-                    result = detectState.detection,
-                    onBackClick = onBackClick,
-                    onSuggestClick = onSuggestClick,
-                )
+                Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
+                LazyColumn(
+                    state = scrollState,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    detectContent(
+                        result = detectState.detection,
+                        onSuggestClick = onSuggestClick,
+                    )
+                }
+                Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
             }
         }
+        BasicToolbar(
+            title = when (detectState) {
+                is DetectUiState.Error -> R.string.detect_error_title
+                DetectUiState.Loading -> R.string.detect_loading_title
+                is DetectUiState.Success -> R.string.detect_screen_title
+            },
+            leading = {
+                IconButton(onClick = onBackClick) {
+                    Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = null)
+                }
+            },
+        )
     }
 }
 
-@Composable
-fun DetectContent(
+fun LazyListScope.detectContent(
     result: ObjectDetection,
-    onBackClick: () -> Unit,
     onSuggestClick: () -> Unit,
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        val predictionList = result.predictions.map {
-            DetectionResult(it.jsonMemberClass, it.confidence.times(100))
-        }
+    val predictionList = result.predictions.map {
+        DetectionResult(it.jsonMemberClass, it.confidence.times(100))
+    }
+    item {
+        var enabled by remember { mutableStateOf(true) }
 
-        item {
-            Button(onClick = onBackClick) {
-                Text(text = "Back")
-            }
-        }
-
-        item {
-            var enabled by remember { mutableStateOf(true) }
-
-            SubcomposeAsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(result.image.data)
-                    .size(32)
-                    .crossfade(true)
-                    .build(),
-                loading = {
-                    if (LocalInspectionMode.current) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp),
-                            contentAlignment = Alignment.Center
+        SubcomposeAsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(result.image.data)
+                .size(32)
+                .crossfade(true)
+                .build(),
+            loading = {
+                if (LocalInspectionMode.current) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.orchid),
+                            contentScale = ContentScale.FillHeight,
+                            contentDescription = null
                         )
-                        {
-                            Image(
-                                painter = painterResource(R.drawable.orchid),
-                                contentScale = ContentScale.FillHeight,
-                                contentDescription = null
-                            )
-                        }
-                    } else {
-                        Box(
-                            modifier = Modifier.height(30.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(modifier = Modifier.width(24.dp))
-                        }
                     }
-                },
-                error = {
+                } else {
                     Box(
                         modifier = Modifier.height(30.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Dangerous,
-                            contentDescription = stringResource(R.string.fetch_image_error)
-                        )
+                        CircularProgressIndicator(modifier = Modifier.width(24.dp))
                     }
-                },
-                contentDescription = "image",
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateContentSize()
-                    .clickable { enabled = !enabled }
+                }
+            },
+            error = {
+                Box(
+                    modifier = Modifier.height(30.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Dangerous,
+                        contentDescription = stringResource(R.string.fetch_image_error)
+                    )
+                }
+            },
+            contentDescription = "image",
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+                .clickable { enabled = !enabled }
+        )
+    }
+
+    item {
+        Text(text = "Results")
+    }
+    predictionList.forEach {
+        item {
+            ListItem(
+                headlineContent = { Text(it.name) },
+                trailingContent = { Text(text = "${it.conf}%") }
             )
         }
+    }
 
-        item {
-            Text(text = "Results")
-        }
-        predictionList.forEach {
-            item {
-                ListItem(
-                    headlineContent = { Text(it.name) },
-                    trailingContent = { Text(text = "${it.conf}%") })
-            }
-        }
-
-        item {
-            SuggestButton(onClick = onSuggestClick)
-        }
+    item {
+        SuggestButton(onClick = onSuggestClick)
     }
 }
 
@@ -217,23 +231,33 @@ fun SuggestButton(onClick: () -> Unit) {
         text = annotatedText,
         onClick = { onClick() },
     )
-
 }
-
 
 data class DetectionResult(val name: String, val conf: Float)
 
 @Composable
-private fun LoadingState(message: String? = null, percent: Float? = null) {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-        if (percent != null) CircularProgressIndicator(progress = percent)
-        else CircularProgressIndicator()
-        if (message != null)
+private fun LoadingState(
+    message: String,
+    modifier: Modifier = Modifier,
+    percent: Float? = null,
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround
+    ) {
+        if (percent != null) {
+            CircularProgressIndicator(progress = percent)
+        } else {
+            CircularProgressIndicator()
+        }
+        if (message.isNotEmpty()) {
             Text(
-                message, modifier = Modifier
-                    .align(Alignment.BottomCenter)
+                message,
+                modifier = modifier
                     .padding(50.dp)
             )
+        }
     }
 }
 
@@ -244,14 +268,39 @@ private fun ErrorState(message: String, onClick: () -> Unit = {}) {
             Text("Error: $message")
             Button(onClick = onClick) { Text("Try Again") }
         }
-
     }
 }
 
 @Preview
 @Composable
 private fun Preview_LoadingContent() {
-    PlantScanTheme { Surface { LoadingState() } }
+    PlantScanTheme {
+        Surface {
+            DetectScreen(
+                onBackClick = {},
+                onSuggestClick = {},
+                detectState = DetectUiState.Loading,
+                detect = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun Preview_SuccessContent(
+    @PreviewParameter(DetectScreenPreviewParameterProvider::class) detection: ObjectDetection
+) {
+    PlantScanTheme {
+        Surface {
+            DetectScreen(
+                onBackClick = {},
+                onSuggestClick = {},
+                detectState = DetectUiState.Success(detection),
+                detect = {}
+            )
+        }
+    }
 }
 
 @Preview
@@ -261,11 +310,12 @@ private fun Preview_DetectContent(
 ) {
     PlantScanTheme {
         Surface {
-            DetectContent(
-                onBackClick = {},
-                onSuggestClick = {},
-                result = detection
-            )
+            LazyColumn {
+                detectContent(
+                    onSuggestClick = {},
+                    result = detection
+                )
+            }
         }
     }
 }
@@ -273,5 +323,14 @@ private fun Preview_DetectContent(
 @Preview
 @Composable
 private fun Preview_ErrorState() {
-    PlantScanTheme { Surface { ErrorState("Something Error!") } }
+    PlantScanTheme {
+        Surface {
+            DetectScreen(
+                onBackClick = {},
+                onSuggestClick = {},
+                detectState = DetectUiState.Error("Something Error!"),
+                detect = {}
+            )
+        }
+    }
 }

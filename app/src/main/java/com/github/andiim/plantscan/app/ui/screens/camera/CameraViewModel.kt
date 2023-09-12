@@ -113,8 +113,9 @@ constructor(
                     availableExtensions = listOf(ExtensionMode.NONE) + availableExtensions,
                     availableCameraLens = availableCameraLens,
                     extensionMode =
-                    if (availableExtensions.isEmpty()) ExtensionMode.NONE
-                    else currentCameraUiState.extensionMode,
+                    if (availableExtensions.isEmpty()) {
+                        ExtensionMode.NONE
+                    } else currentCameraUiState.extensionMode,
                 )
             _cameraUiState.emit(newCameraUiState)
         }
@@ -224,7 +225,8 @@ constructor(
                 override fun onError(exception: ImageCaptureException) {
                     launchCatching(log) { _captureUiState.emit(CaptureState.CaptureFailed(exception)) }
                 }
-            })
+            }
+        )
     }
 
     fun openGallery(uri: Uri?) {
@@ -243,7 +245,8 @@ constructor(
         launchCatching(log) {
             _cameraUiState.emit(
                 _cameraUiState.value.copy(
-                    cameraState = CameraState.NOT_READY, extensionMode = extensionMode
+                    cameraState = CameraState.NOT_READY,
+                    extensionMode = extensionMode
                 )
             )
         }

@@ -1,6 +1,5 @@
 package com.github.andiim.plantscan.app.core.domain.usecase
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.paging.PagingSource
 import com.github.andiim.plantscan.app.core.data.Resource
@@ -16,19 +15,23 @@ import javax.inject.Inject
 
 class PlantInteractor
 @Inject
-constructor(private val plantRepo: PlantRepository, private val cameraRepo: CameraRepository) :
+constructor(
+    private val plantRepo: PlantRepository,
+    private val cameraRepo: CameraRepository,
+) :
     PlantUseCase {
     override fun getPlants(query: String): PagingSource<Int, Plant> = plantRepo.getPlants(query)
-
     override fun getPlantDetail(id: String): Flow<Resource<Plant>> = plantRepo.getPlantDetail(id)
-    override fun detect(image: Bitmap): Flow<Resource<ObjectDetection>> = plantRepo.detect(image)
+    override fun detect(base64ImageData: String): Flow<Resource<ObjectDetection>> =
+        plantRepo.detect(base64ImageData)
+
     override fun recordDetection(detection: DetectionHistory): Flow<String> =
         plantRepo.recordDetection(detection)
 
     override fun getDetectionsList(userId: String): Flow<Resource<List<DetectionHistory>>> =
         plantRepo.getDetectionsList(userId)
 
-    override fun sendSuggestion(suggestion: Suggestion): Flow<Resource<String>> =
+    override fun sendSuggestion(suggestion: Suggestion): Flow<String> =
         plantRepo.sendSuggestion(suggestion)
 
     override fun notifyImageCreated(savedUri: Uri) = cameraRepo.notifyImageCreated(savedUri)

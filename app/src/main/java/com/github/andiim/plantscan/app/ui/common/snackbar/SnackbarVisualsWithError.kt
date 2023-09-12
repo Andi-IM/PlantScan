@@ -8,12 +8,10 @@ class SnackbarVisualsWithError(
     val setDuration: SnackbarDuration,
     val isError: Boolean,
     val actionTitle: String? = null,
-    val action: (()-> Unit)? = null
+    val action: (() -> Unit)? = null
 ) : SnackbarVisuals {
     override val actionLabel: String?
         get() = if (isError) actionTitle else null
     override val duration: SnackbarDuration = setDuration
     override val withDismissAction: Boolean = false
-
-
 }

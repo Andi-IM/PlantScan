@@ -90,7 +90,8 @@ fun FindPlantScreen(
     ) {
         DetectButton(
             onClick = toDetect,
-            modifier = Modifier.semantics(false) { contentDescription = "Detect Button" })
+            modifier = Modifier.semantics(false) { contentDescription = "Detect Button" }
+        )
 
         Button(
             modifier =
@@ -103,7 +104,7 @@ fun FindPlantScreen(
         ) {
             Text(text = stringResource(AppText.search_find_by_type_button))
         }
-        /// HERE XXX
+        // / HERE XXX
         PsSearchBar(
             query = query,
             onQueryChange = onQueryChange,
@@ -177,13 +178,14 @@ fun PsSearchBar(
             )
         },
         trailingIcon = {
-            if (active)
+            if (active) {
                 IconButton(onClick = { active = false }) {
                     Icon(
                         Icons.Default.Close,
                         contentDescription = stringResource(AppText.search_icon_close_description)
                     )
                 }
+            }
         },
         content = content
     )

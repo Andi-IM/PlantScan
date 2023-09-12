@@ -91,7 +91,7 @@ class CameraFragment : Fragment() {
                 extensionsScreen.setCaptureScreenViewState(state)
                 postCaptureBackPressedCallback.isEnabled =
                     state.postCaptureScreenViewState is
-                            PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
+                    PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
             }
         }
 
@@ -194,7 +194,8 @@ class CameraFragment : Fragment() {
                                         .enableCameraShutter(true)
                                         .enableSwitchLens(true)
                                         .enableGalleryButton(true)
-                                })
+                                }
+                        )
                     }
 
                     CaptureState.CaptureReady -> {
@@ -204,7 +205,8 @@ class CameraFragment : Fragment() {
                                     .enableCameraShutter(true)
                                     .enableSwitchLens(true)
                                     .enableGalleryButton(true)
-                            })
+                            }
+                        )
                     }
 
                     CaptureState.OpenGallery -> {
@@ -214,7 +216,8 @@ class CameraFragment : Fragment() {
                                     .enableCameraShutter(false)
                                     .enableSwitchLens(false)
                                     .enableGalleryButton(false)
-                            })
+                            }
+                        )
                     }
 
                     is CaptureState.ImageObtained -> {
@@ -232,7 +235,8 @@ class CameraFragment : Fragment() {
                                             PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
                                         }
                                     }
-                                    .updateCameraScreen { it.hideCameraControls() })
+                                    .updateCameraScreen { it.hideCameraControls() }
+                            )
                         }
                     }
 
@@ -243,7 +247,8 @@ class CameraFragment : Fragment() {
                                     .enableCameraShutter(false)
                                     .enableSwitchLens(false)
                                     .enableGalleryButton(false)
-                            })
+                            }
+                        )
                     }
 
                     is CaptureState.CaptureFinished -> {
@@ -260,7 +265,8 @@ class CameraFragment : Fragment() {
                                         PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
                                     }
                                 }
-                                .updateCameraScreen { it.hideCameraControls() })
+                                .updateCameraScreen { it.hideCameraControls() }
+                        )
                     }
 
                     is CaptureState.CaptureFailed -> {
@@ -270,7 +276,8 @@ class CameraFragment : Fragment() {
                             captureScreenViewState.value.updateCameraScreen {
                                 it.showCameraControls().enableCameraShutter(true)
                                     .enableSwitchLens(true)
-                            })
+                            }
+                        )
                     }
                 }
             }
@@ -318,7 +325,8 @@ class CameraFragment : Fragment() {
                                     .updateCameraScreen {
                                         it.showCameraControls().enableCameraShutter(false)
                                             .enableSwitchLens(false)
-                                    })
+                                    }
+                            )
                             viewModel.initializeCamera()
                         }
 
@@ -339,8 +347,10 @@ class CameraFragment : Fragment() {
                                                     getString(extensionName[it]!!),
                                                     cameraUiState.extensionMode == it
                                                 )
-                                            })
-                                })
+                                            }
+                                        )
+                                }
+                            )
                         }
 
                         CameraState.PREVIEW_STOPPED -> Unit
@@ -359,7 +369,8 @@ class CameraFragment : Fragment() {
                 .updateCameraScreen { state -> state.showCameraControls() }
                 .updatePostCaptureScreen {
                     PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
-                })
+                }
+        )
         viewModel.startPreview(viewLifecycleOwner, extensionsScreen.previewView)
     }
 
@@ -371,7 +382,8 @@ class CameraFragment : Fragment() {
         } else {
             PermissionState.Denied(
                 ActivityCompat.shouldShowRequestPermissionRationale(
-                    requireActivity(), Manifest.permission.CAMERA
+                    requireActivity(),
+                    Manifest.permission.CAMERA
                 )
             )
         }

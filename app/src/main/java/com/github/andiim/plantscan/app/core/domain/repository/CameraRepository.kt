@@ -9,6 +9,6 @@ import java.io.File
  * applications can view it.
  */
 interface CameraRepository {
-  fun notifyImageCreated(savedUri: Uri)
-  fun createImageOutputFile(): File
+    fun notifyImageCreated(savedUri: Uri)
+    fun createImageOutputFile(): File
 }

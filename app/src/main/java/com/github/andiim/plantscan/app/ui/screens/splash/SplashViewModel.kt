@@ -26,8 +26,9 @@ constructor(
 
     fun onAppStart(openScreen: () -> Unit) {
         showError.value = false
-        if (accountService.hasUser) openScreen()
-        else {
+        if (accountService.hasUser) {
+            openScreen()
+        } else {
             launchCatching(logService = logService, snackbar = true) {
                 try {
                     accountService.createAnonymousAccount()
@@ -40,4 +41,3 @@ constructor(
         }
     }
 }
-

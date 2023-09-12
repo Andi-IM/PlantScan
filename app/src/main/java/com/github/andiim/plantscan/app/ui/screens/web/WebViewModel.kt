@@ -9,6 +9,6 @@ import javax.inject.Inject
 class WebViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-     private val webArgs: WebArgs = WebArgs(savedStateHandle)
-     val webUrl = webArgs.url
+    private val webArgs: WebArgs = WebArgs(savedStateHandle)
+    val webUrl = webArgs.url
 }

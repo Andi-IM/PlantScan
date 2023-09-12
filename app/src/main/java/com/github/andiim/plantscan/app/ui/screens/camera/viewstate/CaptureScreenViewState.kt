@@ -25,11 +25,12 @@ data class CaptureScreenViewState(
     val postCaptureScreenViewState: PostCaptureScreenViewState =
         PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
 ) {
-  fun updateCameraScreen(block: (cameraPreviewScreenViewState: CameraPreviewScreenViewState) -> CameraPreviewScreenViewState
-  ): CaptureScreenViewState =
-      copy(cameraPreviewScreenViewState = block(cameraPreviewScreenViewState))
+    fun updateCameraScreen(
+        block: (cameraPreviewScreenViewState: CameraPreviewScreenViewState) -> CameraPreviewScreenViewState
+    ): CaptureScreenViewState =
+        copy(cameraPreviewScreenViewState = block(cameraPreviewScreenViewState))
 
-  fun updatePostCaptureScreen(
-      block: (postCaptureScreenViewState: PostCaptureScreenViewState) -> PostCaptureScreenViewState
-  ) = copy(postCaptureScreenViewState = block(postCaptureScreenViewState))
+    fun updatePostCaptureScreen(
+        block: (postCaptureScreenViewState: PostCaptureScreenViewState) -> PostCaptureScreenViewState
+    ) = copy(postCaptureScreenViewState = block(postCaptureScreenViewState))
 }

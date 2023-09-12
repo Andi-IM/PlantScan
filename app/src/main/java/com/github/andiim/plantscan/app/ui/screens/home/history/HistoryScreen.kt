@@ -1,5 +1,6 @@
 package com.github.andiim.plantscan.app.ui.screens.home.history
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,6 +15,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -25,27 +27,34 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.andiim.plantscan.app.core.ui.TrackScrollJank
 import com.github.andiim.plantscan.app.ui.TrackScreenViewEvent
+import com.github.andiim.plantscan.app.ui.common.HistoryScreenPreviewParameterProvider
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
-import com.github.andiim.plantscan.app.utils.HistoryScreenPreviewParameterProvider
+import timber.log.Timber
 
 @Composable
-internal fun HistoryRoute(
-    toDetail: (String) -> Unit,
+fun HistoryRoute(
+    // toDetail: (String) -> Unit,
     viewModel: MyGardenViewModel = hiltViewModel()
 ) {
     val historyUiState: HistoryUiState by viewModel.historyUiState.collectAsState()
+
+    Timber.d("STATE $historyUiState")
     TrackScreenViewEvent(screenName = "History")
     HistoryScreen(
         historyUiState = historyUiState,
-        onItemClick = toDetail,
+        // onItemClick = toDetail,
     )
+
+    LaunchedEffect(viewModel) {
+        viewModel.fetchHistory()
+    }
 }
 
 @Composable
 internal fun HistoryScreen(
     modifier: Modifier = Modifier,
     historyUiState: HistoryUiState,
-    onItemClick: (String) -> Unit = {}, /* TODO: SOMETIMES CAN SHOW DETAIL */
+    // onItemClick: (String) -> Unit = {}, /* TODO: SOMETIMES CAN SHOW DETAIL */
 ) {
     val state = rememberLazyListState()
     TrackScrollJank(scrollableState = state, stateName = "detections")
@@ -55,37 +64,56 @@ internal fun HistoryScreen(
         LazyColumn(
             state = state,
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             item {
                 Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
             }
             when (historyUiState) {
                 HistoryUiState.Loading -> item {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .testTag("loadingWheel")
-                    )
+                    Box(modifier = Modifier.fillParentMaxSize()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .testTag("loadingWheel")
+                        )
+                    }
                 }
 
                 is HistoryUiState.Error -> {
                     item {
-                        Text(text = "${historyUiState.message}")
+                        Text(
+                            text = "${historyUiState.message}",
+                            modifier = Modifier
+                                .fillParentMaxSize()
+                                .align(Alignment.Center)
+                        )
                     }
                 }
 
                 is HistoryUiState.Success -> {
-                    items(
-                        items = historyUiState.detections,
-                        key = { "${it.id}${it.plantRef}" },
-                        itemContent = { history ->
-                            ListItem(
-                                headlineContent = { Text(history.plantRef) },
-                                supportingContent = { Text("${history.timestamp}") },
-                                trailingContent = { Text("${history.accuracy}%") }
+                    if (historyUiState.detections.isNotEmpty()) {
+                        items(
+                            items = historyUiState.detections,
+                            key = { "${it.id}${it.plantRef}" },
+                            itemContent = { history ->
+                                ListItem(
+                                    headlineContent = { Text(history.plantRef) },
+                                    supportingContent = { Text("${history.timestamp}") },
+                                    trailingContent = { Text("${history.accuracy}%") }
+                                )
+                            }
+                        )
+                    } else {
+                        item {
+                            Text(
+                                text = "Empty List!",
+                                modifier = Modifier
+                                    .fillParentMaxSize()
+                                    .align(Alignment.Center)
                             )
                         }
-                    )
+                    }
                 }
             }
         }

@@ -11,7 +11,6 @@ fun PlantScanAppState.navigateToCamera() {
     this.navigate(Direction.Camera.route, singleTopLaunch = false)
 }
 
-
 fun NavGraphBuilder.cameraFragment(
     onBackClick: () -> Unit,
     onDetectionClick: (String) -> Unit

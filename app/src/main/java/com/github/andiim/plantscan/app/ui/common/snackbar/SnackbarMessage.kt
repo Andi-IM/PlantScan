@@ -33,7 +33,6 @@ sealed class SnackbarMessage {
                 is StringSnackbar -> this.message
                 is ResourceSnackbar -> resources.getString(this.message)
                 else -> null
-
             }
         }
 
@@ -60,8 +59,11 @@ sealed class SnackbarMessage {
 
         fun Throwable.toSnackbarMessage(duration: SnackbarDuration = Short): SnackbarMessage {
             val message = this.message.orEmpty()
-            return if (message.isNotBlank()) StringSnackbar(message, duration)
-            else ResourceSnackbar(R.string.generic_error, duration)
+            return if (message.isNotBlank()) {
+                StringSnackbar(message, duration)
+            } else {
+                ResourceSnackbar(R.string.generic_error, duration)
+            }
         }
     }
 }

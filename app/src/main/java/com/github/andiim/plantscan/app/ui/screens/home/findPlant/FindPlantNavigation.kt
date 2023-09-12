@@ -18,9 +18,11 @@ fun NavGraphBuilder.homeFindPlantElement(
 ) {
     composable(
         route = Direction.FindPlant.route,
-        deepLinks = listOf(navDeepLink {
-            uriPattern = "${NavigationConstants.APP_URI}/${Direction.FindPlant.route}"
-        })
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = "${NavigationConstants.APP_URI}/${Direction.FindPlant.route}"
+            }
+        )
     ) {
         FindPlantRoute(
             onDetails = onItemClick,

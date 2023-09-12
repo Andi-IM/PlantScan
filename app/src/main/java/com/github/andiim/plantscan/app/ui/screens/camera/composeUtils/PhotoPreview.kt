@@ -37,38 +37,41 @@ fun PhotoPreviewScreen(
     onDetect: () -> Unit = {},
     onDispose: () -> Unit = {}
 ) {
-  Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
-    Image(
-        painter = imageUri,
-        contentDescription = imageDescription,
-        contentScale = ContentScale.Fit,
-        modifier = Modifier.fillMaxSize())
-    IconButton(
-        onClick = onDispose,
-        modifier =
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+        Image(
+            painter = imageUri,
+            contentDescription = imageDescription,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier.fillMaxSize()
+        )
+        IconButton(
+            onClick = onDispose,
+            modifier =
             Modifier.wrapContentSize()
                 .padding(4.dp)
                 .background(Color(0x59000000), CircleShape)
-                .align(Alignment.TopEnd)) {
-          Icon(
-              modifier = Modifier.size(48.dp),
-              painter = painterResource(AppDrawable.ic_close),
-              contentDescription = "Close Button",
-              tint = Color.White)
+                .align(Alignment.TopEnd)
+        ) {
+            Icon(
+                modifier = Modifier.size(48.dp),
+                painter = painterResource(AppDrawable.ic_close),
+                contentDescription = "Close Button",
+                tint = Color.White
+            )
         }
 
-    Box(modifier = Modifier.padding(bottom = 6.dp).align(Alignment.BottomCenter)) {
-      PlainTooltipBox(tooltip = { Text(stringResource(AppText.camera_detection_tooltip)) }) {
-        FloatingActionButton(onClick = onDetect, modifier = Modifier.tooltipTrigger()) {
-          Icon(Icons.Default.CameraEnhance, contentDescription = null)
+        Box(modifier = Modifier.padding(bottom = 6.dp).align(Alignment.BottomCenter)) {
+            PlainTooltipBox(tooltip = { Text(stringResource(AppText.camera_detection_tooltip)) }) {
+                FloatingActionButton(onClick = onDetect, modifier = Modifier.tooltipTrigger()) {
+                    Icon(Icons.Default.CameraEnhance, contentDescription = null)
+                }
+            }
         }
-      }
     }
-  }
 }
 
 @Preview
 @Composable
 fun Preview_PhotoPreviewScreen() {
-  PhotoPreviewScreen(imageUri = painterResource(AppDrawable.orchid), imageDescription = "")
+    PhotoPreviewScreen(imageUri = painterResource(AppDrawable.orchid), imageDescription = "")
 }

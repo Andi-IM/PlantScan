@@ -94,7 +94,9 @@ fun CardEditor(
 fun PsCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable() ColumnScope.() -> Unit,
+    content:
+    @Composable()
+    ColumnScope.() -> Unit,
 ) {
     Card(
         onClick = onClick,
@@ -140,21 +142,24 @@ private fun Preview() {
                     icon = AppDrawable.ic_visibility_on,
                     content = "something",
                     modifier = Modifier,
-                    onEditClick = {})
+                    onEditClick = {}
+                )
                 Spacer(Modifier.padding(8.dp))
                 RegularCardEditor(
                     title = AppText.app_name,
                     icon = AppDrawable.ic_visibility_on,
                     content = "something",
                     modifier = Modifier,
-                    onClick = {})
+                    onClick = {}
+                )
                 Spacer(Modifier.padding(8.dp))
                 CardSelector(
                     label = AppText.app_name,
                     options = listOf("Hello", "World!"),
                     selection = "select this?",
                     modifier = Modifier,
-                    onNewValue = {})
+                    onNewValue = {}
+                )
             }
         }
     }

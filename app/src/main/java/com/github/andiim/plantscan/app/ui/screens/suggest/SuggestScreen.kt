@@ -7,7 +7,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickMultipleVisualMedia
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -32,27 +30,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.github.andiim.plantscan.app.R
@@ -69,13 +65,13 @@ internal fun SuggestRoute(
     onAuthClick: () -> Unit,
     viewModel: SuggestViewModel = hiltViewModel()
 ) {
-    val uiState: SendingState by viewModel.uiState.collectAsStateWithLifecycle()
-    val status: UiState by viewModel.status.collectAsState()
+    val status: Status by viewModel.status.collectAsState()
     val data: Suggestion by viewModel.data.collectAsState()
+    val sendingState: SendingState by viewModel.uiState.collectAsState()
 
-    if (status is UiState.Denied) {
+    if (status is Status.Denied) {
         SnackbarManager.showMessage(
-            message = stringResource(R.string.suggest_deny_message),
+            message = stringResource(R.string.suggestion_deny_message),
             label = "Login",
             isError = true,
             action = onAuthClick
@@ -85,9 +81,8 @@ internal fun SuggestRoute(
 
     TrackScreenViewEvent(screenName = "Suggesting: ${viewModel.plantId}")
 
-
     SuggestScreen(
-        state = uiState,
+        state = sendingState,
         onBackClick = popUpScreen,
         description = data.description,
         onSetDescription = viewModel::onDescriptionChange,
@@ -97,6 +92,7 @@ internal fun SuggestRoute(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun SuggestScreen(
     state: SendingState,
@@ -112,17 +108,45 @@ internal fun SuggestScreen(
     val context = LocalContext.current
     val listState = rememberLazyListState()
     var openAlertDialog by remember { mutableStateOf(false) }
-    if (state is SendingState.Loading) openAlertDialog = true
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    when (state) {
+        SendingState.Initial -> {
+            openAlertDialog = false
+        }
+
+        SendingState.Loading -> {
+            openAlertDialog = true
+        }
+
+        is SendingState.Error -> {
+            openAlertDialog = false
+            SnackbarManager.showMessage(
+                message = state.message ?: stringResource(R.string.generic_error),
+                isError = true,
+                label = stringResource(R.string.try_again),
+                action = onSendClick
+            )
+        }
+
+        SendingState.Success -> {
+            openAlertDialog = false
+            SnackbarManager.showMessage(
+                message = stringResource(R.string.suggestion_success_message),
+            )
+            onBackClick.invoke()
+        }
+    }
+
 
     val launcher = rememberLauncherForActivityResult(
         contract = PickMultipleVisualMedia(maxItems)
     ) { uris -> if (uris.isNotEmpty()) onImageSet(context, uris, maxItems) }
 
-
     Box(modifier = modifier) {
-
         LazyColumn(
-            state = listState, horizontalAlignment = Alignment.CenterHorizontally
+            state = listState,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
                 BasicToolbar(
@@ -136,7 +160,6 @@ internal fun SuggestScreen(
             }
 
             item {
-
                 Text(
                     text = "Help developer to make better plant detection",
                     style = MaterialTheme.typography.titleMedium,
@@ -196,7 +219,8 @@ internal fun SuggestScreen(
                             PsCard(
                                 onClick = {
                                     launcher.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
-                                }, modifier = Modifier.size(100.dp)
+                                },
+                                modifier = Modifier.size(100.dp)
                             ) {
                                 Box(
                                     modifier = Modifier.fillMaxSize(),
@@ -213,22 +237,21 @@ internal fun SuggestScreen(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = onSendClick,
+                    onClick = {
+                        keyboardController?.hide()
+                        onSendClick.invoke()
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                 ) {
-                    Text(stringResource(R.string.suggest_send_label))
+                    Text(stringResource(R.string.suggestion_send_label))
                 }
             }
-
         }
-
-
 
         if (openAlertDialog) {
             MinimalDialog(
-                state = state,
                 onDismissRequest = { openAlertDialog = !openAlertDialog },
             )
         }
@@ -237,16 +260,8 @@ internal fun SuggestScreen(
 
 @Composable
 fun MinimalDialog(
-    state: SendingState,
     onDismissRequest: () -> Unit,
 ) {
-    var progress by remember { mutableFloatStateOf(0.1f) }
-    val animatedProgress by animateFloatAsState(
-        targetValue = progress,
-        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
-        label = "Loading Progress"
-    )
-
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -255,38 +270,11 @@ fun MinimalDialog(
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
-            when (state) {
-                is SendingState.Error -> {
-                    Text(
-                        text = "This is a minimal dialog",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .wrapContentSize(Alignment.Center),
-                        textAlign = TextAlign.Center,
-                    )
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column {
+                    CircularProgressIndicator()
+                    Text(stringResource(R.string.suggestion_uploading_message))
                 }
-
-                SendingState.Initial -> onDismissRequest.invoke()
-                is SendingState.Loading -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        state.progress?.let {
-                            if (state.progress.toFloatOrNull() != null) {
-                                progress = state.progress.toFloat()
-                                Column {
-                                    CircularProgressIndicator(progress = animatedProgress)
-                                    Text("Uploading image ${animatedProgress}%")
-                                }
-                            } else {
-                                Column {
-                                    CircularProgressIndicator()
-                                    Text(state.progress)
-                                }
-                            }
-                        }
-                    }
-                }
-
-                SendingState.Success -> onDismissRequest.invoke()
             }
         }
     }
@@ -297,13 +285,15 @@ fun MinimalDialog(
 fun Preview_SuggestScreen() {
     PlantScanTheme {
         Surface {
-            SuggestScreen(state = SendingState.Initial,
+            SuggestScreen(
+                state = SendingState.Success,
                 description = "",
                 image = listOf(),
                 onImageSet = { _, _, _ -> },
                 onBackClick = { /*TODO*/ },
                 onSetDescription = {},
-                onSendClick = {})
+                onSendClick = {}
+            )
         }
     }
 }

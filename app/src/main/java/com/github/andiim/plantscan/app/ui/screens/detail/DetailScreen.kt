@@ -60,8 +60,8 @@ import com.github.andiim.plantscan.app.core.domain.model.Image
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
 import com.github.andiim.plantscan.app.ui.TrackScreenViewEvent
+import com.github.andiim.plantscan.app.ui.common.PlantPreviewParameterProvider
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
-import com.github.andiim.plantscan.app.utils.PlantPreviewParameterProvider
 
 @Composable
 fun DetailRoute(
@@ -77,7 +77,6 @@ fun DetailRoute(
         onBackClick = popUpScreen,
         modifier = modifier,
     )
-
 }
 
 @Composable
@@ -97,7 +96,6 @@ internal fun DetailScreen(
             }
             when (detailUiState) {
                 DetailUiState.Error -> {
-
                 }
 
                 DetailUiState.Loading -> item {
@@ -148,7 +146,6 @@ fun Toolbar(
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
         }
     }
-
 }
 
 @Suppress("FunctionName")
@@ -294,10 +291,10 @@ private fun LazyListScope.imageCard(image: List<Image>) {
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             border = BorderStroke(width = 1.dp, color = Color.Gray)
         ) {
-            if (image.size > 1)
+            if (image.size > 1) {
                 LazyVerticalGrid(columns = GridCells.FixedSize(2.dp)) {
-
                 }
+            }
         }
     }
 }

@@ -27,10 +27,10 @@ fun NonPermissionScreen(
     showPermission: () -> Unit,
     openGallery: () -> Unit
 ) {
-
     val stringResource =
-        if (shouldShowRationale) R.string.camera_permissions_request_with_rationale
-        else R.string.camera_permissions_request
+        if (shouldShowRationale) {
+            R.string.camera_permissions_request_with_rationale
+        } else R.string.camera_permissions_request
 
     Column(
         modifier = Modifier

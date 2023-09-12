@@ -11,5 +11,6 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @Module
 @InstallIn(ViewModelComponent::class)
 abstract class AppModule {
-  @Binds @ViewModelScoped abstract fun provideUseCase(interactor: PlantInteractor): PlantUseCase
+    @Binds @ViewModelScoped
+    abstract fun provideUseCase(interactor: PlantInteractor): PlantUseCase
 }

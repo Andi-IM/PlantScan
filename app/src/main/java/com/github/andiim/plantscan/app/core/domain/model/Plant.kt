@@ -10,4 +10,3 @@ data class Plant(
     val thumbnail: String,
     val description: String,
 )
-

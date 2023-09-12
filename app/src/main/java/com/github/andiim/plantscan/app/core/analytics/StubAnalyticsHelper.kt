@@ -1,8 +1,8 @@
 package com.github.andiim.plantscan.app.core.analytics
 
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
-import timber.log.Timber
 
 private const val TAG = "StubAnalyticsHelper"
 

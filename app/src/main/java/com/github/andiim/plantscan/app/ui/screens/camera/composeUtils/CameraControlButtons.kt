@@ -25,29 +25,29 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CameraControlButtons() {
-
-  AnimatedSwitchCameraButton()
+    AnimatedSwitchCameraButton()
 }
 
 @Composable
 fun AnimatedSwitchCameraButton() {
-  var rotated by remember { mutableStateOf(false) }
+    var rotated by remember { mutableStateOf(false) }
 
-  val animatedFloat: Float by
-      animateFloatAsState(
-          targetValue = if (rotated) 360f else 0f,
-          animationSpec =
-              infiniteRepeatable(
-                  animation =
-                      tween(
-                          2000,
-                          easing = LinearEasing,
-                      ),
-                  repeatMode = RepeatMode.Restart,
-              ),
-          label = "Rotate")
+    val animatedFloat: Float by
+        animateFloatAsState(
+            targetValue = if (rotated) 360f else 0f,
+            animationSpec =
+            infiniteRepeatable(
+                animation =
+                tween(
+                    2000,
+                    easing = LinearEasing,
+                ),
+                repeatMode = RepeatMode.Restart,
+            ),
+            label = "Rotate"
+        )
 
-  // val transition = rememberInfiniteTransition(label = "Rotate")
+    // val transition = rememberInfiniteTransition(label = "Rotate")
 
   /*val animateAngle: Float by
   transition.animateFloat(
@@ -59,20 +59,21 @@ fun AnimatedSwitchCameraButton() {
       label = "Rotate box",
   )*/
 
-  Column {
-    Icon(
-        Icons.Default.ChangeCircle,
-        contentDescription = "fan",
-        modifier =
+    Column {
+        Icon(
+            Icons.Default.ChangeCircle,
+            contentDescription = "fan",
+            modifier =
             Modifier.clickable { rotated = !rotated }
                 .rotate(degrees = animatedFloat)
                 .padding(30.dp)
-                .size(100.dp))
-  }
+                .size(100.dp)
+        )
+    }
 }
 
 @Preview
 @Composable
 fun Preview_CameraControlButtons() {
-  Surface { CameraControlButtons() }
+    Surface { CameraControlButtons() }
 }

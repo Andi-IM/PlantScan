@@ -9,6 +9,8 @@ data class TaxonomyDocument(
     val family: String = "",
     val genus: String = ""
 ) {
+    constructor(t: Taxonomy) : this(t.phylum, t.order, t.family, t.genus)
+
     @get:PropertyName("class")
     @set:PropertyName("class")
     var className: String = ""

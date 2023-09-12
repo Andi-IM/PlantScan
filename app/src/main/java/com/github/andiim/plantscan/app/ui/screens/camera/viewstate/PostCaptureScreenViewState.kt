@@ -23,7 +23,7 @@ import android.net.Uri
  * photo captured or hidden.
  */
 sealed interface PostCaptureScreenViewState {
-  data object PostCaptureScreenHiddenViewState : PostCaptureScreenViewState
+    data object PostCaptureScreenHiddenViewState : PostCaptureScreenViewState
 
-  data class PostCaptureScreenVisibleViewState(val uri: Uri) : PostCaptureScreenViewState
+    data class PostCaptureScreenVisibleViewState(val uri: Uri) : PostCaptureScreenViewState
 }

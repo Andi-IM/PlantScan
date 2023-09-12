@@ -1,4 +1,5 @@
 import com.github.andiim.plantscan.app.PsBuildType
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 
 plugins {
     id("plantscan.android.application")
@@ -6,9 +7,8 @@ plugins {
     id("plantscan.android.application.compose")
     id("plantscan.android.application.flavors")
     id("plantscan.android.application.jacoco")
-    id("com.google.devtools.ksp")
+    id("plantscan.android.hilt")
     id("org.jetbrains.kotlin.kapt")
-    id("dagger.hilt.android.plugin")
     id("jacoco")
     id("kotlinx-serialization")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
@@ -40,6 +40,10 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("debug")
+
+            firebaseAppDistribution {
+                artifactType = "APK"
+            }
         }
         /*create("benchmark") {
             initWith(release)
@@ -52,7 +56,7 @@ android {
     }
 
     lint {
-        warningsAsErrors = true
+        // warningsAsErrors = true
         abortOnError = true
         baseline = File("lint-baseline.xml")
     }

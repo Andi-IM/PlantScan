@@ -20,12 +20,12 @@ internal const val plantIdArg = "plant_id"
 
 internal class DetailArgs(val plantId: String) {
     constructor(savedStateHandle: SavedStateHandle) :
-            this(
-                URLDecoder.decode(
-                    checkNotNull(savedStateHandle[plantIdArg]),
-                    urlCharacterEncoding
-                )
+        this(
+            URLDecoder.decode(
+                checkNotNull(savedStateHandle[plantIdArg]),
+                urlCharacterEncoding
             )
+        )
 }
 
 fun PlantScanAppState.navigateToDetail(id: String) {
@@ -40,9 +40,11 @@ fun NavGraphBuilder.detailScreen(
         route = Direction.Detail.route,
         arguments = listOf(navArgument(plantIdArg) { type = NavType.StringType }),
         deepLinks =
-        listOf(navDeepLink {
-            uriPattern = "${NavigationConstants.APP_URI}/${Direction.Detail.route}/{$plantIdArg}"
-        })
+        listOf(
+            navDeepLink {
+                uriPattern = "${NavigationConstants.APP_URI}/${Direction.Detail.route}/{$plantIdArg}"
+            }
+        )
     ) {
         DetailRoute(popUpScreen = onBackClick)
     }

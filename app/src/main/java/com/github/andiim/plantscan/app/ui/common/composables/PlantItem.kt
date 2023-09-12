@@ -33,9 +33,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.github.andiim.plantscan.app.core.analytics.LocalAnalyticsHelper
 import com.github.andiim.plantscan.app.core.domain.model.Plant
+import com.github.andiim.plantscan.app.ui.common.PlantPreviewParameterProvider
 import com.github.andiim.plantscan.app.ui.logPlantResourceOpened
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
-import com.github.andiim.plantscan.app.utils.PlantPreviewParameterProvider
 import com.github.andiim.plantscan.app.R.drawable as ImageDrawable
 
 @Composable

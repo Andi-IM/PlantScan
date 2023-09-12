@@ -7,7 +7,6 @@ import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -26,30 +25,22 @@ constructor(
     val plantId = detailArgs.plantId
 
     val detailUiState: StateFlow<DetailUiState> =
-        detailUiState(
-            plantId = plantId,
-            useCase = useCase
-        ).stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = DetailUiState.Loading,
-        )
-}
-
-private fun detailUiState(
-    plantId: String,
-    useCase: PlantUseCase,
-): Flow<DetailUiState> {
-    return useCase.getPlantDetail(plantId).map {
-        when (it) {
-            is Resource.Error -> DetailUiState.Error
-            is Resource.Loading -> DetailUiState.Loading
-            is Resource.Success -> {
-                val data = it.data
-                DetailUiState.Success(data)
+        useCase.getPlantDetail(plantId)
+            .map {
+                when (it) {
+                    is Resource.Error -> DetailUiState.Error
+                    is Resource.Loading -> DetailUiState.Loading
+                    is Resource.Success -> {
+                        val data = it.data
+                        DetailUiState.Success(data)
+                    }
+                }
             }
-        }
-    }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = DetailUiState.Loading,
+            )
 }
 
 sealed interface DetailUiState {

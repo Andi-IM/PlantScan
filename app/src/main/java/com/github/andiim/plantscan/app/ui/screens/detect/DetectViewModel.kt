@@ -24,6 +24,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import java.io.ByteArrayOutputStream
+import java.util.Base64
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,12 +47,12 @@ constructor(
 
     fun detect(context: Context) {
         val bitmap = getImage(context, imageUri)
-
+        val base64Data = bitmap.convertToBase64()
 
         launchCatching(logService) {
             val currentUser = authService.currentUser.first()
 
-            useCase.detect(bitmap).collectLatest {
+            useCase.detect(base64Data).collectLatest {
                 when (it) {
                     is Resource.Error -> {
                         val error = it.message
@@ -65,29 +67,33 @@ constructor(
                         var data = it.data.apply {
                             image = image.copy(data = bitmap)
                         }
+                        val predictions = data.predictions
 
-                        val history = data.predictions.first().let { det ->
-                            DetectionHistory(
-                                plantRef = det.jsonMemberClass,
-                                userId = if (currentUser.isAnonymous) "Anonymous" else currentUser.id,
-                                accuracy = det.confidence
-                            )
-
-                        }
-                        useCase.recordDetection(history)
-
-                        val detectedObjects = data.predictions.map { results ->
-                            with(results) {
-                                val text = "${jsonMemberClass}, ${confidence.times(100).toInt()}%"
-                                val rect = Rect(
-                                    (x - (width / 2)).toInt(),
-                                    (y - (height / 2)).toInt(),
-                                    (x + (width / 2)).toInt(),
-                                    (y + (height / 2)).toInt()
+                        data.predictions
+                            .find { item -> item == predictions.maxByOrNull { det -> det.confidence } }
+                            ?.let { det ->
+                                val history = DetectionHistory(
+                                    plantRef = det.jsonMemberClass,
+                                    userId = if (currentUser.isAnonymous) "Anonymous" else currentUser.id,
+                                    accuracy = det.confidence
                                 )
-                                BoxWithText(rect, text)
+                                useCase.recordDetection(history)
                             }
-                        }
+
+                        val detectedObjects = predictions
+                            .map { results ->
+                                with(results) {
+                                    val text =
+                                        "$jsonMemberClass, ${confidence.times(100).toInt()}%"
+                                    val rect = Rect(
+                                        (x - (width / 2)).toInt(),
+                                        (y - (height / 2)).toInt(),
+                                        (x + (width / 2)).toInt(),
+                                        (y + (height / 2)).toInt()
+                                    )
+                                    BoxWithText(rect, text)
+                                }
+                            }
                         val visualizedResult = drawDetectionResult(bitmap, detectedObjects)
 
                         if (detectedObjects.isNotEmpty()) {
@@ -103,6 +109,13 @@ constructor(
                 }
             }
         }
+    }
+
+    private fun Bitmap.convertToBase64(): String {
+        val outputStream = ByteArrayOutputStream()
+        this.compress(Bitmap.CompressFormat.JPEG, 20, outputStream)
+        val byteArray = outputStream.toByteArray()
+        return Base64.getEncoder().encodeToString(byteArray)
     }
 
     fun onSuggestClick(onClick: (String) -> Unit) {
@@ -153,13 +166,14 @@ private fun drawDetectionResult(
         var margin = (box.width() - tagSize.width()) / 2.0F
         if (margin < 0F) margin = 0F
         canvas.drawText(
-            it.text, box.left + margin,
-            box.top + tagSize.height().times(1F), pen
+            it.text,
+            box.left + margin,
+            box.top + tagSize.height().times(1F),
+            pen
         )
     }
     return outputBitmap
 }
-
 
 sealed interface DetectUiState {
     data class Success(val detection: ObjectDetection) : DetectUiState

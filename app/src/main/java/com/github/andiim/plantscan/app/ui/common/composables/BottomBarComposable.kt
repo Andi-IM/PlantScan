@@ -38,10 +38,11 @@ fun BottomBar(
     val visible =
         (currentDestination?.hierarchy?.any { it.route == Direction.MainNav.route } == true)
 
-    val enterAnimation = (slideInVertically {
-        // Slide in from 40 dp from the top.
-        with(density) { -40.dp.roundToPx() }
-    } +
+    val enterAnimation = (
+        slideInVertically {
+            // Slide in from 40 dp from the top.
+            with(density) { -40.dp.roundToPx() }
+        } +
             expandVertically(
                 // Expand from the top.
                 expandFrom = Alignment.Top
@@ -49,7 +50,8 @@ fun BottomBar(
             fadeIn(
                 // Fade in with the initial alpha of 0.3f.
                 initialAlpha = 0.3f
-            ))
+            )
+        )
 
     val exitAnimation = (slideOutVertically() + shrinkVertically() + fadeOut())
 

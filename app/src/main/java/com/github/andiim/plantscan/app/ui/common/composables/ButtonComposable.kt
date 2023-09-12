@@ -77,7 +77,8 @@ private fun Preview() {
                 BasicTextButton(
                     text = AppText.app_name,
                     modifier = Modifier.basicButton(),
-                    action = {})
+                    action = {}
+                )
                 BasicButton(text = AppText.app_name, modifier = Modifier.basicButton(), action = {})
                 DialogConfirmButton(text = AppText.app_name, action = {})
                 DialogCancelButton(text = AppText.app_name, action = {})

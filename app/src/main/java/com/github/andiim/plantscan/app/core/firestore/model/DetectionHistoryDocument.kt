@@ -38,6 +38,6 @@ fun Date.toinstant(): Instant {
     return Instant.parse(this.toString())
 }
 
-fun Instant.toDate(): Date{
+fun Instant.toDate(): Date {
     return Date.from(this.toJavaInstant())
 }

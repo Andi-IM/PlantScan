@@ -19,6 +19,9 @@ class AccountServiceImpl @Inject constructor(
     override val hasUser: Boolean
         get() = auth.currentUser != null
 
+    override val isAnonymous: Boolean
+        get() = auth.currentUser?.isAnonymous ?: true
+
     override val currentUser: Flow<User>
         get() = callbackFlow {
             val listener =

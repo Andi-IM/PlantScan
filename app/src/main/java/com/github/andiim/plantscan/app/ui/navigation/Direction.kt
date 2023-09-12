@@ -8,10 +8,10 @@ sealed class Direction(val route: String) {
     data object AccountNav : Direction("account_navigation")
     data object Splash : Direction("splash")
     data object FindPlant : Direction("find")
-    data object MyGarden : Direction("my_garden")
+    data object History : Direction("history")
     data object Settings : Direction("settings")
     data object Login : Direction("login")
-    data object Suggest : Direction("suggest/{plant_id}"){
+    data object Suggest : Direction("suggest/{plant_id}") {
         fun createRoute(id: String) = "suggest/$id"
     }
     data object List : Direction("plant")
@@ -21,9 +21,9 @@ sealed class Direction(val route: String) {
     data object Detail : Direction("plant/{plant_id}") {
         fun createRoute(id: String) = "plant/$id"
     }
-    data object Camera: Direction("camera")
+    data object Camera : Direction("camera")
     data object Detect : Direction("camera/{imageUri}") {
-        fun createRoute(imageUri: String) : String {
+        fun createRoute(imageUri: String): String {
             val encoder = URLEncoder.encode(imageUri, StandardCharsets.UTF_8.toString())
             return "camera/$encoder"
         }

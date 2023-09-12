@@ -36,7 +36,9 @@ fun PermissionDialog(onRequestPermission: () -> Unit) {
 
     if (showWarningDialog) {
         AlertDialog(
-            modifier = Modifier.alertDialog(), onDismissRequest = { showWarningDialog = false }) {
+            modifier = Modifier.alertDialog(),
+            onDismissRequest = { showWarningDialog = false }
+        ) {
             Surface(
                 modifier = Modifier
                     .wrapContentWidth()

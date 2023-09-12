@@ -11,7 +11,7 @@ compose_compilerextension = "1.5.0"
 kotlin = "1.9.0"
 
 # DEPENDENCIES
-agp = "8.1.0"
+agp = "8.1.1"
 activity = "1.7.2"
 androidDesugarJdkLibs = "2.0.3"
 androidx_activity_compose = "1.7.2"
@@ -71,6 +71,7 @@ androidx_mockito_android = { module = "org.mockito:mockito-android", version = "
 androidx_mockito_inline = { module = "org.mockito:mockito-inline", version = "4.8.1" }
 androidx_mockito_dexmaker = { module = "com.linkedin.dexmaker:dexmaker-mockito-inline", version = "2.28.1" }
 androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileInstaller" }
+autofactory = {group="com.google.auto.factory", name = "auto-factory", version = "1.0.1"}
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 dagger_hilt_navigation_compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.0.0" }
@@ -101,6 +102,7 @@ espresso_core = { module = "androidx.test.espresso:espresso-core", version.ref =
 espresso_intent = { module = "androidx.test.espresso:espresso-intents", version.ref = "espresso_core" }
 espresso_idlingResource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "espresso_core" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-appdistribution-plugin = { group = "com.google.firebase", name = "firebase-appdistribution-gradle", version = "4.0.0" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 firebase-config = { group = "com.google.firebase", name = "firebase-config-ktx" }

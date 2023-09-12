@@ -84,7 +84,3 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
         )
     }
 }
-
-
-
-

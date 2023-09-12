@@ -2,7 +2,6 @@ package com.github.andiim.plantscan.app.ui.screens.home.findPlant
 
 import androidx.lifecycle.ViewModel
 import androidx.paging.Pager
-import com.github.andiim.plantscan.app.core.data.PlantRepositoryImpl.Companion.getDefaultPageConfig
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
@@ -27,11 +26,11 @@ constructor(
     private val queryState = MutableStateFlow("")
     val query: StateFlow<String> = queryState.asStateFlow()
 
-    val items =
-        Pager(
-            config = getDefaultPageConfig(),
-            pagingSourceFactory = { useCase.getPlants(queryState.value) })
-            .flow
+    val items = Pager(
+        config = PlantUseCase.getDefaultPageConfig(),
+        pagingSourceFactory = { useCase.getPlants(queryState.value) }
+    )
+        .flow
 
     fun onQueryChange(queryData: String) {
         launchCatching(logService) {

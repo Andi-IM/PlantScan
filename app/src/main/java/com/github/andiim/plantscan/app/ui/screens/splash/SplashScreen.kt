@@ -62,7 +62,8 @@ fun SplashScreen(
             }
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         if (isError) {
             Text(text = stringResource(R.string.generic_error))
 
@@ -71,7 +72,8 @@ fun SplashScreen(
                 Modifier
                     .basicButton()
                     .testTag("Reload Button"),
-                action = { onAppStart(openScreen) })
+                action = { onAppStart(openScreen) }
+            )
         } else {
             CircularProgressIndicator(
                 modifier = Modifier.testTag("Progress"),

@@ -40,29 +40,35 @@ fun DropdownContextMenu(
     modifier: Modifier,
     onActionClick: (String) -> Unit
 ) {
-  var isExpanded by remember { mutableStateOf(false) }
+    var isExpanded by remember { mutableStateOf(false) }
 
-  ExposedDropdownMenuBox(
-      expanded = isExpanded, modifier = modifier, onExpandedChange = { isExpanded = !isExpanded }) {
-    Icon(
-        modifier = Modifier.padding(8.dp, 0.dp),
-        imageVector = Icons.Default.MoreVert,
-        contentDescription = "More")
-
-    ExposedDropdownMenu(
-        modifier = Modifier.width(180.dp),
+    ExposedDropdownMenuBox(
         expanded = isExpanded,
-        onDismissRequest = { isExpanded = false }) {
-      options.forEach { selectionOption ->
-        DropdownMenuItem(
-            text = { Text(text = selectionOption) },
-            onClick = {
-              isExpanded = false
-              onActionClick(selectionOption)
-            })
-      }
+        modifier = modifier,
+        onExpandedChange = { isExpanded = !isExpanded }
+    ) {
+        Icon(
+            modifier = Modifier.padding(8.dp, 0.dp),
+            imageVector = Icons.Default.MoreVert,
+            contentDescription = "More"
+        )
+
+        ExposedDropdownMenu(
+            modifier = Modifier.width(180.dp),
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false }
+        ) {
+            options.forEach { selectionOption ->
+                DropdownMenuItem(
+                    text = { Text(text = selectionOption) },
+                    onClick = {
+                        isExpanded = false
+                        onActionClick(selectionOption)
+                    }
+                )
+            }
+        }
     }
-  }
 }
 
 @Composable
@@ -74,62 +80,71 @@ fun DropdownSelector(
     modifier: Modifier,
     onNewValue: (String) -> Unit
 ) {
-  var isExpanded by remember { mutableStateOf(false) }
+    var isExpanded by remember { mutableStateOf(false) }
 
-  ExposedDropdownMenuBox(
-      expanded = isExpanded, modifier = modifier, onExpandedChange = { isExpanded = !isExpanded }) {
-    TextField(
-        modifier = Modifier.fillMaxWidth(),
-        readOnly = true,
-        value = selection,
-        label = { Text(stringResource(label)) },
-        onValueChange = {},
-        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
-        colors = dropdownColors()
-    )
+    ExposedDropdownMenuBox(
+        expanded = isExpanded,
+        modifier = modifier,
+        onExpandedChange = { isExpanded = !isExpanded }
+    ) {
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            readOnly = true,
+            value = selection,
+            label = { Text(stringResource(label)) },
+            onValueChange = {},
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
+            colors = dropdownColors()
+        )
 
-    ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
-      options.forEach { selectionOption ->
-        DropdownMenuItem(
-            text = { Text(text = selectionOption) },
-            onClick = {
-              onNewValue(selectionOption)
-              isExpanded = false
-            })
-      }
+        ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
+            options.forEach { selectionOption ->
+                DropdownMenuItem(
+                    text = { Text(text = selectionOption) },
+                    onClick = {
+                        onNewValue(selectionOption)
+                        isExpanded = false
+                    }
+                )
+            }
+        }
     }
-  }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun dropdownColors(): TextFieldColors {
-  return ExposedDropdownMenuDefaults.textFieldColors(
-      focusedContainerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-      focusedIndicatorColor = Color.Transparent,
-      unfocusedIndicatorColor = Color.Transparent,
-      focusedTrailingIconColor = MaterialTheme.colorScheme.onSurface,
-      focusedLabelColor = MaterialTheme.colorScheme.primary,
-      unfocusedLabelColor = MaterialTheme.colorScheme.primary)
+    return ExposedDropdownMenuDefaults.textFieldColors(
+        focusedContainerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        focusedIndicatorColor = Color.Transparent,
+        unfocusedIndicatorColor = Color.Transparent,
+        focusedTrailingIconColor = MaterialTheme.colorScheme.onSurface,
+        focusedLabelColor = MaterialTheme.colorScheme.primary,
+        unfocusedLabelColor = MaterialTheme.colorScheme.primary
+    )
 }
 
 @Preview(name = "Night Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(name = "Day Mode", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun Preview() {
-  PlantScanTheme {
-    Surface {
-      Column(Modifier.padding(16.dp)) {
-        DropdownContextMenu(
-            options = listOf("Hello", "World!"), modifier = Modifier, onActionClick = {})
-        Spacer(Modifier.padding(8.dp))
-        DropdownSelector(
-            label = AppText.app_name,
-            options = listOf("Hello", "World!"),
-            selection = "select this?",
-            modifier = Modifier.dropdownSelector(),
-            onNewValue = {})
-      }
+    PlantScanTheme {
+        Surface {
+            Column(Modifier.padding(16.dp)) {
+                DropdownContextMenu(
+                    options = listOf("Hello", "World!"),
+                    modifier = Modifier,
+                    onActionClick = {}
+                )
+                Spacer(Modifier.padding(8.dp))
+                DropdownSelector(
+                    label = AppText.app_name,
+                    options = listOf("Hello", "World!"),
+                    selection = "select this?",
+                    modifier = Modifier.dropdownSelector(),
+                    onNewValue = {}
+                )
+            }
+        }
     }
-  }
 }

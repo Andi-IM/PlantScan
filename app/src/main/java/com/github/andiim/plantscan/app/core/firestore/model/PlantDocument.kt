@@ -22,6 +22,18 @@ data class PlantDocument(
     @set:PropertyName("common_name")
     var commonName: List<CommonName> = listOf()
 
+    constructor(plant: Plant) : this(
+        plant.id,
+        TaxonomyDocument(plant.taxon),
+        plant.description,
+        null,
+        plant.species,
+        null,
+        plant.name,
+        plant.images.map { ImageDocument(it) },
+        plant.thumbnail
+    )
+
     fun toModel(): Plant =
         Plant(
             id = this.id,
@@ -38,6 +50,3 @@ data class PlantDocument(
 
     data class CommonName(val name: String = "")
 }
-
-
-

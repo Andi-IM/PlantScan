@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -45,7 +46,8 @@ fun BasicField(
         modifier = modifier,
         value = value,
         onValueChange = { onNewValue(it) },
-        placeholder = { Text(stringResource(text)) })
+        placeholder = { Text(stringResource(text)) }
+    )
 }
 
 @Composable
@@ -56,7 +58,8 @@ fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier =
         value = value,
         onValueChange = { onNewValue(it) },
         placeholder = { Text(stringResource(AppText.email)) },
-        leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") })
+        leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") }
+    )
 }
 
 @Composable
@@ -83,13 +86,19 @@ private fun PasswordField(
     var isVisible by remember { mutableStateOf(false) }
 
     val icon =
-        if (isVisible) painterResource(AppIcon.ic_visibility_on)
-        else painterResource(AppIcon.ic_visibility_off)
+        if (isVisible) {
+            painterResource(AppIcon.ic_visibility_on)
+        } else {
+            painterResource(AppIcon.ic_visibility_off)
+        }
 
     val visualTransformation =
         if (isVisible) VisualTransformation.None else PasswordVisualTransformation()
 
+    val description = if (isVisible) "Hide Password" else "Show Password"
+
     OutlinedTextField(
+        singleLine = true,
         modifier = modifier,
         value = value,
         onValueChange = { onNewValue(it) },
@@ -97,10 +106,10 @@ private fun PasswordField(
         leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Lock") },
         trailingIcon = {
             IconButton(onClick = { isVisible = !isVisible }) {
-                Icon(painter = icon, contentDescription = "Visibility")
+                Icon(painter = icon, contentDescription = description)
             }
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
         visualTransformation = visualTransformation
     )
 }

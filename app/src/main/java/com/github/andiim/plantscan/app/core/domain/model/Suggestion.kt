@@ -8,12 +8,12 @@ data class Suggestion(
     val userId: String,
     val date: Date?,
     val description: String,
-    val imageUrl: List<String>? = null,
+    val imageUrl: List<String> = listOf(),
     val image: List<Bitmap>,
 ) {
     constructor(
         userId: String = "",
         description: String = "",
         image: List<Bitmap> = listOf(),
-    ) : this("", userId, null, description, null, image)
+    ) : this("", userId, null, description, listOf(), image)
 }

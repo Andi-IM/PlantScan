@@ -35,9 +35,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import com.github.andiim.plantscan.app.R.drawable as AppIcon
 import com.github.andiim.plantscan.app.R.string as AppText
-import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,12 +47,13 @@ fun BasicToolbar(
     leading: @Composable () -> Unit = {},
     trailing: @Composable (RowScope.() -> Unit) = {}
 ) {
-  TopAppBar(
-      modifier = modifier,
-      navigationIcon = leading,
-      title = { Text(stringResource(title)) },
-      colors = TopAppBarDefaults.orchidScanTopAppBarColor(),
-      actions = trailing)
+    TopAppBar(
+        modifier = modifier,
+        navigationIcon = leading,
+        title = { Text(stringResource(title)) },
+        colors = TopAppBarDefaults.orchidScanTopAppBarColor(),
+        actions = trailing
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,42 +64,44 @@ fun ActionToolbar(
     modifier: Modifier,
     endAction: () -> Unit
 ) {
-  TopAppBar(
-      title = { Text(stringResource(title)) },
-      colors = TopAppBarDefaults.orchidScanTopAppBarColor(),
-      actions = {
-        Box(modifier) {
-          IconButton(onClick = endAction) {
-            Icon(painter = painterResource(endActionIcon), contentDescription = "Action")
-          }
+    TopAppBar(
+        title = { Text(stringResource(title)) },
+        colors = TopAppBarDefaults.orchidScanTopAppBarColor(),
+        actions = {
+            Box(modifier) {
+                IconButton(onClick = endAction) {
+                    Icon(painter = painterResource(endActionIcon), contentDescription = "Action")
+                }
+            }
         }
-      })
+    )
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun TopAppBarDefaults.orchidScanTopAppBarColor(): TopAppBarColors {
-  return topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    return topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
 }
 
 @Preview(name = "Night Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(name = "Day Mode", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun BasicToolbarPreview() {
-  PlantScanTheme { Surface { BasicToolbar(title = AppText.app_name) } }
+    PlantScanTheme { Surface { BasicToolbar(title = AppText.app_name) } }
 }
 
 @Preview(name = "Night Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(name = "Day Mode", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun ActionToolbarPreview() {
-  PlantScanTheme {
-    Surface {
-      ActionToolbar(
-          title = AppText.app_name,
-          endActionIcon = AppIcon.ic_visibility_on,
-          endAction = {},
-          modifier = Modifier)
+    PlantScanTheme {
+        Surface {
+            ActionToolbar(
+                title = AppText.app_name,
+                endActionIcon = AppIcon.ic_visibility_on,
+                endAction = {},
+                modifier = Modifier
+            )
+        }
     }
-  }
 }

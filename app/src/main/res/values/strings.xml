@@ -79,13 +79,21 @@
     <string name="fetch_image_error">Fetch image failed</string>
     <string name="login_forgot_password_label">Forgot Password?</string>
     <string name="no_account_question_label">Don\'t have an account?</string>
+    <string name="camera_error_label">Couldn\'t take photo</string>
     <string name="sign_up">Sign Up</string>
     <string name="have_account_question_label">Already have an account?</string>
     <string name="description">Description</string>
+
     <string name="suggestion_button_label">Not sure for the result?</string>
     <string name="suggestion_action_label">give a suggestion</string>
-    <string name="camera_error_label">Couldn\'t take photo</string>
     <string name="suggestion_title_screen">Give a suggestion</string>
-    <string name="suggest_send_label">Send</string>
-    <string name="suggest_deny_message">Sorry, you must login to access this feature</string>
+    <string name="suggestion_send_label">Send</string>
+    <string name="suggestion_deny_message">Sorry, you must login to access this feature</string>
+    <string name="suggestion_success_message">Thank you for the feedback</string>
+    <string name="suggestion_uploading_message">Uploading…</string>
+    <string name="detect_screen_title">Result</string>
+    <string name="detect_loading_title">Loading</string>
+    <string name="detect_loading_state">"Detecting… "</string>
+    <string name="detect_error_title">Error</string>
+    <string name="success">Sending Success!</string>
 </resources>

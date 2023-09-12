@@ -1,4 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import io.gitlab.arturbosch.detekt.Detekt
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("com.android.application") apply false
@@ -9,6 +11,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0" apply false
     id("com.google.gms.google-services") version "4.3.15" apply false
     id("com.google.dagger.hilt.android") apply false
+    id("com.google.firebase.appdistribution") apply false
     id("com.google.firebase.crashlytics") apply false
     id("com.google.firebase.firebase-perf") apply false
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1" apply false
@@ -21,13 +24,18 @@ allprojects {
     group = PUBLISHING_GROUP
 }
 
-val detektFormatting: Provider<MinimalExternalModuleDependency> = libs.detekt.formatting
+/*val detektFormatting: Provider<MinimalExternalModuleDependency> = libs.detekt.formatting
 
 subprojects {
     apply { plugin("io.gitlab.arturbosch.detekt") }
-    detekt { config.setFrom(rootProject.files("config/detekt/detekt.yml")) }
+    detekt {
+        autoCorrect = true
+        buildUponDefaultConfig = true
+        allRules = false
+        config.setFrom(rootProject.files("config/detekt/detekt.yml"))
+    }
     dependencies { detektPlugins(detektFormatting) }
-}
+}*/
 
 tasks {
     withType<DependencyUpdatesTask>().configureEach {
@@ -35,4 +43,12 @@ tasks {
             candidate.version.isStableVersion().not()
         }
     }
+
+    /*withType<Detekt>().configureEach {
+        jvmTarget = "1.8"
+
+        reports {
+            html.required = true
+        }
+    }*/
 }

@@ -9,14 +9,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface FirestoreSource {
     suspend fun getPlants(
-        query: String,
-        limit: Long
+        limit: Long,
+        query: String = "",
     ): List<PlantDocument>
 
     suspend fun getPlantById(id: String): PlantDocument
     suspend fun recordDetection(detection: DetectionHistoryDocument): String
     suspend fun getDetectionsList(userId: String): List<DetectionHistoryDocument>
-    suspend fun sendASuggestions(suggestion: SuggestionDocument): String
-    suspend fun updateASuggestion(suggestion: SuggestionDocument)
-    fun uploadSuggestionImage(content: ImageContent): Flow<Resource<String>>
+    suspend fun sendASuggestion(suggestion: SuggestionDocument): String
+    fun uploadSuggestionImage(content: ImageContent): Flow<String>
 }

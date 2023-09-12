@@ -11,12 +11,12 @@ import com.github.andiim.plantscan.app.core.analytics.AnalyticsHelper
 import com.github.andiim.plantscan.app.core.analytics.LocalAnalyticsHelper
 import com.github.andiim.plantscan.app.core.data.util.NetworkMonitor
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PlantScanActivity : AppCompatActivity() {
@@ -32,7 +32,6 @@ class PlantScanActivity : AppCompatActivity() {
 
     @Inject
     lateinit var analyticsHelper: AnalyticsHelper
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

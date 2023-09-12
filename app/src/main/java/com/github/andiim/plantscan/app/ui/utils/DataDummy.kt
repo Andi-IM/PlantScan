@@ -1,12 +1,15 @@
 package com.github.andiim.plantscan.app.utils
 
 import androidx.paging.PagingData
+import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
 import com.github.andiim.plantscan.app.core.domain.model.Imgz
 import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.model.Prediction
+import com.github.andiim.plantscan.app.core.domain.model.Suggestion
 import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
 import com.github.andiim.plantscan.app.core.firestore.model.PlantDocument
+import kotlinx.datetime.Clock
 
 object DataDummy {
     var OBJECT_DETECTIONS =
@@ -29,19 +32,6 @@ object DataDummy {
             )
         }
 
-    /*var PREDICTIONS =
-        List(10) {
-            Prediction(
-                confidence = 10.0f,
-                x = 10.0f,
-                y = 10.0f,
-                width = 10.0f,
-                height = 10.0f,
-                jsonMemberClass = "Something $it"
-            )
-        }*/
-
-
     const val ERROR_FAIL_MESSAGE = "fail"
 
     private fun String.removeWhitespace() = filterNot { it.isWhitespace() }
@@ -61,12 +51,24 @@ object DataDummy {
             )
         }
 
-
     fun getPlants(list: List<PlantDocument>): PagingData<PlantDocument> = PagingData.from(list)
 
     fun searchPlant(query: String) =
         PLANTS.filter { plant ->
             plant.name.removeWhitespace() == query.removeWhitespace() ||
-                    plant.species.removeWhitespace() == query.removeWhitespace()
+                plant.species.removeWhitespace() == query.removeWhitespace()
         }
+
+    val HISTORIES =
+        List(10) {
+            DetectionHistory(
+                id = "id@$it",
+                timestamp = Clock.System.now(),
+                plantRef = "ref",
+                userId = "id",
+                accuracy = 0.1f
+            )
+        }
+
+    val SUGGESTION = Suggestion()
 }

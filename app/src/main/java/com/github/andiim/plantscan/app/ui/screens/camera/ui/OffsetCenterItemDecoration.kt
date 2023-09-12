@@ -63,13 +63,17 @@ class OffsetCenterItemDecoration : RecyclerView.ItemDecoration() {
         val lp = child.layoutParams
 
         val widthSpec = RecyclerView.LayoutManager.getChildMeasureSpec(
-            layoutManager.width, layoutManager.widthMode,
-            layoutManager.paddingLeft + layoutManager.paddingRight, lp.width,
+            layoutManager.width,
+            layoutManager.widthMode,
+            layoutManager.paddingLeft + layoutManager.paddingRight,
+            lp.width,
             layoutManager.canScrollHorizontally()
         )
         val heightSpec = RecyclerView.LayoutManager.getChildMeasureSpec(
-            layoutManager.height, layoutManager.heightMode,
-            layoutManager.paddingTop + layoutManager.paddingBottom, lp.height,
+            layoutManager.height,
+            layoutManager.heightMode,
+            layoutManager.paddingTop + layoutManager.paddingBottom,
+            lp.height,
             layoutManager.canScrollVertically()
         )
         child.measure(widthSpec, heightSpec)

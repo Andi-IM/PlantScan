@@ -105,13 +105,15 @@ fun AuthScreen(
                 onNewValue = onEmailChange,
                 modifier = Modifier
                     .fieldModifier()
-                    .semantics(true) { contentDescription = "Email Field" })
+                    .semantics(true) { contentDescription = "Email Field" }
+            )
             PasswordField(
                 value = uiState.password,
                 onNewValue = onPasswordChange,
                 modifier = Modifier
                     .fieldModifier()
-                    .semantics(true) { contentDescription = "Password Field" })
+                    .semantics(true) { contentDescription = "Password Field" }
+            )
 
             AnimatedVisibility(visible = !isSignup) {
                 ForgotPasswordButton(onClick = onForgotPasswordClick)
@@ -125,7 +127,8 @@ fun AuthScreen(
                         .fieldModifier()
                         .semantics(true) {
                             contentDescription = "Repeat Password Field"
-                        })
+                        }
+                )
             }
 
             BasicButton(
@@ -134,8 +137,11 @@ fun AuthScreen(
                     .basicButton()
                     .semantics(true) { contentDescription = "Sign In Button" },
                 action = {
-                    if (!isSignup) onSignInClick(navigateFromLogin)
-                    else onSignUpClick(navigateFromLogin)
+                    if (!isSignup) {
+                        onSignInClick(navigateFromLogin)
+                    } else {
+                        onSignUpClick(navigateFromLogin)
+                    }
                 },
             )
 
@@ -148,10 +154,10 @@ fun AuthScreen(
                 .align(Alignment.BottomCenter)
                 .semantics(true) {
                     contentDescription = "Terms Label"
-                })
+                }
+        )
     }
 }
-
 
 @Composable
 private fun ChangerButton(isSignUp: Boolean, onClick: () -> Unit) {
@@ -159,7 +165,11 @@ private fun ChangerButton(isSignUp: Boolean, onClick: () -> Unit) {
 
     val annotatedText = buildAnnotatedString {
         withStyle(style = SpanStyle()) {
-            append(context.getString(if (isSignUp) R.string.have_account_question_label else R.string.no_account_question_label))
+            append(
+                context.getString(
+                    if (isSignUp) R.string.have_account_question_label else R.string.no_account_question_label
+                )
+            )
         }
         append(" ")
         withStyle(
@@ -175,9 +185,8 @@ private fun ChangerButton(isSignUp: Boolean, onClick: () -> Unit) {
     ClickableText(
         text = annotatedText,
         onClick = { onClick() },
-        )
+    )
 }
-
 
 @Composable
 private fun ForgotPasswordButton(onClick: () -> Unit) {
@@ -196,7 +205,7 @@ private fun ForgotPasswordButton(onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
 
-        )
+    )
 }
 
 @Composable

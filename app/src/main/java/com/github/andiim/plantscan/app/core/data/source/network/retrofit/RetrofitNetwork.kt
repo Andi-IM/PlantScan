@@ -1,6 +1,5 @@
 package com.github.andiim.plantscan.app.core.data.source.network.retrofit
 
-import android.graphics.Bitmap
 import com.github.andiim.plantscan.app.BuildConfig
 import com.github.andiim.plantscan.app.core.data.source.network.NetworkDataSource
 import com.github.andiim.plantscan.app.core.data.source.network.model.DetectionResponse
@@ -19,7 +18,6 @@ import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Query
-import java.io.ByteArrayOutputStream
 import java.util.Base64
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -73,13 +71,20 @@ class RetrofitNetwork @Inject constructor(
         .build()
         .create(RetrofitNetworkApi::class.java)
 
-    override suspend fun detect(image: Bitmap): DetectionResponse = trace("Detecting") {
-        val outputStream = ByteArrayOutputStream()
-        image.compress(Bitmap.CompressFormat.JPEG, 20, outputStream)
+    override suspend fun detect(image: String): DetectionResponse = trace("Detecting") {
+        if (image.isValidBase64()) {
+            return networkApi.uploadImage(apiKey = API_KEY, base64Image = image)
+        }
+        throw Exception("Not a valid base64 image file!")
+    }
+}
 
-        val byteArray = outputStream.toByteArray()
-        val base = Base64.getEncoder().encodeToString(byteArray)
-
-        return networkApi.uploadImage(apiKey = API_KEY, base64Image = base)
+fun String.isValidBase64(): Boolean {
+    return try {
+        val decodedBytes = Base64.getDecoder().decode(this)
+        String(decodedBytes)
+        true
+    } catch (e: IllegalArgumentException) {
+        false
     }
 }
