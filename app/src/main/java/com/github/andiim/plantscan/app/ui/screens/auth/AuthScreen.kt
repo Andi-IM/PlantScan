@@ -44,6 +44,7 @@ import com.github.andiim.plantscan.app.ui.common.composables.PasswordField
 import com.github.andiim.plantscan.app.ui.common.composables.RepeatPasswordField
 import com.github.andiim.plantscan.app.ui.common.extensions.basicButton
 import com.github.andiim.plantscan.app.ui.common.extensions.fieldModifier
+import com.github.andiim.plantscan.app.ui.common.extensions.withSemantics
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import com.github.andiim.plantscan.app.R.string as AppString
 
@@ -82,37 +83,27 @@ fun AuthScreen(
 ) {
     var isSignup by remember { mutableStateOf(false) }
 
-    val animatedResource: Int by animateIntAsState(
-        if (isSignup) R.string.label_create_account else R.string.label_sign_in,
-        label = "String Resources for Login"
-    )
+    val animatedResource: Int by
+        animateIntAsState(
+            if (isSignup) R.string.label_create_account else R.string.label_sign_in,
+            label = "String Resources for Login"
+        )
 
-    Box(
-        modifier = Modifier
-            .padding(24.dp)
-            .testTag("Login Content")
-    ) {
+    Box(modifier = Modifier.padding(24.dp).testTag("Login Content")) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState()),
+            modifier = Modifier.fillMaxWidth().fillMaxHeight().verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             EmailField(
                 value = uiState.email,
                 onNewValue = onEmailChange,
-                modifier = Modifier
-                    .fieldModifier()
-                    .semantics(true) { contentDescription = "Email Field" }
+                modifier = Modifier.fieldModifier().withSemantics("Email Field")
             )
             PasswordField(
                 value = uiState.password,
                 onNewValue = onPasswordChange,
-                modifier = Modifier
-                    .fieldModifier()
-                    .semantics(true) { contentDescription = "Password Field" }
+                modifier = Modifier.fieldModifier().withSemantics("Password Field")
             )
 
             AnimatedVisibility(visible = !isSignup) {
@@ -123,19 +114,13 @@ fun AuthScreen(
                 RepeatPasswordField(
                     value = uiState.repeatPassword,
                     onNewValue = onRepeatPasswordChange,
-                    modifier = Modifier
-                        .fieldModifier()
-                        .semantics(true) {
-                            contentDescription = "Repeat Password Field"
-                        }
+                    modifier = Modifier.fieldModifier().withSemantics("Repeat Password Field")
                 )
             }
 
             BasicButton(
                 text = animatedResource,
-                modifier = Modifier
-                    .basicButton()
-                    .semantics(true) { contentDescription = "Sign In Button" },
+                modifier = Modifier.basicButton().withSemantics("Sign In Button"),
                 action = {
                     if (!isSignup) {
                         onSignInClick(navigateFromLogin)
@@ -150,11 +135,9 @@ fun AuthScreen(
         TermsAndPrivacyStatementText(
             openWeb = openWeb,
             modifier =
-            Modifier
-                .align(Alignment.BottomCenter)
-                .semantics(true) {
-                    contentDescription = "Terms Label"
-                }
+            Modifier.align(Alignment.BottomCenter).semantics(true) {
+                contentDescription = "Terms Label"
+            }
         )
     }
 }
@@ -167,16 +150,16 @@ private fun ChangerButton(isSignUp: Boolean, onClick: () -> Unit) {
         withStyle(style = SpanStyle()) {
             append(
                 context.getString(
-                    if (isSignUp) R.string.have_account_question_label else R.string.no_account_question_label
+                    if (isSignUp) {
+                        R.string.have_account_question_label
+                    } else R.string.no_account_question_label
                 )
             )
         }
         append(" ")
         withStyle(
-            style = SpanStyle(
-                color = (MaterialTheme.colorScheme).primary,
-                fontWeight = FontWeight.Bold
-            ),
+            style =
+            SpanStyle(color = (MaterialTheme.colorScheme).primary, fontWeight = FontWeight.Bold),
         ) {
             append(context.getString(if (isSignUp) R.string.label_sign_in else R.string.sign_up))
         }
@@ -201,10 +184,7 @@ private fun ForgotPasswordButton(onClick: () -> Unit) {
     ClickableText(
         text = annotatedText,
         onClick = { onClick() },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp),
-
+        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
     )
 }
 
@@ -239,15 +219,15 @@ private fun TermsAndPrivacyStatementText(
         modifier = modifier,
         style = TextStyle.Default.copy(textAlign = TextAlign.Center, fontSize = 13.sp),
         onClick = { offset ->
-            annotatedText.getStringAnnotations(tag = "URL_A", start = offset, end = offset)
-                .firstOrNull()?.let {
-                    openWeb(it.item)
-                }
+            annotatedText
+                .getStringAnnotations(tag = "URL_A", start = offset, end = offset)
+                .firstOrNull()
+                ?.let { openWeb(it.item) }
 
-            annotatedText.getStringAnnotations(tag = "URL_B", start = offset, end = offset)
-                .firstOrNull()?.let {
-                    openWeb(it.item)
-                }
+            annotatedText
+                .getStringAnnotations(tag = "URL_B", start = offset, end = offset)
+                .firstOrNull()
+                ?.let { openWeb(it.item) }
         }
     )
 }

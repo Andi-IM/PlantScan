@@ -12,13 +12,13 @@ import java.net.URLEncoder
 
 private val urlCharacterEncoding = Charsets.UTF_8.name()
 
-internal const val urlArg = "url"
+internal const val URL_ARG = "url"
 
 internal class WebArgs(val url: String) {
     constructor(savedStateHandle: SavedStateHandle) : this(
         URLDecoder.decode(
             checkNotNull(
-                savedStateHandle[urlArg],
+                savedStateHandle[URL_ARG],
             ),
             urlCharacterEncoding
         )
@@ -35,7 +35,7 @@ fun NavGraphBuilder.webViewScreen(
 ) {
     composable(
         route = Direction.Web.route,
-        arguments = listOf(navArgument(urlArg) { type = NavType.StringType })
+        arguments = listOf(navArgument(URL_ARG) { type = NavType.StringType })
     ) {
         WebRoute(popUpScreen = onBackClick)
     }

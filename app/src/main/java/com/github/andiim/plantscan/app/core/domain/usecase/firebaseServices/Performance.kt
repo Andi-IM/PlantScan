@@ -1,4 +1,4 @@
-package com.github.andiim.plantscan.app.core.domain.usecase.firebase_services
+package com.github.andiim.plantscan.app.core.domain.usecase.firebaseServices
 
 import com.google.firebase.perf.ktx.trace
 import com.google.firebase.perf.metrics.Trace

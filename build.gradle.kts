@@ -24,7 +24,7 @@ allprojects {
     group = PUBLISHING_GROUP
 }
 
-/*val detektFormatting: Provider<MinimalExternalModuleDependency> = libs.detekt.formatting
+val detektFormatting: Provider<MinimalExternalModuleDependency> = libs.detekt.formatting
 
 subprojects {
     apply { plugin("io.gitlab.arturbosch.detekt") }
@@ -35,7 +35,7 @@ subprojects {
         config.setFrom(rootProject.files("config/detekt/detekt.yml"))
     }
     dependencies { detektPlugins(detektFormatting) }
-}*/
+}
 
 tasks {
     withType<DependencyUpdatesTask>().configureEach {
@@ -44,11 +44,11 @@ tasks {
         }
     }
 
-    /*withType<Detekt>().configureEach {
+    withType<Detekt>().configureEach {
         jvmTarget = "1.8"
 
         reports {
             html.required = true
         }
-    }*/
+    }
 }

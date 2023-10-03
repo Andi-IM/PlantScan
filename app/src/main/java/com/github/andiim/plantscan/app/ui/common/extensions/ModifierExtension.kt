@@ -1,14 +1,12 @@
 package com.github.andiim.plantscan.app.ui.common.extensions
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
 fun Modifier.textButton(): Modifier {
@@ -23,10 +21,6 @@ fun Modifier.card(): Modifier {
     return this.padding(16.dp, 0.dp, 16.dp, 8.dp)
 }
 
-fun Modifier.contextMenu(): Modifier {
-    return this.wrapContentWidth()
-}
-
 fun Modifier.alertDialog(): Modifier {
     return this.widthIn(280.dp, 560.dp).wrapContentHeight()
 }
@@ -39,14 +33,10 @@ fun Modifier.fieldModifier(): Modifier {
     return this.fillMaxWidth().padding(16.dp, 4.dp)
 }
 
-fun Modifier.toolbarActions(): Modifier {
-    return this.wrapContentSize(Alignment.TopEnd)
+fun Modifier.withSemantics(name: String): Modifier {
+    return this.semantics(true) { contentDescription = name }
 }
 
 fun Modifier.spacer(): Modifier {
     return this.fillMaxWidth().padding(12.dp)
-}
-
-fun Modifier.smallSpacer(): Modifier {
-    return this.fillMaxWidth().height(8.dp)
 }

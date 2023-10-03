@@ -2,7 +2,7 @@ package com.github.andiim.plantscan.app.ui.screens.home.settings
 
 import androidx.lifecycle.ViewModel
 import com.github.andiim.plantscan.app.core.auth.AccountService
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
+import com.github.andiim.plantscan.app.core.domain.usecase.firebaseServices.LogService
 import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
 import com.github.andiim.plantscan.app.ui.navigation.Direction
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.extensions.ExtensionMode
@@ -15,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.github.andiim.plantscan.app.R
@@ -22,13 +24,24 @@ import com.github.andiim.plantscan.app.databinding.FragmentCameraBinding
 import com.github.andiim.plantscan.app.ui.screens.camera.adapter.CameraExtensionItem
 import com.github.andiim.plantscan.app.ui.screens.camera.model.CameraState
 import com.github.andiim.plantscan.app.ui.screens.camera.model.CameraUiAction
+import com.github.andiim.plantscan.app.ui.screens.camera.model.CameraUiState
 import com.github.andiim.plantscan.app.ui.screens.camera.model.CaptureState
 import com.github.andiim.plantscan.app.ui.screens.camera.model.PermissionState
 import com.github.andiim.plantscan.app.ui.screens.camera.ui.CameraExtensionsScreen
 import com.github.andiim.plantscan.app.ui.screens.camera.ui.doOnLaidOut
 import com.github.andiim.plantscan.app.ui.screens.camera.viewstate.CaptureScreenViewState
 import com.github.andiim.plantscan.app.ui.screens.camera.viewstate.PostCaptureScreenViewState
+import com.github.andiim.plantscan.app.ui.screens.camera.viewstate.handleCameraNotReady
+import com.github.andiim.plantscan.app.ui.screens.camera.viewstate.handleCameraReady
+import com.github.andiim.plantscan.app.ui.screens.camera.viewstate.handleCaptureNotReady
+import com.github.andiim.plantscan.app.ui.screens.camera.viewstate.handleCaptureReady
+import com.github.andiim.plantscan.app.ui.screens.camera.viewstate.handleCaptureStarted
+import com.github.andiim.plantscan.app.ui.screens.camera.viewstate.handleFailedCapture
+import com.github.andiim.plantscan.app.ui.screens.camera.viewstate.handleFinishedCapture
+import com.github.andiim.plantscan.app.ui.screens.camera.viewstate.handleImageObtained
+import com.github.andiim.plantscan.app.ui.screens.camera.viewstate.handleOpenGallery
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -86,14 +99,7 @@ class CameraFragment : Fragment() {
         extensionsScreen = CameraExtensionsScreen(binding.root.context as Context, binding)
 
         // consume and dispatch the current view state to update the camera extensions screen
-        lifecycleScope.launch {
-            captureScreenViewState.collectLatest { state ->
-                extensionsScreen.setCaptureScreenViewState(state)
-                postCaptureBackPressedCallback.isEnabled =
-                    state.postCaptureScreenViewState is
-                    PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
-            }
-        }
+        lifecycleScope.collectViewState()
 
         activity?.apply {
             onBackPressedDispatcher.addCallback(viewLifecycleOwner, postCaptureBackPressedCallback)
@@ -113,9 +119,7 @@ class CameraFragment : Fragment() {
 
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                lifecycleScope.launch {
-                    viewModel.openGallery(uri)
-                }
+                lifecycleScope.launch { viewModel.openGallery(uri) }
             }
 
         lifecycleScope.launch {
@@ -129,159 +133,11 @@ class CameraFragment : Fragment() {
         // the view model or permission flow.
         // Note that this flow is a shared flow and will not emit the last action unlike the state
         // flows exposed by the view model for consuming UI state.
-        lifecycleScope.launch {
-            extensionsScreen.action.collectLatest { action ->
-                when (action) {
-                    is CameraUiAction.SelectCameraExtension -> {
-                        viewModel.setExtensionMode(action.extension)
-                    }
-
-                    CameraUiAction.AddFromGalleryClick -> {
-                        pickMedia.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    }
-
-                    CameraUiAction.ShutterButtonClick -> {
-                        viewModel.capturePhoto()
-                    }
-
-                    CameraUiAction.SwitchCameraClick -> {
-                        viewModel.switchCamera()
-                    }
-
-                    CameraUiAction.ClosePhotoPreviewClick -> {
-                        closePhotoPreview()
-                    }
-
-                    is CameraUiAction.ActionDetect -> {
-                        val uri = action.uri
-                        onDetectClick?.invoke(uri)
-                    }
-
-                    CameraUiAction.CloseCameraClick -> {
-                        closeCamera()
-                    }
-
-                    CameraUiAction.RequestPermissionClick -> {
-                        requestPermissionsLauncher.launch(Manifest.permission.CAMERA)
-                    }
-
-                    is CameraUiAction.Focus -> {
-                        viewModel.focus(action.meteringPoint)
-                    }
-
-                    is CameraUiAction.Scale -> {
-                        viewModel.scale(action.scaleFactor)
-                    }
-                }
-            }
-        }
+        lifecycleScope.collectUIState(pickMedia, requestPermissionsLauncher)
 
         // Consume state emitted by the view model to render the Photo Capture state.
         // Upon collecting this state, the last emitted state will be immediately received.
-        lifecycleScope.launch {
-            viewModel.captureUiState.collectLatest { state ->
-                when (state) {
-                    CaptureState.CaptureNotReady -> {
-                        captureScreenViewState.emit(
-                            captureScreenViewState.value
-                                .updatePostCaptureScreen {
-                                    PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
-                                }
-                                .updateCameraScreen {
-                                    it.enableBackButton(true)
-                                        .enableCameraShutter(true)
-                                        .enableSwitchLens(true)
-                                        .enableGalleryButton(true)
-                                }
-                        )
-                    }
-
-                    CaptureState.CaptureReady -> {
-                        captureScreenViewState.emit(
-                            captureScreenViewState.value.updateCameraScreen {
-                                it.enableBackButton(true)
-                                    .enableCameraShutter(true)
-                                    .enableSwitchLens(true)
-                                    .enableGalleryButton(true)
-                            }
-                        )
-                    }
-
-                    CaptureState.OpenGallery -> {
-                        captureScreenViewState.emit(
-                            captureScreenViewState.value.updateCameraScreen {
-                                it.enableBackButton(false)
-                                    .enableCameraShutter(false)
-                                    .enableSwitchLens(false)
-                                    .enableGalleryButton(false)
-                            }
-                        )
-                    }
-
-                    is CaptureState.ImageObtained -> {
-                        lifecycleScope.launch {
-                            viewModel.stopPreview()
-                            captureScreenViewState.emit(
-                                captureScreenViewState.value
-                                    .updatePostCaptureScreen {
-                                        val uri = state.uri
-                                        if (uri != null) {
-                                            PostCaptureScreenViewState.PostCaptureScreenVisibleViewState(
-                                                uri
-                                            )
-                                        } else {
-                                            PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
-                                        }
-                                    }
-                                    .updateCameraScreen { it.hideCameraControls() }
-                            )
-                        }
-                    }
-
-                    CaptureState.CaptureStarted -> {
-                        captureScreenViewState.emit(
-                            captureScreenViewState.value.updateCameraScreen {
-                                it.enableBackButton(false)
-                                    .enableCameraShutter(false)
-                                    .enableSwitchLens(false)
-                                    .enableGalleryButton(false)
-                            }
-                        )
-                    }
-
-                    is CaptureState.CaptureFinished -> {
-                        viewModel.stopPreview()
-                        captureScreenViewState.emit(
-                            captureScreenViewState.value
-                                .updatePostCaptureScreen {
-                                    val uri = state.outputResults.savedUri
-                                    if (uri != null) {
-                                        PostCaptureScreenViewState.PostCaptureScreenVisibleViewState(
-                                            uri
-                                        )
-                                    } else {
-                                        PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
-                                    }
-                                }
-                                .updateCameraScreen { it.hideCameraControls() }
-                        )
-                    }
-
-                    is CaptureState.CaptureFailed -> {
-                        extensionsScreen.showCaptureError(getString(R.string.camera_error_label))
-                        viewModel.startPreview(viewLifecycleOwner, extensionsScreen.previewView)
-                        captureScreenViewState.emit(
-                            captureScreenViewState.value.updateCameraScreen {
-                                it.showCameraControls().enableCameraShutter(true)
-                                    .enableSwitchLens(true)
-                            }
-                        )
-                    }
-                }
-            }
-        }
+        lifecycleScope.collectCaptureState(viewModel.captureUiState)
 
         // Because camera state is dependent on the camera permission status, we combine both camera
         // UI state and permission state such that each emission accurately captures the current
@@ -289,9 +145,113 @@ class CameraFragment : Fragment() {
         // The camera permission is always checked to see if it's granted. If it isn't then stop
         // interacting with the camera and display the permission request screen. The user can tap
         // on "Turn On" to request permissions.
-        lifecycleScope.launch {
+        lifecycleScope.handlePermissionState(pickMedia, permissionState, viewModel.cameraUiState)
+    }
+
+    private fun LifecycleCoroutineScope.collectViewState() {
+        this.launch {
+            captureScreenViewState.collectLatest { state ->
+                extensionsScreen.setCaptureScreenViewState(state)
+                postCaptureBackPressedCallback.isEnabled =
+                    state.postCaptureScreenViewState is
+                    PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
+            }
+        }
+    }
+
+    private fun LifecycleCoroutineScope.collectUIState(
+        pickMedia: ActivityResultLauncher<PickVisualMediaRequest>,
+        requestPermissionsLauncher: ActivityResultLauncher<String>
+    ) {
+        this.launch {
+            extensionsScreen.action.collectLatest { action ->
+                when (action) {
+                    is CameraUiAction.SelectCameraExtension -> {
+                        viewModel.setExtensionMode(action.extension)
+                    }
+                    CameraUiAction.AddFromGalleryClick -> {
+                        pickMedia.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }
+                    CameraUiAction.ShutterButtonClick -> {
+                        viewModel.capturePhoto()
+                    }
+                    CameraUiAction.SwitchCameraClick -> {
+                        viewModel.switchCamera()
+                    }
+                    CameraUiAction.ClosePhotoPreviewClick -> {
+                        closePhotoPreview()
+                    }
+                    is CameraUiAction.ActionDetect -> {
+                        val uri = action.uri
+                        onDetectClick?.invoke(uri)
+                    }
+                    CameraUiAction.CloseCameraClick -> {
+                        closeCamera()
+                    }
+                    CameraUiAction.RequestPermissionClick -> {
+                        requestPermissionsLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                    is CameraUiAction.Focus -> {
+                        viewModel.focus(action.meteringPoint)
+                    }
+                    is CameraUiAction.Scale -> {
+                        viewModel.scale(action.scaleFactor)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun LifecycleCoroutineScope.collectCaptureState(state: Flow<CaptureState>) {
+        this.launch {
+            state.collectLatest { state ->
+                when (state) {
+                    CaptureState.CaptureNotReady -> {
+                        captureScreenViewState.emit(captureScreenViewState.value.handleCaptureNotReady())
+                    }
+                    CaptureState.CaptureReady -> {
+                        captureScreenViewState.emit(captureScreenViewState.value.handleCaptureReady())
+                    }
+                    CaptureState.OpenGallery -> {
+                        captureScreenViewState.emit(captureScreenViewState.value.handleOpenGallery())
+                    }
+                    is CaptureState.ImageObtained -> {
+                        lifecycleScope.launch {
+                            viewModel.stopPreview()
+                            captureScreenViewState.emit(
+                                captureScreenViewState.value.handleImageObtained(state.uri)
+                            )
+                        }
+                    }
+                    CaptureState.CaptureStarted -> {
+                        captureScreenViewState.emit(captureScreenViewState.value.handleCaptureStarted())
+                    }
+                    is CaptureState.CaptureFinished -> {
+                        viewModel.stopPreview()
+                        captureScreenViewState.emit(
+                            captureScreenViewState.value.handleFinishedCapture(state.outputResults.savedUri)
+                        )
+                    }
+                    is CaptureState.CaptureFailed -> {
+                        extensionsScreen.showCaptureError(getString(R.string.camera_error_label))
+                        viewModel.startPreview(viewLifecycleOwner, extensionsScreen.previewView)
+                        captureScreenViewState.emit(captureScreenViewState.value.handleFailedCapture())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun LifecycleCoroutineScope.handlePermissionState(
+        pickMedia: ActivityResultLauncher<PickVisualMediaRequest>,
+        permissionState: MutableStateFlow<PermissionState>,
+        cameraUiState: Flow<CameraUiState>
+    ) {
+        this.launch {
             permissionState
-                .combine(viewModel.cameraUiState) { permissionState, cameraUiState ->
+                .combine(cameraUiState) { permissionState, cameraUiState ->
                     Pair(permissionState, cameraUiState)
                 }
                 .collectLatest { (permissionState, cameraUiState) ->
@@ -299,14 +259,15 @@ class CameraFragment : Fragment() {
                         PermissionState.Granted -> {
                             extensionsScreen.hidePermissionsRequest()
                         }
-
                         is PermissionState.Denied -> {
                             if (cameraUiState.cameraState != CameraState.PREVIEW_STOPPED) {
                                 extensionsScreen.showPermissionsRequest(
                                     shouldShowRationale = permissionState.shouldShowRationale,
                                     galleryClicked = {
                                         pickMedia.launch(
-                                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                            PickVisualMediaRequest(
+                                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                                            )
                                         )
                                     },
                                 )
@@ -317,42 +278,25 @@ class CameraFragment : Fragment() {
 
                     when (cameraUiState.cameraState) {
                         CameraState.NOT_READY -> {
-                            captureScreenViewState.emit(
-                                captureScreenViewState.value
-                                    .updatePostCaptureScreen {
-                                        PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
-                                    }
-                                    .updateCameraScreen {
-                                        it.showCameraControls().enableCameraShutter(false)
-                                            .enableSwitchLens(false)
-                                    }
-                            )
+                            captureScreenViewState.emit(captureScreenViewState.value.handleCameraNotReady())
                             viewModel.initializeCamera()
                         }
-
                         CameraState.READY -> {
                             extensionsScreen.previewView.doOnLaidOut {
-                                viewModel.startPreview(
-                                    viewLifecycleOwner,
-                                    extensionsScreen.previewView
-                                )
+                                viewModel.startPreview(viewLifecycleOwner, extensionsScreen.previewView)
                             }
                             captureScreenViewState.emit(
-                                captureScreenViewState.value.updateCameraScreen { s ->
-                                    s.showCameraControls()
-                                        .setAvailableExtensions(
-                                            cameraUiState.availableExtensions.map {
-                                                CameraExtensionItem(
-                                                    it,
-                                                    getString(extensionName[it]!!),
-                                                    cameraUiState.extensionMode == it
-                                                )
-                                            }
+                                captureScreenViewState.value.handleCameraReady(cameraUiState) { extensions ->
+                                    extensions.map {
+                                        CameraExtensionItem(
+                                            it,
+                                            getString(extensionName[it]!!),
+                                            cameraUiState.extensionMode == it
                                         )
+                                    }
                                 }
                             )
                         }
-
                         CameraState.PREVIEW_STOPPED -> Unit
                     }
                 }
@@ -375,8 +319,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun getCurrentPermissionState(): PermissionState {
-        val status =
-            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+        val status = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
         return if (status == PackageManager.PERMISSION_GRANTED) {
             PermissionState.Granted
         } else {

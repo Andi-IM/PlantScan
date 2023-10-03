@@ -1,4 +1,4 @@
-package com.github.andiim.plantscan.app.utils
+package com.github.andiim.plantscan.app.ui.utils
 
 import androidx.paging.PagingData
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory

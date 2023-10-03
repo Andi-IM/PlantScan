@@ -37,7 +37,12 @@ fun PhotoPreviewScreen(
     onDetect: () -> Unit = {},
     onDispose: () -> Unit = {}
 ) {
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+    val cloud = Color(0xFFC5C6D0)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
         Image(
             painter = imageUri,
             contentDescription = imageDescription,
@@ -46,10 +51,10 @@ fun PhotoPreviewScreen(
         )
         IconButton(
             onClick = onDispose,
-            modifier =
-            Modifier.wrapContentSize()
+            modifier = Modifier
+                .wrapContentSize()
                 .padding(4.dp)
-                .background(Color(0x59000000), CircleShape)
+                .background(cloud, CircleShape)
                 .align(Alignment.TopEnd)
         ) {
             Icon(
@@ -60,7 +65,11 @@ fun PhotoPreviewScreen(
             )
         }
 
-        Box(modifier = Modifier.padding(bottom = 6.dp).align(Alignment.BottomCenter)) {
+        Box(
+            modifier = Modifier
+                .padding(bottom = 6.dp)
+                .align(Alignment.BottomCenter)
+        ) {
             PlainTooltipBox(tooltip = { Text(stringResource(AppText.camera_detection_tooltip)) }) {
                 FloatingActionButton(onClick = onDetect, modifier = Modifier.tooltipTrigger()) {
                     Icon(Icons.Default.CameraEnhance, contentDescription = null)

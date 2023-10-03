@@ -15,6 +15,7 @@ data class AnalyticsEvent(
     val extras: List<Param> = emptyList(),
 ) {
     // Standard analytics types.
+    @Suppress("UtilityClassWithPublicConstructor")
     class Types {
         companion object {
             const val SCREEN_VIEW = "screen_view" // (extras: SCREEN_NAME)
@@ -34,6 +35,7 @@ data class AnalyticsEvent(
     data class Param(val key: String, val value: String)
 
     // Standard parameter keys.
+    @Suppress("UtilityClassWithPublicConstructor")
     class ParamKeys {
         companion object {
             const val SCREEN_NAME = "screen_name"

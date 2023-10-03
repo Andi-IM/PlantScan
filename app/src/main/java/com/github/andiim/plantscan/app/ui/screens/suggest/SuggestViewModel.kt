@@ -10,7 +10,7 @@ import com.github.andiim.plantscan.app.R
 import com.github.andiim.plantscan.app.core.auth.AccountService
 import com.github.andiim.plantscan.app.core.domain.model.Suggestion
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
+import com.github.andiim.plantscan.app.core.domain.usecase.firebaseServices.LogService
 import com.github.andiim.plantscan.app.ui.common.extensions.getImage
 import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager

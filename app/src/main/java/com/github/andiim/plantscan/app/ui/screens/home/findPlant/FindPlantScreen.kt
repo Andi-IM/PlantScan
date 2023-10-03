@@ -119,6 +119,11 @@ fun FindPlantScreen(
     TrackScreenViewEvent(screenName = "Home")
 }
 
+private val darkGrayishBlue = Color(0xFF789885)
+private val limeGreen = Color(0xFF7D8A82)
+private const val OFFSET_X = 0.5f
+private const val OFFSET_Y = 0.5f
+
 @Composable
 fun DetectButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(modifier = modifier.size(100.dp), onClick = onClick) {
@@ -130,8 +135,8 @@ fun DetectButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
                 .background(
                     brush =
                     Brush.radialGradient(
-                        colors = listOf(Color(0xFF789885), Color(0xFF7D8A82)),
-                        center = Offset(0.5f, 0.5f),
+                        colors = listOf(darkGrayishBlue, limeGreen),
+                        center = Offset(OFFSET_X, OFFSET_Y),
                         radius = 0.2f
                     )
                 )

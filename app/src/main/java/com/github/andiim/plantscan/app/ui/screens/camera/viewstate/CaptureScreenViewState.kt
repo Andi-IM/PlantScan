@@ -26,7 +26,10 @@ data class CaptureScreenViewState(
         PostCaptureScreenViewState.PostCaptureScreenHiddenViewState
 ) {
     fun updateCameraScreen(
-        block: (cameraPreviewScreenViewState: CameraPreviewScreenViewState) -> CameraPreviewScreenViewState
+        block: (
+            cameraPreviewScreenViewState:
+            CameraPreviewScreenViewState
+        ) -> CameraPreviewScreenViewState
     ): CaptureScreenViewState =
         copy(cameraPreviewScreenViewState = block(cameraPreviewScreenViewState))
 

@@ -24,26 +24,27 @@ import javax.inject.Singleton
 class CameraRepositoryImpl @Inject constructor(@ApplicationContext context: Context) :
     CameraRepository {
 
-  private val appContext = context
+    private val appContext = context
 
-  companion object {
-    private const val PHOTO_EXTENSION = ".jpg"
-    private const val FILENAME_FORMAT = "yyyyMMdd_HHmmss"
-  }
+    companion object {
+        private const val PHOTO_EXTENSION = ".jpg"
+        private const val FILENAME_FORMAT = "yyyyMMdd_HHmmss"
+    }
 
-  override fun notifyImageCreated(savedUri: Uri) {
-    val file = savedUri.toFile()
-    val fileProviderUri =
-        FileProvider.getUriForFile(appContext, appContext.packageName + ".provider", file)
+    override fun notifyImageCreated(savedUri: Uri) {
+        val file = savedUri.toFile()
+        val fileProviderUri =
+            FileProvider.getUriForFile(appContext, appContext.packageName + ".provider", file)
 
-    @Suppress("DEPRECATION") val intent = Intent(ACTION_NEW_PICTURE, fileProviderUri)
-    appContext.sendBroadcast(intent)
-  }
+        @Suppress("DEPRECATION")
+        val intent = Intent(ACTION_NEW_PICTURE, fileProviderUri)
+        appContext.sendBroadcast(intent)
+    }
 
-  private val timeStamp: String = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(Date())
+    private val timeStamp: String = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(Date())
 
-  override fun createImageOutputFile(): File {
-    val filesDir = appContext.externalCacheDir
-    return File.createTempFile(timeStamp, PHOTO_EXTENSION, filesDir)
-  }
+    override fun createImageOutputFile(): File {
+        val filesDir = appContext.externalCacheDir
+        return File.createTempFile(timeStamp, PHOTO_EXTENSION, filesDir)
+    }
 }

@@ -18,7 +18,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
+import com.github.andiim.plantscan.app.core.domain.usecase.firebaseServices.LogService
 import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
 import com.github.andiim.plantscan.app.ui.screens.camera.model.CameraState
 import com.github.andiim.plantscan.app.ui.screens.camera.model.CameraUiState

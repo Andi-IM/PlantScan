@@ -5,7 +5,7 @@ import com.github.andiim.plantscan.app.core.auth.AccountService
 import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
+import com.github.andiim.plantscan.app.core.domain.usecase.firebaseServices.LogService
 import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,10 +29,10 @@ class MyGardenViewModel @Inject constructor(
     fun fetchHistory() {
         launchCatching(logService) {
             auth.currentUser.collectLatest { user ->
-                if (user.isAnonymous)
+                if (user.isAnonymous) {
                     _historyUiState.value =
                         HistoryUiState.Error("You must login to access this Feature!")
-                else {
+                } else {
                     useCase.getDetectionsList(user.id).map {
                         when (it) {
                             is Resource.Error -> HistoryUiState.Error(it.message)
@@ -51,7 +51,7 @@ class MyGardenViewModel @Inject constructor(
     }
 
     fun getDetailId(ref: String): String? {
-        var something: String? = null;
+        var something: String? = null
         launchCatching(logService) {
             something = useCase.getPlantBySpecies(ref).map {
                 when (it) {
@@ -63,10 +63,7 @@ class MyGardenViewModel @Inject constructor(
         }
         return something
     }
-
-
 }
-
 
 sealed interface HistoryUiState {
     data class Success(val detections: List<DetectionHistory>) : HistoryUiState

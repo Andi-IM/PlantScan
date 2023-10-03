@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -45,13 +46,14 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun PlantScanApp(
     networkMonitor: NetworkMonitor,
-    appState: PlantScanAppState = rememberAppState(
-        networkMonitor = networkMonitor,
-    )
+    state: PlantScanAppState =
+        rememberAppState(
+            networkMonitor = networkMonitor,
+        )
 ) {
     PlantScanTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+            val isOffline by state.isOffline.collectAsStateWithLifecycle()
 
             LaunchedEffect(isOffline) {
                 if (isOffline) {
@@ -63,59 +65,56 @@ fun PlantScanApp(
             }
 
             Scaffold(
-                modifier = Modifier.semantics {
-                    testTagsAsResourceId = true
-                },
+                modifier = Modifier.semantics { testTagsAsResourceId = true },
                 contentColor = MaterialTheme.colorScheme.onBackground,
                 contentWindowInsets = WindowInsets(0, 0, 0, 0),
-                snackbarHost = {
-                    SnackbarHost(
-                        hostState = appState.snackbarHostState
-                    ) { snackbarData ->
-                        val isError =
-                            (snackbarData.visuals as? SnackbarVisualsWithError)?.isError
-                                ?: false
-
-                        val buttonColor = if (isError) {
-                            ButtonDefaults.textButtonColors(
-                                containerColor = MaterialTheme.colorScheme.errorContainer,
-                                contentColor = MaterialTheme.colorScheme.error
-                            )
-                        } else {
-                            ButtonDefaults.textButtonColors(
-                                contentColor = MaterialTheme.colorScheme.inversePrimary
-                            )
-                        }
-
-                        Snackbar(
-                            modifier = Modifier
-                                .padding(12.dp),
-                            action = {
-                                if (isError) {
-                                    TextButton(
-                                        onClick = { snackbarData.performAction() },
-                                        colors = buttonColor,
-                                        modifier = Modifier.padding(2.dp)
-                                    ) { Text(snackbarData.visuals.actionLabel ?: "") }
-                                }
-                            }
-                        ) {
-                            Text(snackbarData.visuals.message)
-                        }
-                    }
-                },
+                snackbarHost = { BuildSnackbarHost(state.snackbarHostState) },
                 bottomBar = {
                     BottomBar(
-                        navigate = appState::clearAndNavigate,
-                        currentDestination = appState.currentDestination,
+                        navigate = state::clearAndNavigate,
+                        currentDestination = state.currentDestination,
                         modifier = Modifier.testTag("BottomBar")
                     )
                 }
             ) { innerPadding ->
-                SetupRootNavGraph(appState, modifier = Modifier.padding(innerPadding))
+                SetupRootNavGraph(state, modifier = Modifier.padding(innerPadding))
             }
         }
     }
+}
+
+@Composable
+private fun BuildSnackbarHost(state: SnackbarHostState) =
+    SnackbarHost(hostState = state) { snackbarData ->
+        val isError = (snackbarData.visuals as? SnackbarVisualsWithError)?.isError ?: false
+        val buttonColor = ButtonDefaults.getButtonColor(isError)
+
+        Snackbar(
+            modifier = Modifier.padding(12.dp),
+            action = {
+                if (isError) {
+                    TextButton(
+                        onClick = { snackbarData.performAction() },
+                        colors = buttonColor,
+                        modifier = Modifier.padding(2.dp)
+                    ) {
+                        Text(snackbarData.visuals.actionLabel ?: "")
+                    }
+                }
+            }
+        ) {
+            Text(snackbarData.visuals.message)
+        }
+    }
+
+@Composable
+fun ButtonDefaults.getButtonColor(isError: Boolean): ButtonColors {
+    return if (isError) {
+        this.textButtonColors(
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.error
+        )
+    } else this.textButtonColors(contentColor = MaterialTheme.colorScheme.inversePrimary)
 }
 
 @Composable
@@ -130,11 +129,11 @@ fun rememberAppState(
     networkMonitor: NetworkMonitor,
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
     navController: NavHostController = rememberNavController(),
-    snackbarManager: SnackbarManager = SnackbarManager,
     getContext: Context = getContext(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ): PlantScanAppState {
     NavigationTrackingSideEffect(navController)
+    val snackbarManager = SnackbarManager
     return remember(
         navController,
         snackbarHostState,
@@ -154,20 +153,17 @@ fun rememberAppState(
     }
 }
 
-/**
- * Stores information about navigation events to be used with JankStats
- */
+/** Stores information about navigation events to be used with JankStats */
 @Composable
 private fun NavigationTrackingSideEffect(navController: NavHostController) {
     TrackDisposableJank(navController) { metricsHolder ->
-        val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
-            metricsHolder.state?.putState("Navigation", destination.route.toString())
-        }
+        val listener =
+            NavController.OnDestinationChangedListener { _, destination, _ ->
+                metricsHolder.state?.putState("Navigation", destination.route.toString())
+            }
 
         navController.addOnDestinationChangedListener(listener)
 
-        onDispose {
-            navController.removeOnDestinationChangedListener(listener)
-        }
+        onDispose { navController.removeOnDestinationChangedListener(listener) }
     }
 }

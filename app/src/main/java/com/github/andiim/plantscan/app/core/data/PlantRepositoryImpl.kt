@@ -14,11 +14,13 @@ import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
 import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
 import com.github.andiim.plantscan.app.core.firestore.model.ImageContent
 import com.github.andiim.plantscan.app.core.firestore.model.SuggestionDocument
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.Clock
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,7 +39,7 @@ constructor(
         try {
             val response = remote.getPlantById(id)
             emit(Resource.Success(response.toModel()))
-        } catch (e: Exception) {
+        } catch (e: FirebaseFirestoreException) {
             emit(Resource.Error(e.message.orEmpty()))
         }
     }
@@ -46,7 +48,7 @@ constructor(
         try {
             val response = remote.getPlantBySpecies(species)
             emit(Resource.Success(response.toModel()))
-        } catch (e: Exception) {
+        } catch (e: FirebaseFirestoreException) {
             emit(Resource.Error(e.message.orEmpty()))
         }
     }
@@ -61,7 +63,7 @@ constructor(
             try {
                 val response = network.detect(base64ImageData, confidence)
                 emit(Resource.Success(response.toModel()))
-            } catch (e: Exception) {
+            } catch (e: IOException) {
                 emit(Resource.Error(e.localizedMessage.orEmpty()))
             }
         }
@@ -70,7 +72,7 @@ constructor(
         try {
             val response = remote.getDetectionsList(userId)
             emit(Resource.Success(response.map { it.toModel() }))
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             emit(Resource.Error(e.message.orEmpty()))
         }
     }
@@ -97,12 +99,10 @@ constructor(
 
             val id = remote.sendASuggestion(SuggestionDocument.fromModel(data))
             emit(id)
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             if (BuildConfig.DEBUG) {
                 Timber.d("Error $e")
             }
-            throw Exception(e)
         }
     }
 }
-

@@ -72,6 +72,11 @@ class CameraExtensionsScreen(
         private const val SPRING_STIFFNESS_ALPHA_OUT = 100f
         private const val SPRING_STIFFNESS = 800f
         private const val SPRING_DAMPING_RATIO = 0.35f
+        private const val HALF_CLOCKWISE = 180f
+        private const val ANIMATION_DURATION = 300L
+        private const val INITIAL_ROTATION = 0f
+        private const val SCALE_X = 1.5f
+        private const val SCALE_Y = 1.5f
     }
 
     private val cameraShutterButton: View = binding.cameraShutter
@@ -322,12 +327,12 @@ class CameraExtensionsScreen(
         }
 
         switchLensButton.animate().apply {
-            rotation(180f)
-            duration = 300L
+            rotation(HALF_CLOCKWISE)
+            duration = ANIMATION_DURATION
             setListener(
                 object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
-                        switchLensButton.rotation = 0f
+                        switchLensButton.rotation = INITIAL_ROTATION
                     }
                 }
             )
@@ -376,8 +381,8 @@ class CameraExtensionsScreen(
             translationX = x - width / 2f
             translationY = y - height / 2f
             alpha = 0f
-            scaleX = 1.5f
-            scaleY = 1.5f
+            scaleX = SCALE_X
+            scaleY = SCALE_Y
         }
 
         alphaAnimation.start()

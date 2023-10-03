@@ -12,12 +12,12 @@ import java.net.URLEncoder
 
 private val urlCharacterEncoding = Charsets.UTF_8.name()
 
-internal const val detectUriArg = "imageUri"
+internal const val DETECT_URI_ARG = "imageUri"
 
 internal class DetectArgs(val uri: String) {
     constructor(savedStateHandle: SavedStateHandle) : this(
         URLDecoder.decode(
-            checkNotNull(savedStateHandle[detectUriArg]),
+            checkNotNull(savedStateHandle[DETECT_URI_ARG]),
             urlCharacterEncoding
         )
     )
@@ -34,7 +34,7 @@ fun NavGraphBuilder.detectFragment(
 ) {
     composable(
         route = Direction.Detect.route,
-        arguments = listOf(navArgument(detectUriArg) { type = NavType.StringType })
+        arguments = listOf(navArgument(DETECT_URI_ARG) { type = NavType.StringType })
     ) {
         DetectRoute(
             backToTop = backToTop,

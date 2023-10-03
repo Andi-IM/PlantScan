@@ -14,13 +14,13 @@ import java.net.URLEncoder
 private val urlCharacterEncoding = Charsets.UTF_8.name()
 
 @VisibleForTesting
-internal const val plantIdArg = "plant_id"
+internal const val PLANT_ID_ARG = "plant_id"
 
 internal class SuggestArgs(val plantId: String) {
     constructor(savedStateHandle: SavedStateHandle) :
         this(
             URLDecoder.decode(
-                checkNotNull(savedStateHandle[plantIdArg]),
+                checkNotNull(savedStateHandle[PLANT_ID_ARG]),
                 urlCharacterEncoding
             )
         )
@@ -37,7 +37,7 @@ fun NavGraphBuilder.suggestScreen(
 ) {
     composable(
         route = Direction.Suggest.route,
-        arguments = listOf(navArgument(plantIdArg) { type = NavType.StringType }),
+        arguments = listOf(navArgument(PLANT_ID_ARG) { type = NavType.StringType }),
     ) {
         SuggestRoute(popUpScreen = onBackClick, onAuthClick = onAuthClick)
     }

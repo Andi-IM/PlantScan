@@ -16,7 +16,7 @@ import java.net.URLEncoder
 private val urlCharacterEncoding = Charsets.UTF_8.name()
 
 @VisibleForTesting
-internal const val plantIdArg = "plant_id"
+internal val plantIdArg = "plant_id"
 
 internal class DetailArgs(val plantId: String) {
     constructor(savedStateHandle: SavedStateHandle) :

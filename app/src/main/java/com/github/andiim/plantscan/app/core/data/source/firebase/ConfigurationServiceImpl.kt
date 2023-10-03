@@ -1,8 +1,8 @@
 package com.github.andiim.plantscan.app.core.data.source.firebase
 
 import com.github.andiim.plantscan.app.BuildConfig
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.ConfigurationService
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.trace
+import com.github.andiim.plantscan.app.core.domain.usecase.firebaseServices.ConfigurationService
+import com.github.andiim.plantscan.app.core.domain.usecase.firebaseServices.trace
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig

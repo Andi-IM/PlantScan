@@ -8,7 +8,7 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
+import com.github.andiim.plantscan.app.core.domain.usecase.firebaseServices.LogService
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
 import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarMessage.Companion.toSnackbarMessage
 import kotlinx.coroutines.CoroutineExceptionHandler

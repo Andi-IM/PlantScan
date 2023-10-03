@@ -3,7 +3,7 @@ package com.github.andiim.plantscan.app.core.data.source.network.retrofit
 import com.github.andiim.plantscan.app.BuildConfig
 import com.github.andiim.plantscan.app.core.data.source.network.NetworkDataSource
 import com.github.andiim.plantscan.app.core.data.source.network.model.DetectionResponse
-import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.trace
+import com.github.andiim.plantscan.app.core.domain.usecase.firebaseServices.trace
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -32,14 +32,11 @@ private interface RetrofitNetworkApi {
     ): DetectionResponse
 }
 
-private const val TIME_OUT = 120L
-private const val BASE_URL = BuildConfig.BACKEND_URL
-private const val API_KEY = BuildConfig.ROBOFLOW_API
-private const val DETECT_TRACE_TAG = "detecting"
-
 @Module
 @InstallIn(SingletonComponent::class)
 object LoggingModule {
+    private const val TIME_OUT = 120L
+
     @Provides
     @Singleton
     fun provideLogging(): OkHttpClient {
@@ -50,43 +47,41 @@ object LoggingModule {
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
         }
 
-        return OkHttpClient.Builder()
-            .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
-            .readTimeout(TIME_OUT, TimeUnit.SECONDS)
-            .addInterceptor(loggingInterceptor)
-            .build()
+        return OkHttpClient.Builder().connectTimeout(TIME_OUT, TimeUnit.SECONDS)
+            .readTimeout(TIME_OUT, TimeUnit.SECONDS).addInterceptor(loggingInterceptor).build()
     }
 }
 
 @Singleton
-class RetrofitNetwork @Inject constructor(
+class RetrofitNetwork
+@Inject constructor(
     networkJson: Json,
     okHttpCallFactory: Call.Factory,
     client: OkHttpClient,
 ) : NetworkDataSource {
-    private val networkApi = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .callFactory(okHttpCallFactory)
-        .addConverterFactory(
+    companion object {
+        private const val BASE_URL: String = BuildConfig.BACKEND_URL
+        private const val API_KEY: String = BuildConfig.ROBOFLOW_API
+        private const val DETECT_TRACE_TAG: String = "detecting"
+    }
+
+    private val networkApi =
+        Retrofit.Builder().baseUrl(BASE_URL).callFactory(okHttpCallFactory).addConverterFactory(
             networkJson.asConverterFactory("application/json".toMediaType()),
-        )
-        .client(client)
-        .build()
-        .create(RetrofitNetworkApi::class.java)
+        ).client(client).build().create(RetrofitNetworkApi::class.java)
 
     override suspend fun detect(image: String, confidence: Int): DetectionResponse =
         trace(DETECT_TRACE_TAG) {
-            if (image.isValidBase64()) {
-                return networkApi.uploadImage(
-                    apiKey = API_KEY,
-                    confidence = confidence,
-                    base64Image = image
-                )
-            }
-            throw Exception("Not a valid base64 image file!")
+            require(image.isValidBase64()) { "Not a valid base64 image file!" }
+            return networkApi.uploadImage(
+                apiKey = API_KEY,
+                confidence = confidence,
+                base64Image = image,
+            )
         }
 }
 
+@Suppress("SwallowedException")
 fun String.isValidBase64(): Boolean {
     return try {
         val decodedBytes = Base64.getDecoder().decode(this)
