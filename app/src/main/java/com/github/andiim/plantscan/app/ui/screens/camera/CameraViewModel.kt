@@ -211,12 +211,12 @@ constructor(
             outputFileOptions,
             Dispatchers.Default.asExecutor(),
             object : ImageCapture.OnImageSavedCallback {
-                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    useCase.notifyImageCreated(outputFileResults.savedUri ?: photoFile.toUri())
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    useCase.notifyImageCreated(output.savedUri ?: photoFile.toUri())
                     launchCatching(log) {
                         _captureUiState.emit(
                             CaptureState.CaptureFinished(
-                                outputFileResults
+                                output
                             )
                         )
                     }
@@ -231,10 +231,6 @@ constructor(
 
     fun openGallery(uri: Uri?) {
         launchCatching(log) { _captureUiState.emit(CaptureState.OpenGallery) }
-
-        /*        if (uri != null) {
-                    // useCase.notifyImageCreated(uri)
-                }*/
         launchCatching(log) {
             _captureUiState.emit(CaptureState.ImageObtained(uri))
         }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -48,6 +49,22 @@ class MyGardenViewModel @Inject constructor(
             }
         }
     }
+
+    fun getDetailId(ref: String): String? {
+        var something: String? = null;
+        launchCatching(logService) {
+            something = useCase.getPlantBySpecies(ref).map {
+                when (it) {
+                    is Resource.Success -> it.data.id
+                    else -> null
+                }
+            }.first().orEmpty()
+            return@launchCatching
+        }
+        return something
+    }
+
+
 }
 
 

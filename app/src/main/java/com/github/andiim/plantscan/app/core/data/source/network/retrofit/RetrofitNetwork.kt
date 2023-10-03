@@ -24,15 +24,18 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private interface RetrofitNetworkApi {
-    @POST("/orchid-flower-detection/1")
+    @POST("/orchid-flower-detection/3")
     suspend fun uploadImage(
         @Query("api_key") apiKey: String,
+        @Query("confidence") confidence: Int,
         @Body base64Image: String
     ): DetectionResponse
 }
 
+private const val TIME_OUT = 120L
 private const val BASE_URL = BuildConfig.BACKEND_URL
 private const val API_KEY = BuildConfig.ROBOFLOW_API
+private const val DETECT_TRACE_TAG = "detecting"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -48,8 +51,8 @@ object LoggingModule {
         }
 
         return OkHttpClient.Builder()
-            .connectTimeout(120, TimeUnit.SECONDS)
-            .readTimeout(120, TimeUnit.SECONDS)
+            .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
+            .readTimeout(TIME_OUT, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
             .build()
     }
@@ -71,12 +74,17 @@ class RetrofitNetwork @Inject constructor(
         .build()
         .create(RetrofitNetworkApi::class.java)
 
-    override suspend fun detect(image: String): DetectionResponse = trace("Detecting") {
-        if (image.isValidBase64()) {
-            return networkApi.uploadImage(apiKey = API_KEY, base64Image = image)
+    override suspend fun detect(image: String, confidence: Int): DetectionResponse =
+        trace(DETECT_TRACE_TAG) {
+            if (image.isValidBase64()) {
+                return networkApi.uploadImage(
+                    apiKey = API_KEY,
+                    confidence = confidence,
+                    base64Image = image
+                )
+            }
+            throw Exception("Not a valid base64 image file!")
         }
-        throw Exception("Not a valid base64 image file!")
-    }
 }
 
 fun String.isValidBase64(): Boolean {

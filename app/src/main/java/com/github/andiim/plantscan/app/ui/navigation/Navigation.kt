@@ -51,7 +51,7 @@ fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier
                 onCameraClick = appState::navigateToCamera,
                 onListClick = appState::navigateToList
             )
-            homeHistoryElement()
+            homeHistoryElement({})
             homeSettingsElement(
                 clearAndNavigate = appState::clearAndNavigate,
                 onLoginClick = appState::navigateToAuthRoute,

@@ -16,13 +16,15 @@ class FakeNetworkDataSource @Inject constructor(
     private val networkJson: Json,
     private val assets: FakeAssetManager,
 ) : NetworkDataSource {
-    @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun detect(image: String): DetectionResponse =
-        withContext(ioDispatcher) {
-            assets.open(DETECT_ASSET).use(networkJson::decodeFromStream)
-        }
 
     companion object {
         private const val DETECT_ASSET = "detect.json"
     }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    override suspend fun detect(image: String, confidence: Int): DetectionResponse =
+        withContext(ioDispatcher) {
+            assets.open(DETECT_ASSET).use(networkJson::decodeFromStream)
+        }
+
 }

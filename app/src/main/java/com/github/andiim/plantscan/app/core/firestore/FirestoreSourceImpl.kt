@@ -1,7 +1,6 @@
 package com.github.andiim.plantscan.app.core.firestore
 
 import android.graphics.Bitmap
-import com.github.andiim.plantscan.app.core.data.Resource
 import com.github.andiim.plantscan.app.core.data.source.network.Dispatcher
 import com.github.andiim.plantscan.app.core.data.source.network.PsDispatchers.IO
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.trace
@@ -21,7 +20,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
-import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
@@ -40,6 +38,10 @@ class FirestoreSourceImpl @Inject constructor(
 
     override suspend fun getPlantById(id: String): PlantDocument =
         documentSnapshotHandling(db.collection(PLANT_COLLECTION).document(id))
+
+    override suspend fun getPlantBySpecies(species: String): PlantDocument =
+        db.collection(PLANT_COLLECTION).whereEqualTo(SPECIES_FIELD, species).limit(1).get().await()
+            .toObjects<PlantDocument>().first()
 
     override suspend fun recordDetection(detection: DetectionHistoryDocument): String =
         trace(SAVE_DETECT_TRACE) {
@@ -105,5 +107,6 @@ class FirestoreSourceImpl @Inject constructor(
         private const val DETECT_COLLECTION = "detections"
         private const val USER_ID_FIELD = "userId"
         private const val NAME_FIELD = "name"
+        private const val SPECIES_FIELD = "species"
     }
 }

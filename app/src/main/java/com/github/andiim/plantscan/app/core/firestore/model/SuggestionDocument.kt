@@ -10,7 +10,7 @@ data class SuggestionDocument(
     val userId: String = "",
     @ServerTimestamp val date: Date? = null,
     val description: String = "",
-    val imageUrl: List<String> = listOf(),
+    val images: List<ImageDocument> = listOf(),
 ) {
     companion object {
         fun fromModel(suggestion: Suggestion) = SuggestionDocument(
@@ -18,7 +18,9 @@ data class SuggestionDocument(
             userId = suggestion.userId,
             date = suggestion.date,
             description = suggestion.description,
-            imageUrl = suggestion.imageUrl
+            images = suggestion.imageUrl.map {
+                ImageDocument.fromModel(it)
+            }
         )
     }
 }

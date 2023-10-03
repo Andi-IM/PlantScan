@@ -22,8 +22,11 @@ constructor(
     PlantUseCase {
     override fun getPlants(query: String): PagingSource<Int, Plant> = plantRepo.getPlants(query)
     override fun getPlantDetail(id: String): Flow<Resource<Plant>> = plantRepo.getPlantDetail(id)
-    override fun detect(base64ImageData: String): Flow<Resource<ObjectDetection>> =
-        plantRepo.detect(base64ImageData)
+    override fun getPlantBySpecies(species: String): Flow<Resource<Plant>> =
+        plantRepo.getPlantBySpecies(species)
+
+    override fun detect(base64ImageData: String, confidence: Int): Flow<Resource<ObjectDetection>> =
+        plantRepo.detect(base64ImageData, confidence)
 
     override fun recordDetection(detection: DetectionHistory): Flow<String> =
         plantRepo.recordDetection(detection)

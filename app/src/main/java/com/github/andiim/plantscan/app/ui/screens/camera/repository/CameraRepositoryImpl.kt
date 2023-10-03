@@ -6,11 +6,12 @@ import android.hardware.Camera.ACTION_NEW_PICTURE
 import android.net.Uri
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
-import com.github.andiim.plantscan.app.R
 import com.github.andiim.plantscan.app.core.domain.repository.CameraRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
-import java.util.UUID
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,30 +24,26 @@ import javax.inject.Singleton
 class CameraRepositoryImpl @Inject constructor(@ApplicationContext context: Context) :
     CameraRepository {
 
-    private val appContext = context
-    private var rootDirectory: File
+  private val appContext = context
 
-    companion object {
-        private const val PHOTO_EXTENSION = ".jpg"
-    }
+  companion object {
+    private const val PHOTO_EXTENSION = ".jpg"
+    private const val FILENAME_FORMAT = "yyyyMMdd_HHmmss"
+  }
 
-    init {
-        val mediaDir =
-            context.externalMediaDirs.firstOrNull()?.let {
-                File(it, appContext.resources.getString(R.string.app_name)).apply { mkdirs() }
-            }
-        rootDirectory = if (mediaDir?.exists() == true) mediaDir else appContext.filesDir
-    }
+  override fun notifyImageCreated(savedUri: Uri) {
+    val file = savedUri.toFile()
+    val fileProviderUri =
+        FileProvider.getUriForFile(appContext, appContext.packageName + ".provider", file)
 
-    override fun notifyImageCreated(savedUri: Uri) {
-        val file = savedUri.toFile()
-        val fileProviderUri =
-            FileProvider.getUriForFile(appContext, appContext.packageName + ".provider", file)
-        appContext.sendBroadcast(Intent(ACTION_NEW_PICTURE, fileProviderUri))
-    }
+    @Suppress("DEPRECATION") val intent = Intent(ACTION_NEW_PICTURE, fileProviderUri)
+    appContext.sendBroadcast(intent)
+  }
 
-    override fun createImageOutputFile(): File =
-        File(rootDirectory, PHOTO_EXTENSION.generateFilename())
+  private val timeStamp: String = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(Date())
 
-    private fun String.generateFilename() = UUID.randomUUID().toString() + this
+  override fun createImageOutputFile(): File {
+    val filesDir = appContext.externalCacheDir
+    return File.createTempFile(timeStamp, PHOTO_EXTENSION, filesDir)
+  }
 }

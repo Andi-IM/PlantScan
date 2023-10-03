@@ -1,12 +1,9 @@
 package com.github.andiim.plantscan.app.ui.screens.home.history
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -25,24 +22,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.andiim.plantscan.app.R
 import com.github.andiim.plantscan.app.core.ui.TrackScrollJank
 import com.github.andiim.plantscan.app.ui.TrackScreenViewEvent
 import com.github.andiim.plantscan.app.ui.common.HistoryScreenPreviewParameterProvider
+import com.github.andiim.plantscan.app.ui.common.composables.BasicToolbar
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import timber.log.Timber
 
 @Composable
 fun HistoryRoute(
-    // toDetail: (String) -> Unit,
+    toDetail: (String) -> Unit,
     viewModel: MyGardenViewModel = hiltViewModel()
 ) {
     val historyUiState: HistoryUiState by viewModel.historyUiState.collectAsState()
 
-    Timber.d("STATE $historyUiState")
     TrackScreenViewEvent(screenName = "History")
     HistoryScreen(
         historyUiState = historyUiState,
-        // onItemClick = toDetail,
+        onItemClick = toDetail,
+        getId = viewModel::getDetailId
     )
 
     LaunchedEffect(viewModel) {
@@ -54,7 +55,8 @@ fun HistoryRoute(
 internal fun HistoryScreen(
     modifier: Modifier = Modifier,
     historyUiState: HistoryUiState,
-    // onItemClick: (String) -> Unit = {}, /* TODO: SOMETIMES CAN SHOW DETAIL */
+    getId: (String) -> String? = { _ -> null },
+    onItemClick: (String) -> Unit = {},
 ) {
     val state = rememberLazyListState()
     TrackScrollJank(scrollableState = state, stateName = "detections")
@@ -67,7 +69,7 @@ internal fun HistoryScreen(
             verticalArrangement = Arrangement.Center
         ) {
             item {
-                Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
+                BasicToolbar(title = R.string.label_history)
             }
             when (historyUiState) {
                 HistoryUiState.Loading -> item {
@@ -97,10 +99,24 @@ internal fun HistoryScreen(
                             items = historyUiState.detections,
                             key = { "${it.id}${it.plantRef}" },
                             itemContent = { history ->
+
+                                LaunchedEffect(getId) {
+                                    Timber.d("${getId.invoke(history.plantRef)}")
+                                }
+
                                 ListItem(
+                                    modifier = Modifier.clickable { onItemClick.invoke(history.plantRef) },
                                     headlineContent = { Text(history.plantRef) },
-                                    supportingContent = { Text("${history.timestamp}") },
-                                    trailingContent = { Text("${history.accuracy}%") }
+                                    supportingContent = {
+                                        Text(
+                                            "${
+                                                history.timestamp?.toLocalDateTime(
+                                                    TimeZone.currentSystemDefault()
+                                                )
+                                            }"
+                                        )
+                                    },
+                                    trailingContent = { Text("%.2f%%".format(history.accuracy * 100)) }
                                 )
                             }
                         )

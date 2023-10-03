@@ -194,6 +194,13 @@ fun LazyListScope.detectContent(
     item {
         Text(text = "Results")
     }
+
+    if (predictionList.isEmpty()) {
+        item {
+            Text(text = "Can't detect or not available in dataset!")
+        }
+    }
+
     predictionList.forEach {
         item {
             ListItem(

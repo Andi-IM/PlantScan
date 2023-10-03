@@ -8,4 +8,12 @@ data class DetectionHistory(
     val plantRef: String,
     val userId: String,
     val accuracy: Float
-)
+) {
+    constructor(plantRef: String, userId: String, accuracy: Float) : this(
+        null,
+        null,
+        plantRef,
+        userId,
+        accuracy
+    )
+}

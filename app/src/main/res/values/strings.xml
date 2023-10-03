@@ -96,4 +96,6 @@
     <string name="detect_loading_state">"Detecting… "</string>
     <string name="detect_error_title">Error</string>
     <string name="success">Sending Success!</string>
+    <string name="label_history">Detection History\n</string>
+    <string name="suggest_description_error_message">Please give some short description.</string>
 </resources>

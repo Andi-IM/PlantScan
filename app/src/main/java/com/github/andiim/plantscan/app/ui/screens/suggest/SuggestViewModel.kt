@@ -6,12 +6,14 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.andiim.plantscan.app.R
 import com.github.andiim.plantscan.app.core.auth.AccountService
 import com.github.andiim.plantscan.app.core.domain.model.Suggestion
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
 import com.github.andiim.plantscan.app.core.domain.usecase.firebase_services.LogService
 import com.github.andiim.plantscan.app.ui.common.extensions.getImage
 import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
+import com.github.andiim.plantscan.app.ui.common.snackbar.SnackbarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,6 +66,12 @@ class SuggestViewModel @Inject constructor(
     fun upload() {
         if (status.value is Status.Granted) {
             _sendingState.value = SendingState.Loading
+
+            if (_suggestData.value.description.isBlank()) {
+                SnackbarManager.showMessage(R.string.suggest_description_error_message)
+                _sendingState.value = SendingState.Initial
+                return
+            }
 
             val data = Suggestion(
                 userId = (status.value as Status.Granted).id,
