@@ -1,11 +1,11 @@
 package com.github.andiim.plantscan.app.ui.screens.suggest
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.github.andiim.plantscan.app.PlantScanAppState
 import com.github.andiim.plantscan.app.ui.navigation.Direction
 import org.jetbrains.annotations.VisibleForTesting
 import java.net.URLDecoder
@@ -18,17 +18,17 @@ internal const val PLANT_ID_ARG = "plant_id"
 
 internal class SuggestArgs(val plantId: String) {
     constructor(savedStateHandle: SavedStateHandle) :
-        this(
-            URLDecoder.decode(
-                checkNotNull(savedStateHandle[PLANT_ID_ARG]),
-                urlCharacterEncoding
+            this(
+                URLDecoder.decode(
+                    checkNotNull(savedStateHandle[PLANT_ID_ARG]),
+                    urlCharacterEncoding
+                )
             )
-        )
 }
 
-fun PlantScanAppState.navigateToSuggest(id: String) {
+fun NavController.navigateToSuggest(id: String) {
     val encodedId = URLEncoder.encode(id, urlCharacterEncoding)
-    this.navigate(Direction.Suggest.createRoute(encodedId))
+    this.navigate(Direction.Suggest.createRoute(encodedId)) { launchSingleTop = true }
 }
 
 fun NavGraphBuilder.suggestScreen(

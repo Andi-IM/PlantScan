@@ -1,11 +1,11 @@
 package com.github.andiim.plantscan.app.ui.screens.detect
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.github.andiim.plantscan.app.PlantScanAppState
 import com.github.andiim.plantscan.app.ui.navigation.Direction
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -23,9 +23,9 @@ internal class DetectArgs(val uri: String) {
     )
 }
 
-fun PlantScanAppState.navigateToDetect(uri: String) {
+fun NavController.navigateToDetect(uri: String) {
     val encodedId = URLEncoder.encode(uri, urlCharacterEncoding)
-    this.navigate(Direction.Detect.createRoute(encodedId), false)
+    this.navigate(Direction.Detect.createRoute(encodedId)) { launchSingleTop = false }
 }
 
 fun NavGraphBuilder.detectFragment(

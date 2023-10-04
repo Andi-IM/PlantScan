@@ -1,6 +1,5 @@
 package com.github.andiim.plantscan.app.core.firestore.model
 
-import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.PropertyName
@@ -22,31 +21,18 @@ data class PlantDocument(
     @set:PropertyName("common_name")
     var commonName: List<CommonName> = listOf()
 
-    constructor(plant: Plant) : this(
-        plant.id,
-        TaxonomyDocument(plant.taxon),
-        plant.description,
-        null,
-        plant.species,
-        null,
-        plant.name,
-        plant.images.map { ImageDocument(it) },
-        plant.thumbnail
-    )
-
-    fun toModel(): Plant =
-        Plant(
-            id = this.id,
-            taxon = this.taxonomy?.toModel()!!,
-            species = this.species,
-            name = this.name,
-            images = this.images.map {
-                it.toModel()
-            },
-            commonName = this.commonName.map { it.name },
-            thumbnail = this.thumbnail,
-            description = this.description,
-        )
-
     data class CommonName(val name: String = "")
+
+    constructor(
+        id: String,
+        taxon: TaxonomyDocument,
+        description: String,
+        species: String,
+        name: String,
+        images: List<ImageDocument> = listOf(),
+        thumbnail: String,
+        commonName: List<String> = listOf(),
+    ) : this(id, taxon, description, null, species, null, name, images, thumbnail) {
+        this.commonName = commonName.map { CommonName(it) }
+    }
 }

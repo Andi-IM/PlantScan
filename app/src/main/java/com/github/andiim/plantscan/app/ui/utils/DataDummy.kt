@@ -2,6 +2,7 @@ package com.github.andiim.plantscan.app.ui.utils
 
 import androidx.paging.PagingData
 import com.github.andiim.plantscan.app.core.domain.model.DetectionHistory
+import com.github.andiim.plantscan.app.core.domain.model.Image
 import com.github.andiim.plantscan.app.core.domain.model.Imgz
 import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.core.domain.model.Plant
@@ -12,63 +13,52 @@ import com.github.andiim.plantscan.app.core.firestore.model.PlantDocument
 import kotlinx.datetime.Clock
 
 object DataDummy {
-    var OBJECT_DETECTIONS =
-        List(10) {
-            ObjectDetection(
-                image = Imgz(
-                    width = 100.0f,
-                    height = 100.0f
-                ),
-                predictions = listOf(
-                    Prediction(
-                        confidence = 10.0f,
-                        x = 10.0f,
-                        y = 10.0f,
-                        width = 10.0f,
-                        height = 10.0f,
-                        jsonMemberClass = "Something $it"
-                    )
+    var OBJECT_DETECTIONS = List(10) {
+        ObjectDetection(
+            image = Imgz(
+                width = 100.0f, height = 100.0f
+            ), predictions = listOf(
+                Prediction(
+                    confidence = 10.0f,
+                    x = 10.0f,
+                    y = 10.0f,
+                    width = 10.0f,
+                    height = 10.0f,
+                    jsonMemberClass = "Something $it"
                 )
             )
-        }
+        )
+    }
 
-    const val ERROR_FAIL_MESSAGE = "fail"
 
     private fun String.removeWhitespace() = filterNot { it.isWhitespace() }
 
     private var KNOWN_NAMES = (0..3).map { "name$it" }
-    var PLANTS =
-        List(10) {
-            Plant(
-                id = "id@$it",
-                name = "name@$it",
-                species = "species",
-                images = listOf(),
-                commonName = KNOWN_NAMES,
-                thumbnail = "",
-                description = "",
-                taxon = Taxonomy("", "", "", "", ""),
-            )
-        }
+    val TAXONOMY = Taxonomy("GENUS", "CLASS", "FAMILY", "ORDER", "PHYLUM")
+    val IMAGE = Image("url", Clock.System.now())
+    var PLANTS = List(10) {
+        Plant(
+            id = "id@$it",
+            name = "name@$it",
+            species = "species",
+            images = listOf(),
+            commonName = KNOWN_NAMES,
+            thumbnail = "",
+            description = "",
+            taxon = TAXONOMY,
+        )
+    }
 
     fun getPlants(list: List<PlantDocument>): PagingData<PlantDocument> = PagingData.from(list)
 
-    fun searchPlant(query: String) =
-        PLANTS.filter { plant ->
-            plant.name.removeWhitespace() == query.removeWhitespace() ||
-                plant.species.removeWhitespace() == query.removeWhitespace()
-        }
+    val HISTORIES = List(10) {
+        DetectionHistory(
+            id = "id@$it",
+            timestamp = Clock.System.now(),
+            plantRef = "ref",
+            userId = "id",
+            accuracy = 0.1f
+        )
+    }
 
-    val HISTORIES =
-        List(10) {
-            DetectionHistory(
-                id = "id@$it",
-                timestamp = Clock.System.now(),
-                plantRef = "ref",
-                userId = "id",
-                accuracy = 0.1f
-            )
-        }
-
-    val SUGGESTION = Suggestion()
 }

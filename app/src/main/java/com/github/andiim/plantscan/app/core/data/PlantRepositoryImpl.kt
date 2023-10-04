@@ -14,6 +14,7 @@ import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
 import com.github.andiim.plantscan.app.core.firestore.model.DetectionHistoryDocument
 import com.github.andiim.plantscan.app.core.firestore.model.ImageContent
 import com.github.andiim.plantscan.app.core.firestore.model.SuggestionDocument
+import com.github.andiim.plantscan.app.core.firestore.model.toModel
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest

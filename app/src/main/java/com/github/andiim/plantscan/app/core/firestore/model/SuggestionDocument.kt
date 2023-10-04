@@ -13,14 +13,12 @@ data class SuggestionDocument(
     val images: List<ImageDocument> = listOf(),
 ) {
     companion object {
-        fun fromModel(suggestion: Suggestion) = SuggestionDocument(
-            id = suggestion.id,
+        fun fromModel(suggestion: Suggestion) = SuggestionDocument(id = suggestion.id,
             userId = suggestion.userId,
             date = suggestion.date,
             description = suggestion.description,
             images = suggestion.imageUrl.map {
-                ImageDocument.fromModel(it)
-            }
-        )
+                it.toDocument()
+            })
     }
 }

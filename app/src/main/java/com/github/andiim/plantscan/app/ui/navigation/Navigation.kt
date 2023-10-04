@@ -16,9 +16,11 @@ import com.github.andiim.plantscan.app.ui.screens.detail.detailScreen
 import com.github.andiim.plantscan.app.ui.screens.detail.navigateToDetail
 import com.github.andiim.plantscan.app.ui.screens.detect.detectFragment
 import com.github.andiim.plantscan.app.ui.screens.detect.navigateToDetect
-import com.github.andiim.plantscan.app.ui.screens.home.findPlant.gotoMainNavRoute
+import com.github.andiim.plantscan.app.ui.screens.home.findPlant.navigateToMainNavAndPopUpSplash
 import com.github.andiim.plantscan.app.ui.screens.home.findPlant.homeFindPlantElement
+import com.github.andiim.plantscan.app.ui.screens.home.findPlant.navigateToMainNavAndPopUpDetect
 import com.github.andiim.plantscan.app.ui.screens.home.history.homeHistoryElement
+import com.github.andiim.plantscan.app.ui.screens.home.settings.clearAndNavigateFromSettings
 import com.github.andiim.plantscan.app.ui.screens.home.settings.homeSettingsElement
 import com.github.andiim.plantscan.app.ui.screens.list.listScreen
 import com.github.andiim.plantscan.app.ui.screens.list.navigateToList
@@ -30,57 +32,53 @@ import com.github.andiim.plantscan.app.ui.screens.web.webViewScreen
 
 @Composable
 fun SetupRootNavGraph(appState: PlantScanAppState, modifier: Modifier = Modifier) {
+    val navController = appState.navController
     NavHost(
         modifier = modifier.semantics(false) { contentDescription = "Nav Host" },
-        navController = appState.navController,
+        navController = navController,
         startDestination = Direction.Splash.route,
     ) {
         navigation(startDestination = Direction.Login.route, route = Direction.AccountNav.route) {
             authScreen(
-                onLinkClick = appState::navigateToWeb,
-                onAuthClick = appState::navigateFromAuthRoute,
+                onLinkClick = navController::navigateToWeb,
+                onAuthClick = navController::navigateFromAuthRoute,
             )
-            webViewScreen(onBackClick = appState::popUp)
+            webViewScreen(onBackClick = navController::popBackStack)
         }
 
-        detailScreen(onBackClick = appState::popUp)
+        detailScreen(onBackClick = navController::popBackStack)
 
         navigation(startDestination = Direction.FindPlant.route, route = Direction.MainNav.route) {
             homeFindPlantElement(
-                onItemClick = appState::navigateToDetail,
-                onCameraClick = appState::navigateToCamera,
-                onListClick = appState::navigateToList
+                onItemClick = navController::navigateToDetail,
+                onCameraClick = navController::navigateToCamera,
+                onListClick = navController::navigateToList
             )
-            homeHistoryElement({})
+            homeHistoryElement {}
             homeSettingsElement(
-                clearAndNavigate = appState::clearAndNavigate,
-                onLoginClick = appState::navigateToAuthRoute,
+                clearAndNavigate = navController::clearAndNavigateFromSettings,
+                onLoginClick = navController::navigateToAuthRoute,
             )
         }
 
         listScreen(
-            onBackClick = appState::popUp,
-            onDetailClick = appState::navigateToDetail,
+            onBackClick = navController::popBackStack,
+            onDetailClick = navController::navigateToDetail,
         )
-        splashScreen(onLoadingFinished = appState::gotoMainNavRoute)
+        splashScreen(onLoadingFinished = navController::navigateToMainNavAndPopUpSplash)
 
         cameraFragment(
-            onBackClick = appState::popUp,
-            onDetectionClick = appState::navigateToDetect
+            onBackClick = navController::popBackStack,
+            onDetectionClick = navController::navigateToDetect
         )
         detectFragment(
-            backToTop = {
-                appState.navigateAndPopUp(
-                    Direction.MainNav.route,
-                    Direction.Detect.route
-                )
-            },
-            onSuggestClick = appState::navigateToSuggest
+            backToTop = navController::navigateToMainNavAndPopUpDetect,
+            onSuggestClick = navController::navigateToSuggest
         )
 
         suggestScreen(
-            onBackClick = appState::popUp,
-            onAuthClick = appState::navigateToAuthRoute
+            onBackClick = navController::popBackStack,
+            onAuthClick = navController::navigateToAuthRoute
         )
     }
 }

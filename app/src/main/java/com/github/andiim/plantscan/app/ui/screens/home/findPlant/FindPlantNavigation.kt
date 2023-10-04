@@ -1,14 +1,24 @@
 package com.github.andiim.plantscan.app.ui.screens.home.findPlant
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
-import com.github.andiim.plantscan.app.PlantScanAppState
 import com.github.andiim.plantscan.app.ui.navigation.Direction
 import com.github.andiim.plantscan.app.ui.navigation.NavigationConstants
 
-fun PlantScanAppState.gotoMainNavRoute() {
-    this.navigateAndPopUp(Direction.MainNav.route, Direction.Splash.route)
+fun NavController.navigateToMainNavAndPopUpSplash() {
+    this.navigate(Direction.MainNav.route) {
+        launchSingleTop = true
+        popUpTo(Direction.Splash.route) { inclusive = true }
+    }
+}
+
+fun NavController.navigateToMainNavAndPopUpDetect(){
+    this.navigate(Direction.MainNav.route) {
+        launchSingleTop = true
+        popUpTo(Direction.Detect.route) { inclusive = true }
+    }
 }
 
 fun NavGraphBuilder.homeFindPlantElement(

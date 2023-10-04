@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.firestore.FirestoreSource
+import com.github.andiim.plantscan.app.core.firestore.model.toModel
 
 class PlantPagingSource(
     private val remote: FirestoreSource,

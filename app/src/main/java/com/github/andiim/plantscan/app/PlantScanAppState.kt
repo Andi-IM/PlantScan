@@ -41,7 +41,7 @@ class PlantScanAppState(
                     val state = snackbarHostState
                         .showSnackbar(
                             SnackbarVisualsWithError(
-                                actionTitle = "Dismiss",
+                                actionTitle = context.getString(R.string.snackbar_dismiss),
                                 message = text,
                                 setDuration = snackbarMessage.getDuration(),
                                 isError = true,
@@ -80,19 +80,8 @@ class PlantScanAppState(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    fun popUp() {
-        navController.popBackStack()
-    }
-
     fun navigate(route: String, singleTopLaunch: Boolean = true) {
         navController.navigate(route) { launchSingleTop = singleTopLaunch }
-    }
-
-    fun navigateAndPopUp(route: String, popUp: String) {
-        navController.navigate(route) {
-            launchSingleTop = true
-            popUpTo(popUp) { inclusive = true }
-        }
     }
 
     fun clearAndNavigate(route: String) {
