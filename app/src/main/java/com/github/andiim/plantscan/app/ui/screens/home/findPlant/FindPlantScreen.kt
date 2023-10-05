@@ -32,8 +32,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,6 +40,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.ui.TrackScreenViewEvent
 import com.github.andiim.plantscan.app.ui.common.composables.PlantPagedList
+import com.github.andiim.plantscan.app.ui.common.extensions.withSemantics
 import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -90,16 +89,14 @@ fun FindPlantScreen(
     ) {
         DetectButton(
             onClick = toDetect,
-            modifier = Modifier.semantics(false) { contentDescription = "Detect Button" }
+            modifier = Modifier.withSemantics("Detect Button")
         )
 
         Button(
             modifier =
             Modifier
                 .align(Alignment.BottomCenter)
-                .semantics(true) {
-                    contentDescription = "Manual Find Button"
-                },
+                .withSemantics("Manual Find Button"),
             onClick = toPlantType,
         ) {
             Text(text = stringResource(AppText.search_find_by_type_button))
