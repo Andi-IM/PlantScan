@@ -99,4 +99,9 @@
     <string name="label_history">Detection History\n</string>
     <string name="suggest_description_error_message">Please give some short description.</string>
     <string name="snackbar_dismiss">Dismiss</string>
+
+    <!--  Search  -->
+    <string name="clear_search_text_content_desc">Clear search text</string>
+    <string name="search_result_not_found">Sorry, there is no content found for your search \"%1$s\"</string>
+    <string name="search_not_ready">Sorry, we are still processing the search index. Please come back later.</string>
 </resources>

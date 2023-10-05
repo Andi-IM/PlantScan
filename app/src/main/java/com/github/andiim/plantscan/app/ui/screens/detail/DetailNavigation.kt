@@ -21,7 +21,8 @@ internal val plantIdArg = "plant_id"
 internal class DetailArgs(val plantId: String) {
     constructor(savedStateHandle: SavedStateHandle) : this(
         URLDecoder.decode(
-            checkNotNull(savedStateHandle[plantIdArg]), urlCharacterEncoding
+            checkNotNull(savedStateHandle[plantIdArg]),
+            urlCharacterEncoding
         )
     )
 }
@@ -34,11 +35,15 @@ fun NavController.navigateToDetail(id: String) {
 fun NavGraphBuilder.detailScreen(
     onBackClick: () -> Unit,
 ) {
-    composable(route = Direction.Detail.route,
+    composable(
+        route = Direction.Detail.route,
         arguments = listOf(navArgument(plantIdArg) { type = NavType.StringType }),
-        deepLinks = listOf(navDeepLink {
-            uriPattern = "${NavigationConstants.APP_URI}/${Direction.Detail.route}/{$plantIdArg}"
-        })) {
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = "${NavigationConstants.APP_URI}/${Direction.Detail.route}/{$plantIdArg}"
+            }
+        )
+    ) {
         DetailRoute(popUpScreen = onBackClick)
     }
 }

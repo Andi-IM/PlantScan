@@ -3,6 +3,10 @@ package com.github.andiim.plantscan.app.core.result
 import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.UploadTask
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 
@@ -10,6 +14,15 @@ sealed interface Result<out T> {
     data class Success<T>(val data: T) : Result<T>
     data class Error(val exception: Throwable? = null) : Result<Nothing>
     data class Loading(val progress: String? = null) : Result<Nothing>
+}
+
+fun <T> Flow<T>.asResult(): Flow<Result<T>> {
+    return this
+        .map<T, Result<T>> {
+            Result.Success(it)
+        }
+        .onStart { emit(Result.Loading()) }
+        .catch { emit(Result.Error(it)) }
 }
 
 suspend fun UploadTask.asResult(): Task<Result<String>> {

@@ -5,7 +5,6 @@ gson = "2.10.1"
 integrity = "1.2.0"
 kotlinxDatetime = "0.4.1"
 min_sdk_version = "27"
-modelmapper = "3.1.1"
 objectDetection = "17.0.0"
 target_sdk_version = "33"
 compose_compilerextension = "1.5.0"
@@ -123,7 +122,6 @@ lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-
 lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
-modelmapper = { module = "org.modelmapper:modelmapper", version.ref = "modelmapper" }
 navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version = "2.6.0" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version = "2.6.0" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }

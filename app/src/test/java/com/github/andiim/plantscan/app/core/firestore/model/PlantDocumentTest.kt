@@ -11,7 +11,7 @@ class PlantDocumentTest {
 
         val document = plant.toDocument()
 
-        with(document){
+        with(document) {
             assertThat(id).isEqualTo(plant.id)
             assertThat(taxonomy).isEqualTo(plant.taxon.toDocument())
             assertThat(description).isEqualTo(plant.description)

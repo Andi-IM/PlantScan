@@ -78,9 +78,6 @@ dependencies {
     // Logging
     implementation(libs.timber)
     implementation(libs.espresso.idlingResource)
-    // Mapper
-    implementation(libs.modelmapper)
-    implementation(kotlin("reflect"))
 
     // Profile Installer
     implementation(libs.androidx.profileinstaller)

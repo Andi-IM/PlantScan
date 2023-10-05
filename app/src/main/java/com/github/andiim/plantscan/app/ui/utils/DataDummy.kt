@@ -7,7 +7,6 @@ import com.github.andiim.plantscan.app.core.domain.model.Imgz
 import com.github.andiim.plantscan.app.core.domain.model.ObjectDetection
 import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.model.Prediction
-import com.github.andiim.plantscan.app.core.domain.model.Suggestion
 import com.github.andiim.plantscan.app.core.domain.model.Taxonomy
 import com.github.andiim.plantscan.app.core.firestore.model.PlantDocument
 import kotlinx.datetime.Clock
@@ -16,8 +15,10 @@ object DataDummy {
     var OBJECT_DETECTIONS = List(10) {
         ObjectDetection(
             image = Imgz(
-                width = 100.0f, height = 100.0f
-            ), predictions = listOf(
+                width = 100.0f,
+                height = 100.0f
+            ),
+            predictions = listOf(
                 Prediction(
                     confidence = 10.0f,
                     x = 10.0f,
@@ -29,9 +30,6 @@ object DataDummy {
             )
         )
     }
-
-
-    private fun String.removeWhitespace() = filterNot { it.isWhitespace() }
 
     private var KNOWN_NAMES = (0..3).map { "name$it" }
     val TAXONOMY = Taxonomy("GENUS", "CLASS", "FAMILY", "ORDER", "PHYLUM")
@@ -60,5 +58,4 @@ object DataDummy {
             accuracy = 0.1f
         )
     }
-
 }

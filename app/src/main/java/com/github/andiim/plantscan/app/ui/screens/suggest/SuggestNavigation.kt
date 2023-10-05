@@ -18,12 +18,12 @@ internal const val PLANT_ID_ARG = "plant_id"
 
 internal class SuggestArgs(val plantId: String) {
     constructor(savedStateHandle: SavedStateHandle) :
-            this(
-                URLDecoder.decode(
-                    checkNotNull(savedStateHandle[PLANT_ID_ARG]),
-                    urlCharacterEncoding
-                )
+        this(
+            URLDecoder.decode(
+                checkNotNull(savedStateHandle[PLANT_ID_ARG]),
+                urlCharacterEncoding
             )
+        )
 }
 
 fun NavController.navigateToSuggest(id: String) {

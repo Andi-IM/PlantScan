@@ -32,6 +32,5 @@ class PlantPagingSourceTest {
         assertThat(result.data)
             .containsExactlyElementsIn(mockPlants)
             .inOrder()
-
     }
 }

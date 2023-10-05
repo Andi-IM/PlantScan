@@ -28,9 +28,8 @@ fun ImageDocument.toModel(): Image = Image(
     attribution = this.attribution
 )
 
-fun Image.toDocument(): ImageDocument = ImageDocument(
-    url = this.url, date = this.date?.toDate()!!
-)
+fun Image.toDocument(): ImageDocument =
+    ImageDocument(url = this.url, date = this.date?.toDate()!!)
 
 fun Plant.toDocument(): PlantDocument = PlantDocument(
     this.id,
@@ -55,4 +54,3 @@ fun PlantDocument.toModel(): Plant = Plant(
     thumbnail = this.thumbnail,
     description = this.description,
 )
-

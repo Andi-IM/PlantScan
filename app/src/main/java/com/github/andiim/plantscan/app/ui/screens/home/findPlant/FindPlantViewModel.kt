@@ -1,44 +1,45 @@
 package com.github.andiim.plantscan.app.ui.screens.home.findPlant
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
+import androidx.paging.PagingSource
+import androidx.paging.cachedIn
+import com.github.andiim.plantscan.app.core.domain.model.Plant
 import com.github.andiim.plantscan.app.core.domain.usecase.PlantUseCase
 import com.github.andiim.plantscan.app.core.domain.usecase.firebaseServices.LogService
-import com.github.andiim.plantscan.app.ui.common.extensions.launchCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
-@OptIn(FlowPreview::class)
 @HiltViewModel
 class FindPlantViewModel
 @Inject
 constructor(
     private val useCase: PlantUseCase,
+    private val savedStateHandle: SavedStateHandle,
     private val logService: LogService,
 ) : ViewModel() {
 
-    private val queryState = MutableStateFlow("")
-    val query: StateFlow<String> = queryState.asStateFlow()
+    val query = savedStateHandle.getStateFlow(SEARCH_QUERY, "")
 
-    val items = Pager(
-        config = PlantUseCase.getDefaultPageConfig(),
-        pagingSourceFactory = { useCase.getPlants(queryState.value) }
-    )
-        .flow
+    val items = Pager(PlantUseCase.getDefaultPageConfig()) {
+        search(query.value)
+    }
+        .flow.cachedIn(viewModelScope)
 
     fun onQueryChange(queryData: String) {
-        launchCatching(logService) {
-            queryState.debounce(1.seconds).collect { queryState.value = queryData }
-        }
+        savedStateHandle[SEARCH_QUERY] = queryData
     }
 
     fun onSearch(query: String) {
-        launchCatching(logService) { queryState.value = query }
+        // launchCatching(logService) { queryState.value = query }
+    }
+
+    private fun search(queryData: String): PagingSource<Int, Plant> {
+        return useCase.getPlants(queryData)
     }
 }
+
+
+private const val SEARCH_QUERY = "searchQuery"

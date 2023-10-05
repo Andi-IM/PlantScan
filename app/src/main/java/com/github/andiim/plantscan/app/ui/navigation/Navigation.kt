@@ -16,9 +16,9 @@ import com.github.andiim.plantscan.app.ui.screens.detail.detailScreen
 import com.github.andiim.plantscan.app.ui.screens.detail.navigateToDetail
 import com.github.andiim.plantscan.app.ui.screens.detect.detectFragment
 import com.github.andiim.plantscan.app.ui.screens.detect.navigateToDetect
-import com.github.andiim.plantscan.app.ui.screens.home.findPlant.navigateToMainNavAndPopUpSplash
 import com.github.andiim.plantscan.app.ui.screens.home.findPlant.homeFindPlantElement
 import com.github.andiim.plantscan.app.ui.screens.home.findPlant.navigateToMainNavAndPopUpDetect
+import com.github.andiim.plantscan.app.ui.screens.home.findPlant.navigateToMainNavAndPopUpSplash
 import com.github.andiim.plantscan.app.ui.screens.home.history.homeHistoryElement
 import com.github.andiim.plantscan.app.ui.screens.home.settings.clearAndNavigateFromSettings
 import com.github.andiim.plantscan.app.ui.screens.home.settings.homeSettingsElement
