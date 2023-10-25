@@ -98,6 +98,9 @@ dependencies {
 
     // Camera
     implementation(libs.bundles.camera)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
 
     // Hilt
     ksp(libs.hilt.compiler)
