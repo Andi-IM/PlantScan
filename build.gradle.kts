@@ -1,22 +1,45 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import io.gitlab.arturbosch.detekt.Detekt
 
+
+buildscript {
+     repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath(libs.agp)
+        classpath(libs.kgp)
+        classpath(libs.dhp)
+        classpath(libs.ksp.plugin)
+        classpath(libs.firebase.crashlytics.plugin)
+        classpath(libs.firebase.perf.plugin)
+        classpath(libs.firebase.appdistribution.plugin)
+    }
+}
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.application") apply false
-    id("com.android.library") apply false
-    kotlin("android") apply false
-    kotlin("kapt") apply false
-    id("com.google.devtools.ksp") apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0" apply false
-    id("com.google.gms.google-services") version "4.3.15" apply false
-    id("com.google.dagger.hilt.android") apply false
-    id("com.google.firebase.appdistribution") apply false
-    id("com.google.firebase.crashlytics") apply false
-    id("com.google.firebase.firebase-perf") apply false
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1" apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.application.compose) apply false
+    alias(libs.plugins.android.application.jacoco) apply false
+    alias(libs.plugins.android.application.firebase) apply false
+    alias(libs.plugins.android.application.flavors) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.android.library.compose) apply false
+    alias(libs.plugins.android.library.jacoco) apply false
+    alias(libs.plugins.android.feature) apply false
+    alias(libs.plugins.jvm.library) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.gms) apply false
+    alias(libs.plugins.android.hilt) apply false
+    alias(libs.plugins.android.room) apply false
+    alias(libs.plugins.android.test) apply false
+    alias(libs.plugins.secrets) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
+    alias(libs.plugins.com.android.library) apply false
+    alias(libs.plugins.org.jetbrains.kotlin.android) apply false
     base
 }
 

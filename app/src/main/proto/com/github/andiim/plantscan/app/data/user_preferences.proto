@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "com/github/andiim/plantscan/app/data/dark_theme_config.proto";
+
+option java_package = "com.github.andiim.plantscan.app.data.datastore";
+option java_multiple_files = true;
+
+message UserPreferences {
+  reserved 2;
+  DarkThemeConfigProto dark_theme_config = 17;
+  bool should_hide_onboarding = 18;
+}

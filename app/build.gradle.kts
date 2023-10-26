@@ -2,11 +2,12 @@ import com.github.andiim.plantscan.app.PsBuildType
 import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 
 plugins {
-    id("plantscan.android.application")
-    id("plantscan.android.application.firebase")
-    id("plantscan.android.application.compose")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.application.firebase)
+    alias(libs.plugins.android.application.compose)
     id("plantscan.android.application.flavors")
     id("plantscan.android.application.jacoco")
+    alias(libs.plugins.protobuf)
     id("plantscan.android.hilt")
     id("org.jetbrains.kotlin.kapt")
     id("jacoco")
@@ -60,6 +61,7 @@ android {
         abortOnError = true
         baseline = File("lint-baseline.xml")
     }
+
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
@@ -72,6 +74,32 @@ android {
 
 secrets {
     defaultPropertiesFileName = "secrets.defaults.properties"
+}
+
+// Setup protobuf configuration, generating lite Java and Kotlin classes
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString()
+    }
+    generateProtoTasks {
+        all().forEach {task ->
+            task.builtins{
+                register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
+
+androidComponents.beforeVariants {
+    android.sourceSets.register(it.name) {
+        java.srcDir(buildDir.resolve("generated/source/proto/${it.name}/java"))
+        kotlin.srcDir(buildDir.resolve("generated/source/proto/${it.name}/kotlin"))
+    }
 }
 
 dependencies {
@@ -94,7 +122,9 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.coil.kt.svg)
     implementation(libs.material)
+    implementation(libs.material.window)
     implementation(libs.bundles.paging)
+    implementation(libs.androidx.core.splashscreen)
 
     // Camera
     implementation(libs.bundles.camera)
@@ -118,8 +148,6 @@ dependencies {
     // Accompanist
     implementation(libs.accompanist.permission)
     implementation(libs.accompanist.webview)
-    implementation(libs.androidx.window)
-    implementation(libs.androidx.window.extension)
 
     // Navigation
     implementation(libs.bundles.navigation)
@@ -127,6 +155,11 @@ dependencies {
     // Firebase
     implementation(libs.bundles.firebase)
     implementation(libs.play.services.auth)
+
+    // datastore
+    implementation(libs.androidx.datastore)
+    implementation(libs.protobuf.kotlin.lite)
+
     // compat
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
