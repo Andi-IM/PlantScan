@@ -1,6 +1,7 @@
 package com.github.andiim.plantscan.core.network.di
 
 import android.content.Context
+import com.github.andiim.plantscan.core.network.BuildConfig
 import com.github.andiim.plantscan.core.network.fake.FakeAssetManager
 import dagger.Module
 import dagger.Provides

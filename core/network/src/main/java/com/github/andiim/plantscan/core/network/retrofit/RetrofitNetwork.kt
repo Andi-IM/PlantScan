@@ -1,6 +1,7 @@
 package com.github.andiim.plantscan.core.network.retrofit
 
 import com.github.andiim.plantscan.core.network.AppNetworkDataSource
+import com.github.andiim.plantscan.core.network.BuildConfig
 import com.github.andiim.plantscan.core.network.model.DetectionResponse
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -11,6 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Query
+import java.util.Base64
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,8 +43,22 @@ class RetrofitNetwork @Inject constructor(
             networkJson.asConverterFactory("application/json".toMediaType()),
         ).client(client).build().create(RetrofitNetworkApi::class.java)
 
-    override suspend fun detect(image: String, confidence: Int): DetectionResponse {
+    override suspend fun detect(image: String, confidence: Int): DetectionResponse =
+        networkApi.uploadImage(
+            apiKey = API_KEY,
+            confidence = confidence,
+            base64Image = image,
+        )
 
+}
+
+@Suppress("SwallowedException")
+private fun String.isValidBase64(): Boolean {
+    return try {
+        val decodedBytes = Base64.getDecoder().decode(this)
+        String(decodedBytes)
+        true
+    } catch (e: IllegalArgumentException) {
+        false
     }
-
 }

@@ -76,31 +76,6 @@ secrets {
     defaultPropertiesFileName = "secrets.defaults.properties"
 }
 
-// Setup protobuf configuration, generating lite Java and Kotlin classes
-protobuf {
-    protoc {
-        artifact = libs.protobuf.protoc.get().toString()
-    }
-    generateProtoTasks {
-        all().forEach {task ->
-            task.builtins{
-                register("java") {
-                    option("lite")
-                }
-                register("kotlin") {
-                    option("lite")
-                }
-            }
-        }
-    }
-}
-
-androidComponents.beforeVariants {
-    android.sourceSets.register(it.name) {
-        java.srcDir(buildDir.resolve("generated/source/proto/${it.name}/java"))
-        kotlin.srcDir(buildDir.resolve("generated/source/proto/${it.name}/kotlin"))
-    }
-}
 
 dependencies {
     // Logging
@@ -122,12 +97,15 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.coil.kt.svg)
     implementation(libs.material)
-    implementation(libs.material.window)
+    implementation(libs.compose.materialWindow)
     implementation(libs.bundles.paging)
     implementation(libs.androidx.core.splashscreen)
 
     // Camera
-    implementation(libs.bundles.camera)
+    implementation(libs.camera)
+    implementation(libs.camera.core)
+    implementation(libs.camera.view)
+
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
@@ -156,9 +134,6 @@ dependencies {
     implementation(libs.bundles.firebase)
     implementation(libs.play.services.auth)
 
-    // datastore
-    implementation(libs.androidx.datastore)
-    implementation(libs.protobuf.kotlin.lite)
 
     // compat
     implementation(libs.androidx.appcompat)

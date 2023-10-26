@@ -1,44 +1,34 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    alias(libs.plugins.com.android.library)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.library.compose)
+    alias(libs.plugins.android.library.jacoco)
 }
 
 android {
-    namespace = "com.github.andiim.designsystem"
-    compileSdk = 33
-
     defaultConfig {
-        minSdk = 27
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
     }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
+    lint {
+        checkDependencies = true
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+    namespace = "com.github.andiim.plantscan.core.designsystem"
 }
 
 dependencies {
+    lintPublish(project(":lint"))
+
+    api(libs.compose.foundation)
+    api(libs.compose.foundation.layout)
+    api(libs.compose.materialIcons)
+    api(libs.compose.material)
+    api(libs.compose.runtime)
+    api(libs.compose.ui.tooling.preview)
+    api(libs.compose.ui.util)
+
+    debugApi(libs.compose.ui.tooling)
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    implementation(libs.coil.compose)
+
+    androidTestImplementation(project(":core:testing"))
 }
