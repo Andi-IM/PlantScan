@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:datastore"))
     implementation(project(":core:model"))
+    implementation(project(":core:notifications"))
     implementation(libs.firebase.storage)
     implementation(libs.androidx.lifecycle.livedata)
     implementation(libs.androidx.tracing.ktx)
@@ -26,6 +27,7 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     implementation(libs.kotlin.coroutines.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.timber)
 
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))

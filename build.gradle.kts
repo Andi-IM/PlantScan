@@ -10,6 +10,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        classpath(libs.google.oss.licenses.plugin) {
+            exclude(group = "com.google.protobuf")
+        }
         classpath(libs.agp)
         classpath(libs.kgp)
         classpath(libs.dhp)

@@ -2,7 +2,7 @@ package com.github.andiim.plantscan.core.datastore
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import com.github.andiim.plantscan.app.data.datastore.UserPreferences
+import com.github.andiim.plantscan.core.datastore.UserPreferences
 import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
 import java.io.OutputStream

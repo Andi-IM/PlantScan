@@ -12,9 +12,9 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.github.andiim.plantscan.app.ui.extensions.TrackDisposableJank
-import com.github.andiim.plantscan.app.core.utils.NetworkMonitor
 import com.github.andiim.plantscan.app.core.utils.snackbar.SnackbarManager
+import com.github.andiim.plantscan.core.data.util.NetworkMonitor
+import com.github.andiim.plantscan.core.ui.TrackDisposableJank
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull

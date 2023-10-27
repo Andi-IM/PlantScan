@@ -40,6 +40,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.andiim.plantscan.feature.camera.rotateBitmap
 import timber.log.Timber
 import java.util.concurrent.Executor
 

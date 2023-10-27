@@ -1,8 +1,11 @@
+import com.android.aaptcompiler.shouldIgnoreElement
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.android.library.jacoco)
-    alias(libs.plugins.android.hilt)
     alias(libs.plugins.protobuf)
+    id("dagger.hilt.android.plugin")
+    kotlin("kapt")
 }
 
 android {
@@ -16,6 +19,10 @@ android {
         }
     }
 }
+
+/*tasks.named("protobuf").configure {
+
+}*/
 
 // Setup protobuf configuration, generating lite Java and Kotlin classes
 protobuf {
@@ -46,6 +53,8 @@ androidComponents.beforeVariants {
 dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
     implementation(libs.androidx.dataStore.core)
     implementation(libs.protobuf.kotlin.lite)
     implementation(libs.kotlin.coroutines.android)

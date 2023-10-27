@@ -5,7 +5,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.github.andiim.plantscan.buildsrc"
+group = "com.github.andiim.plantscan.buildlogic"
 
 repositories {
     google()

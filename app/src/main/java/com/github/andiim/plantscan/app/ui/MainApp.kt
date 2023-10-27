@@ -18,17 +18,23 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.andiim.plantscan.app.R
-import com.github.andiim.plantscan.app.ui.navigation.Host
-import com.github.andiim.plantscan.app.ui.theme.PlantScanTheme
-import com.github.andiim.plantscan.app.core.utils.NetworkMonitor
 import com.github.andiim.plantscan.app.core.utils.snackbar.SnackbarManager
 import com.github.andiim.plantscan.app.core.utils.snackbar.SnackbarMessage
+import com.github.andiim.plantscan.app.navigation.Host
+import com.github.andiim.plantscan.core.data.util.NetworkMonitor
+import com.github.andiim.plantscan.core.designsystem.component.PlantScanBackground
+import com.github.andiim.plantscan.core.designsystem.theme.PlantScanTheme
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainApp(
     modifier: Modifier = Modifier,
@@ -39,39 +45,39 @@ fun MainApp(
         windowSizeClass = windowSizeClass
     )
 ) {
-    PlantScanTheme {
-        Surface(
-            modifier = modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            val isOffline by state.isOffline.collectAsStateWithLifecycle()
-            val context = LocalContext.current
-            LaunchedEffect(isOffline) {
-                if (isOffline) {
-                    SnackbarManager.showMessage(
-                        message = context.resources.getString(R.string.not_connected),
-                        duration = SnackbarDuration.Indefinite,
-                        isError = true
-                    )
-                }
-            }
-
-            Scaffold(
-                modifier = modifier.fillMaxSize(),
-                contentColor = MaterialTheme.colorScheme.onBackground,
-                contentWindowInsets = WindowInsets(0, 0, 0, 0),
-                snackbarHost = { AppSnackbarHost(state = state.snackbarHostState) },
-                bottomBar = {
-                    if (state.shouldShowBottomBar) {
-
-                    }
-                },
-            ) { paddingValues ->
-                Host(
-                    state = state,
-                    modifier = modifier.padding(paddingValues)
+    PlantScanBackground {
+        val isOffline by state.isOffline.collectAsStateWithLifecycle()
+        val context = LocalContext.current
+        LaunchedEffect(isOffline) {
+            if (isOffline) {
+                SnackbarManager.showMessage(
+                    message = context.resources.getString(R.string.not_connected),
+                    duration = SnackbarDuration.Indefinite,
+                    isError = true
                 )
             }
+        }
+
+        Scaffold(
+            modifier = modifier
+                .fillMaxSize()
+                .semantics {
+                    testTagsAsResourceId = true
+                },
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onBackground,
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            snackbarHost = { AppSnackbarHost(state = state.snackbarHostState) },
+            bottomBar = {
+                if (state.shouldShowBottomBar) {
+
+                }
+            },
+        ) { paddingValues ->
+            Host(
+                state = state,
+                modifier = modifier.padding(paddingValues)
+            )
         }
     }
 }

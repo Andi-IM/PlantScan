@@ -3,16 +3,16 @@ import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.android.application.firebase)
     alias(libs.plugins.android.application.compose)
-    id("plantscan.android.application.flavors")
-    id("plantscan.android.application.jacoco")
+    alias(libs.plugins.android.application.flavors)
+    alias(libs.plugins.android.application.jacoco)
+    alias(libs.plugins.android.hilt)
+    alias(libs.plugins.android.application.firebase)
     alias(libs.plugins.protobuf)
-    id("plantscan.android.hilt")
     id("org.jetbrains.kotlin.kapt")
     id("jacoco")
     id("kotlinx-serialization")
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
@@ -56,10 +56,10 @@ android {
         }*/
     }
 
-    lint {
-        // warningsAsErrors = true
-        abortOnError = true
-        baseline = File("lint-baseline.xml")
+    packaging {
+        resources {
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+        }
     }
 
     testOptions {
@@ -72,97 +72,48 @@ android {
     namespace = "com.github.andiim.plantscan.app"
 }
 
-secrets {
-    defaultPropertiesFileName = "secrets.defaults.properties"
-}
-
-
 dependencies {
-    // Logging
-    implementation(libs.timber)
-    implementation(libs.espresso.idlingResource)
+    implementation(project(":feature:camera"))
+    implementation(project(":feature:web"))
 
-    // Profile Installer
-    implementation(libs.androidx.profileinstaller)
-    // Guava
-    implementation(libs.kotlinx.coroutines.guava)
+    implementation(project(":core:common"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:data"))
+    implementation(project(":core:model"))
+    implementation(project(":core:analytics"))
+    implementation(project(":core:firestore"))
 
-    // Datetime
-    implementation(libs.kotlinx.datetime)
+    implementation(project(":sync:work"))
 
-    // Retrofit
-    implementation(libs.bundles.retrofit)
+    androidTestImplementation(project(":core:testing"))
+    androidTestImplementation(project(":core:datastore-test"))
+    androidTestImplementation(project(":core:data-test"))
+    androidTestImplementation(project(":core:network"))
+    androidTestImplementation(libs.navigation.testing)
+    androidTestImplementation(libs.accompanist.testharness)
+    androidTestImplementation(kotlin("test"))
+    debugImplementation(libs.compose.ui.test.manifest)
+    debugImplementation(project(":ui-test-hilt-manifest"))
 
-    // UI
-    implementation(libs.coil)
-    implementation(libs.coil.kt.svg)
-    implementation(libs.material)
-    implementation(libs.compose.materialWindow)
-    implementation(libs.bundles.paging)
-    implementation(libs.androidx.core.splashscreen)
-
-    // Camera
     implementation(libs.camera)
     implementation(libs.camera.core)
     implementation(libs.camera.view)
 
-    implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
-
-    // Hilt
-    ksp(libs.hilt.compiler)
-    implementation(libs.hilt.android)
-    implementation(libs.dagger.hilt.navigation.compose)
-    implementation(libs.constraintlayout)
-
-    // Compose
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.lifecycle)
-    implementation(libs.metrics.performance)
-    androidTestImplementation(libs.compose.ui.test)
-    debugImplementation(libs.bundles.compose.debug)
-
-    // Accompanist
-    implementation(libs.accompanist.permission)
-    implementation(libs.accompanist.webview)
-
-    // Navigation
-    implementation(libs.bundles.navigation)
-
-    // Firebase
-    implementation(libs.bundles.firebase)
-    implementation(libs.play.services.auth)
-
-
-    // compat
+    implementation(libs.compose.activity)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
-
-    // Unit tests
-    testImplementation(libs.junit)
-    testImplementation(libs.truth)
-    testImplementation(libs.androidx.core.testing)
-    testImplementation(libs.androidx.test.rules)
-    testImplementation(libs.kotlin.coroutines.test)
-    testImplementation(libs.kotlin.coroutines.test.turbine)
-    testImplementation(libs.dagger.hilt.testing)
-    testImplementation(libs.androidx.mockito)
-    testImplementation(libs.androidx.mockito.inline)
-    testImplementation(libs.androidx.mockito.android)
-    testImplementation(libs.paging.testing)
-
-
-    // Instrument test
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.espresso.intent)
-    androidTestImplementation(libs.dagger.hilt.testing)
-    androidTestImplementation(libs.kotlin.coroutines.test)
-    androidTestImplementation(libs.truth)
-    androidTestImplementation(libs.paging.testing)
-    androidTestImplementation(libs.navigation.testing)
-    androidTestImplementation(libs.androidx.mockito.dexmaker)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.compose.runtime)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.compose.runtimeTracing)
+    implementation(libs.compose.materialWindow)
+    implementation(libs.dagger.hilt.navigation.compose)
+    implementation(libs.navigation.compose)
+    implementation(libs.androidx.window)
+    implementation(libs.androidx.profileinstaller)
+    implementation(libs.kotlinx.coroutines.guava)
+    implementation(libs.coil)
+    implementation(libs.timber)
 }
