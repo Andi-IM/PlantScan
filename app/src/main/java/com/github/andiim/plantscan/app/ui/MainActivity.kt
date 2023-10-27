@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,11 +26,11 @@ import androidx.metrics.performance.JankStats
 import androidx.profileinstaller.ProfileVerifier
 import com.github.andiim.core.analytics.AnalyticsHelper
 import com.github.andiim.core.analytics.LocalAnalyticsHelper
-import com.github.andiim.plantscan.core.data.util.NetworkMonitor
-import com.github.andiim.plantscan.core.model.data.DarkThemeConfig
 import com.github.andiim.plantscan.app.ui.MainActivityUiState.Loading
 import com.github.andiim.plantscan.app.ui.MainActivityUiState.Success
+import com.github.andiim.plantscan.core.data.util.NetworkMonitor
 import com.github.andiim.plantscan.core.designsystem.theme.PlantScanTheme
+import com.github.andiim.plantscan.core.model.data.DarkThemeConfig
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -116,6 +118,7 @@ class MainActivity : ComponentActivity() {
                     MainApp(
                         networkMonitor = networkMonitor,
                         windowSizeClass = calculateWindowSizeClass(this),
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
@@ -152,7 +155,7 @@ class MainActivity : ComponentActivity() {
         To see quick turnaround of the ProfileVerifier, we recommend using `speed-profile`.
         If you don't do either of these steps, you might only see the profile status reported as
         "enqueued for compilation" when running the sample locally.
-        */
+         */
         withContext(Dispatchers.IO) {
             val status = ProfileVerifier.getCompilationStatusAsync().await()
             Timber.d("ProfileInstaller status code: ${status.profileInstallResultCode}")
@@ -179,7 +182,6 @@ private fun shouldDisableDynamicTheming(
     Loading -> false
     is Success -> !uiState.userData.useDynamicColor
 }
-
 
 /**
  * Returns `true` if dark theme should be used, as a function of the [uiState] and the

@@ -46,14 +46,14 @@ android {
                 artifactType = "APK"
             }
         }
-        /*create("benchmark") {
+        create("benchmark") {
             initWith(release)
             matchingFallbacks.add("release")
             signingConfig = signingConfigs.getByName("debug")
             proguardFiles("benchmark-rules.pro")
             isMinifyEnabled = true
             applicationIdSuffix = PsBuildType.BENCHMARK.applicationIdSuffix
-        }*/
+        }
     }
 
     packaging {
@@ -67,6 +67,10 @@ android {
             isIncludeAndroidResources = true
         }
         animationsDisabled = true
+    }
+
+    lint {
+        baseline = file("lint-baseline.xml")
     }
 
     namespace = "com.github.andiim.plantscan.app"

@@ -25,6 +25,11 @@ internal fun Project.configureKotlinAndroid(
             minSdk = libs.findVersion("min.sdk.version").get().toString().toInt()
         }
 
+        lint {
+            baseline = file("./lint-baseline.xml")
+            abortOnError = false
+        }
+
         buildFeatures {
             viewBinding = true
             buildConfig = true

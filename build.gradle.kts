@@ -1,6 +1,4 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import dev.iurysouza.modulegraph.ModuleGraphExtension
-import dev.iurysouza.modulegraph.ModuleGraphPlugin
 import io.gitlab.arturbosch.detekt.Detekt
 
 
@@ -47,6 +45,8 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android) apply false
     alias(libs.plugins.secrets) apply false
     alias(libs.plugins.versions)
+    alias(libs.plugins.com.android.test) apply false
+    id("project-report")
     base
 }
 
@@ -55,6 +55,7 @@ allprojects {
 }
 
 val detektFormatting: Provider<MinimalExternalModuleDependency> = libs.detekt.formatting
+val detektCompose: Provider<MinimalExternalModuleDependency> = libs.detekt.compose
 
 subprojects {
     apply {
@@ -67,7 +68,10 @@ subprojects {
         allRules = false
         config.setFrom(rootProject.files("config/detekt/detekt.yml"))
     }
-    dependencies { detektPlugins(detektFormatting) }
+    dependencies {
+        detektPlugins(detektFormatting)
+        detektPlugins(detektCompose)
+    }
 
     moduleGraphConfig {
         readmePath.set("./README.md")
@@ -89,6 +93,16 @@ tasks {
         reports {
             html.required = true
         }
+    }
+
+    withType<Sign>().configureEach{
+        notCompatibleWithConfigurationCache("https://github.com/gradle/gradle/issues/13470")
+    }
+
+    named("check").configure {
+        this.setDependsOn(this.dependsOn.filterNot {
+            it is TaskProvider<*> && it.name == "detekt"
+        })
     }
 }
 

@@ -21,7 +21,9 @@ internal class WebArgs(val url: String) {
 
 fun NavController.navigateToWeb(url: String) {
     val encodedUrl = URLEncoder.encode(url, urlCharacterEncoding)
-    this.navigate(Web.route)
+    this.navigate("${Web.route}/$encodedUrl") {
+        launchSingleTop = true
+    }
 }
 
 fun NavGraphBuilder.webViewScreen(

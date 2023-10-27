@@ -14,15 +14,13 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
+private const val MAIN_NOTIFICATION_CHANNEL_NAME = "Verbose WorkManager Notifications"
+private const val MAIN_NOTIFICATION_CHANNEL_DESCRIPTION = "Shows notification whenever work starts"
+private const val NOTIFICATION_TITLE = "WorkRequest Starting"
+private const val SECOND_NOTIFICATION_CHANNEL_NAME = "Secondary WorkManager Notifications"
+private const val MAIN_CHANNEL_ID = "VERBOSE_NOTIFICATION"
+private const val SECOND_CHANNEL_ID = "SECONDARY_NOTIFICATION"
 
-val MAIN_NOTIFICATION_CHANNEL_NAME: CharSequence = "Verbose WorkManager Notifications"
-const val MAIN_NOTIFICATION_CHANNEL_DESCRIPTION = "Shows notification whenever work starts"
-val NOTIFICATION_TITLE: CharSequence = "WorkRequest Starting"
-
-val SECOND_NOTIFICATION_CHANNEL_NAME: CharSequence = "Secondary WorkManager Notifications"
-
-const val MAIN_CHANNEL_ID = "VERBOSE_NOTIFICATION"
-const val SECOND_CHANNEL_ID = "SECONDARY_NOTIFICATION"
 @Module
 @InstallIn(SingletonComponent::class)
 object NotificationModule {
@@ -30,7 +28,7 @@ object NotificationModule {
     @Provides
     @MainNotificationCompatBuilder
     fun provideNotificationBuilder(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): NotificationCompat.Builder {
         /*val intent = Intent(context, MyReceiver::class.java).apply {
             putExtra("MESSAGE", "Clicked!")
@@ -51,7 +49,7 @@ object NotificationModule {
                 NotificationCompat.Builder(context, MAIN_CHANNEL_ID)
                     .setContentTitle(NOTIFICATION_TITLE)
                     .setContentText(MAIN_NOTIFICATION_CHANNEL_DESCRIPTION)
-                    .build()
+                    .build(),
             )
         // addAction(0, "ACTION", pendingIntent)
         // setContentIntent(clickPendingIntent)
@@ -61,7 +59,7 @@ object NotificationModule {
     @Provides
     @SecondNotificationCompatBuilder
     fun provideNotificationCompatBuilder(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, SECOND_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -72,18 +70,18 @@ object NotificationModule {
     @Singleton
     @Provides
     fun provideNotificationManager(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): NotificationManagerCompat {
         val notificationManager = NotificationManagerCompat.from(context)
         val channel1 = NotificationChannel(
             MAIN_CHANNEL_ID,
             MAIN_NOTIFICATION_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_DEFAULT,
         )
         val channel2 = NotificationChannel(
             SECOND_CHANNEL_ID,
             SECOND_NOTIFICATION_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_DEFAULT,
         )
         notificationManager.createNotificationChannel(channel1)
         notificationManager.createNotificationChannel(channel2)

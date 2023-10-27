@@ -5,7 +5,7 @@ import com.github.andiim.plantscan.core.firestore.model.PlantDocument
 import com.github.andiim.plantscan.core.firestore.model.SuggestionDocument
 
 /**
- * Interface representing API calls to the App Firestore backend
+ * Interface representing API calls to the App Firestore backend.
  */
 interface FirebaseDataSource {
     suspend fun getPlants(

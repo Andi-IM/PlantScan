@@ -33,21 +33,23 @@ class DefaultSuggestionRepository @Inject constructor(
         }
     }
 
-    */
+ */
 /**
-     * Cancel any ongoing WorkRequests
-     * *//*
+ * Cancel any ongoing WorkRequests
+ * */
+/*
 
     override fun cancelUpload() {
         workManager.cancelUniqueWork(IMAGE_UPLOAD_WORK_NAME)
     }
 
 
-    */
+ */
 /**
-     * Creates the input data bundle which includes the Uri to operate on
-     * @return Data which contains the Image Uri as a String
-     *//*
+ * Creates the input data bundle which includes the Uri to operate on
+ * @return Data which contains the Image Uri as a String
+ */
+/*
 
     private fun uriInputDataBuilder(uri: Uri): Data {
         return Data.Builder().putString(KEY_IMAGE_URI, uri.toString()).build()

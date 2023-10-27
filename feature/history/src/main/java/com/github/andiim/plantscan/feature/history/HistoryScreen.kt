@@ -8,7 +8,6 @@ fun HistoryScreen(
     modifier: Modifier = Modifier,
 
 ) {
-
 }
 
 @Composable
@@ -16,5 +15,4 @@ internal fun HistoryScreen(
     items: List<String>,
     modifier: Modifier = Modifier
 ) {
-
 }

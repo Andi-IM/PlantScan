@@ -12,7 +12,6 @@ import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Query
-import java.util.Base64
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,7 +20,7 @@ private interface RetrofitNetworkApi {
     suspend fun uploadImage(
         @Query("api_key") apiKey: String,
         @Query("confidence") confidence: Int,
-        @Body base64Image: String
+        @Body base64Image: String,
     ): DetectionResponse
 }
 
@@ -35,7 +34,6 @@ class RetrofitNetwork @Inject constructor(
     companion object {
         private const val BASE_URL: String = BuildConfig.BACKEND_URL
         private const val API_KEY: String = BuildConfig.ROBOFLOW_API
-        private const val DETECT_TRACE_TAG: String = "detecting"
     }
 
     private val networkApi =
@@ -49,16 +47,4 @@ class RetrofitNetwork @Inject constructor(
             confidence = confidence,
             base64Image = image,
         )
-
-}
-
-@Suppress("SwallowedException")
-private fun String.isValidBase64(): Boolean {
-    return try {
-        val decodedBytes = Base64.getDecoder().decode(this)
-        String(decodedBytes)
-        true
-    } catch (e: IllegalArgumentException) {
-        false
-    }
 }

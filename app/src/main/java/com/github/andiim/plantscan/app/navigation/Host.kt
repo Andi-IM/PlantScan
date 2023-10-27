@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.github.andiim.plantscan.app.ui.AppState
 import com.github.andiim.plantscan.core.ui.navigation.Camera
-
+import com.github.andiim.plantscan.feature.camera.cameraScreen
 
 @Composable
 fun Host(state: AppState, modifier: Modifier = Modifier) {
@@ -15,6 +15,6 @@ fun Host(state: AppState, modifier: Modifier = Modifier) {
         navController = navController,
         startDestination = Camera.route
     ) {
-
+        cameraScreen()
     }
 }

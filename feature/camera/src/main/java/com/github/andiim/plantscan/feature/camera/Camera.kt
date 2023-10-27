@@ -25,7 +25,7 @@ fun NavGraphBuilder.cameraScreen() {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CameraFeature() {
+internal fun CameraFeature() {
     val cameraPermissionState: PermissionState = rememberPermissionState(Manifest.permission.CAMERA)
     if (cameraPermissionState.status.isGranted) {
         CameraScreen()

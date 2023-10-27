@@ -4,25 +4,21 @@ import com.github.andiim.plantscan.core.firestore.FirebaseDataSource
 import com.github.andiim.plantscan.core.firestore.model.HistoryDocument
 import com.github.andiim.plantscan.core.firestore.model.PlantDocument
 import com.github.andiim.plantscan.core.firestore.model.SuggestionDocument
-import com.github.andiim.plantscan.core.network.AppDispatchers.IO
-import com.github.andiim.plantscan.core.network.Dispatcher
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class FirebaseNetwork @Inject constructor(
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
-    private val db: FirebaseFirestore
+    private val db: FirebaseFirestore,
 ) : FirebaseDataSource {
     override suspend fun getPlants(limit: Long, query: String): List<PlantDocument> =
         querySnapshotHandling(
             db.collection(PLANT_COLLECTION).whereGreaterThanOrEqualTo(NAME_FIELD, query)
-                .limit(limit)
+                .limit(limit),
         )
 
     override suspend fun getPlantById(id: String): PlantDocument =
@@ -31,10 +27,8 @@ class FirebaseNetwork @Inject constructor(
     override suspend fun recordDetection(detection: HistoryDocument): String =
         db.collection(DETECT_COLLECTION).add(detection).await().id
 
-
     override suspend fun getDetectionsList(id: String): List<HistoryDocument> =
         querySnapshotHandling(db.collection(DETECT_COLLECTION).whereEqualTo(USER_ID_FIELD, id))
-
 
     override suspend fun sendSuggestion(suggestionDocument: SuggestionDocument): String =
         db.collection(SUGGESTION_COLLECTION).add(suggestionDocument).await().id
@@ -51,12 +45,9 @@ class FirebaseNetwork @Inject constructor(
 
     companion object {
         private const val PLANT_COLLECTION = "plants"
-        private const val SAVE_DETECT_TRACE = "saveDetect"
         private const val SUGGESTION_COLLECTION = "suggestions"
-        private const val SAVE_SUGGESTION_TRACE = "saveSuggestion"
         private const val DETECT_COLLECTION = "detections"
         private const val USER_ID_FIELD = "userId"
         private const val NAME_FIELD = "name"
-        private const val SPECIES_FIELD = "species"
     }
 }

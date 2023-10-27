@@ -63,4 +63,3 @@ fun BackgroundDynamic() {
         PlantScanBackground(Modifier.size(100.dp), content = {})
     }
 }
-

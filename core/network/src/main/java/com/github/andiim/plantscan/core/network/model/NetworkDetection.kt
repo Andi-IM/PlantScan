@@ -8,6 +8,7 @@ data class DetectionResponse(
     val image: ImgzResponse,
     val predictions: List<PredictionResponse>
 )
+
 @Serializable
 data class PredictionResponse(
     val confidence: Float,

@@ -18,7 +18,7 @@ import androidx.core.view.WindowCompat
 import org.jetbrains.annotations.VisibleForTesting
 
 /**
- * Light default theme color scheme
+ * Light default theme color scheme.
  */
 @VisibleForTesting
 val lightColorScheme = lightColorScheme(
@@ -54,7 +54,7 @@ val lightColorScheme = lightColorScheme(
 )
 
 /**
- * Dark default theme color scheme
+ * Dark default theme color scheme.
  */
 @VisibleForTesting
 val darkColorScheme = darkColorScheme(

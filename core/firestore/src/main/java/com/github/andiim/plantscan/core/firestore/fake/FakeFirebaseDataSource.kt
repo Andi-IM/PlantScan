@@ -1,7 +1,7 @@
 package com.github.andiim.plantscan.core.firestore.fake
 
+import FirestoreJvmUnitTestFakeAssetManager
 import com.github.andiim.plantscan.core.firestore.FirebaseDataSource
-import com.github.andiim.plantscan.core.firestore.JvmUnitTestFakeAssetManager
 import com.github.andiim.plantscan.core.firestore.model.HistoryDocument
 import com.github.andiim.plantscan.core.firestore.model.PlantDocument
 import com.github.andiim.plantscan.core.firestore.model.SuggestionDocument
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class FakeFirebaseDataSource @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val networkJson: Json,
-    private val assets: FakeAssetManager = JvmUnitTestFakeAssetManager
+    private val assets: FakeAssetManager = FirestoreJvmUnitTestFakeAssetManager
 ) : FirebaseDataSource {
     @OptIn(ExperimentalSerializationApi::class)
     override suspend fun getPlants(limit: Long, query: String): List<PlantDocument> =

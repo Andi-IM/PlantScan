@@ -2,10 +2,10 @@ package com.github.andiim.plantscan.app.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.andiim.plantscan.app.ui.MainActivityUiState.Success
 import com.github.andiim.plantscan.app.ui.MainActivityUiState.Loading
+import com.github.andiim.plantscan.app.ui.MainActivityUiState.Success
+import com.github.andiim.plantscan.core.data.repository.UserDataRepository
 import com.github.andiim.plantscan.core.model.data.UserData
-import com.github.andiim.plantscan.core.data.model.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     userDataRepository: UserDataRepository,
-): ViewModel() {
+) : ViewModel() {
     val uiState: StateFlow<MainActivityUiState> = userDataRepository.userData.map {
         Success(it)
     }.stateIn(

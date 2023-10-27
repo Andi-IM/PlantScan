@@ -1,9 +1,8 @@
 package com.github.andiim.plantscan.core.datastore
 
-
 import androidx.datastore.core.DataStore
-import com.github.andiim.plantscan.core.model.data.UserData
 import com.github.andiim.plantscan.core.model.data.DarkThemeConfig
+import com.github.andiim.plantscan.core.model.data.UserData
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 

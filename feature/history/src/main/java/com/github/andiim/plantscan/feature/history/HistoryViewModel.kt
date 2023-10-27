@@ -5,10 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class HistoryViewModel @Inject constructor(
-
-) : ViewModel() {
-}
+class HistoryViewModel @Inject constructor() : ViewModel()
 
 sealed interface HistoryUiState {
     data object Loading : HistoryUiState

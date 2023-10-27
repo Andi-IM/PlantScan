@@ -18,9 +18,9 @@ import com.github.andiim.plantscan.core.network.Dispatcher
 import com.github.andiim.plantscan.core.notifications.di.SecondNotificationCompatBuilder
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
 import com.google.firebase.storage.ktx.component1
 import com.google.firebase.storage.ktx.component2
+import com.google.firebase.storage.ktx.storage
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -29,9 +29,7 @@ import timber.log.Timber
 import java.io.IOException
 import kotlin.math.roundToInt
 
-
 const val ACTION_UPLOAD_STATUS = "upload_status"
-
 
 @HiltWorker
 class FileUploadWorker @AssistedInject constructor(
@@ -54,6 +52,11 @@ class FileUploadWorker @AssistedInject constructor(
         }
     }
 
+    companion object {
+        const val NOTIFICATION_ID = 3
+        const val MAX_PROGRESS = 100
+    }
+
     private fun uploadImageFromUri(fileUri: Uri): Result {
         fileUri.lastPathSegment?.let {
             val photoRef = storageRef.child(it)
@@ -63,15 +66,14 @@ class FileUploadWorker @AssistedInject constructor(
                     val progress = (100.0 * bytesTransferred) / totalByteCount
                     if (checkPermission()) {
                         notificationManager.notify(
-                            3,
+                            NOTIFICATION_ID,
                             notificationBuilder
                                 .setContentTitle("Uploading")
                                 .setContentText("$progress%")
-                                .setProgress(100, progress.roundToInt(), false)
+                                .setProgress(MAX_PROGRESS, progress.roundToInt(), false)
                                 .build()
                         )
                     }
-
                 }
                 .continueWithTask { task ->
                     if (!task.isSuccessful) {
@@ -91,13 +93,14 @@ class FileUploadWorker @AssistedInject constructor(
         return Result.success()
     }
 
-
     private fun checkPermission(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityCompat.checkSelfPermission(
                 applicationContext,
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
-        } else true
+        } else {
+            true
+        }
     }
 }

@@ -38,15 +38,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.andiim.plantscan.feature.camera.rotateBitmap
 import timber.log.Timber
 import java.util.concurrent.Executor
 
 @Composable
 fun CameraScreen(
-    viewModel: CameraViewModel = viewModel()
+    viewModel: CameraViewModel = hiltViewModel(),
 ) {
     val cameraState: CameraState by viewModel.state.collectAsStateWithLifecycle()
     CameraContent(
@@ -57,20 +57,21 @@ fun CameraScreen(
 
 @Composable
 fun CameraContent(
+    modifier: Modifier = Modifier,
     onPhotoCaptured: (Bitmap) -> Unit,
-    lastCapturedPhoto: Bitmap? = null
+    lastCapturedPhoto: Bitmap? = null,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraController = remember { LifecycleCameraController(context) }
-    
+
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
                     capturePhoto(context, cameraController, onPhotoCaptured)
-                }
+                },
             ) {
                 Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera capture icon")
                 Text(text = "TakePhoto")
@@ -84,21 +85,23 @@ fun CameraContent(
                     .padding(paddingValues),
                 factory = { context ->
                     PreviewView(context).apply {
-                        layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                        layoutParams = LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                        )
                         setBackgroundColor(Color.BLACK)
                         scaleType = PreviewView.ScaleType.FILL_START
-
                     }.also { previewView ->
                         previewView.controller = cameraController
                         cameraController.bindToLifecycle(lifecycleOwner)
                     }
-                }
+                },
             )
 
             if (lastCapturedPhoto != null) {
                 LastPhotoPreview(
                     modifier = Modifier.align(alignment = Alignment.BottomStart),
-                    lastCapturedPhoto = lastCapturedPhoto
+                    lastCapturedPhoto = lastCapturedPhoto,
                 )
             }
         }
@@ -111,26 +114,29 @@ fun capturePhoto(
     onPhotoCaptured: (Bitmap) -> Unit,
 ) {
     val mainExecutor: Executor = ContextCompat.getMainExecutor(context)
-    cameraController.takePicture(mainExecutor, object : ImageCapture.OnImageCapturedCallback() {
-        override fun onCaptureSuccess(image: ImageProxy) {
-            val correctedBitmap: Bitmap = image
-                .toBitmap()
-                .rotateBitmap(image.imageInfo.rotationDegrees)
+    cameraController.takePicture(
+        mainExecutor,
+        object : ImageCapture.OnImageCapturedCallback() {
+            override fun onCaptureSuccess(image: ImageProxy) {
+                val correctedBitmap: Bitmap = image
+                    .toBitmap()
+                    .rotateBitmap(image.imageInfo.rotationDegrees)
 
-            onPhotoCaptured(correctedBitmap)
-            image.close()
-        }
+                onPhotoCaptured(correctedBitmap)
+                image.close()
+            }
 
-        override fun onError(exception: ImageCaptureException) {
-            Timber.tag("CameraContent").e(exception, "Error capturing image")
-        }
-    })
+            override fun onError(exception: ImageCaptureException) {
+                Timber.tag("CameraContent").e(exception, "Error capturing image")
+            }
+        },
+    )
 }
 
 @Composable
 fun LastPhotoPreview(
+    lastCapturedPhoto: Bitmap,
     modifier: Modifier = Modifier,
-    lastCapturedPhoto: Bitmap
 ) {
     val capturedPhoto: ImageBitmap =
         remember(lastCapturedPhoto.hashCode()) { lastCapturedPhoto.asImageBitmap() }
@@ -140,12 +146,12 @@ fun LastPhotoPreview(
             .size(128.dp)
             .padding(16.dp),
         elevation = CardDefaults.cardElevation(8.dp),
-        shape = MaterialTheme.shapes.large
+        shape = MaterialTheme.shapes.large,
     ) {
         Image(
             bitmap = capturedPhoto,
             contentDescription = "Last captured photo",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
     }
 }
