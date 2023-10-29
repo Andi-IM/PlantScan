@@ -57,8 +57,8 @@ fun CameraScreen(
 
 @Composable
 fun CameraContent(
-    modifier: Modifier = Modifier,
     onPhotoCaptured: (Bitmap) -> Unit,
+    modifier: Modifier = Modifier,
     lastCapturedPhoto: Bitmap? = null,
 ) {
     val context = LocalContext.current

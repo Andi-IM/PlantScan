@@ -1,6 +1,6 @@
 package com.github.andiim.plantscan.feature.history
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**

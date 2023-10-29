@@ -47,6 +47,7 @@ plugins {
     alias(libs.plugins.versions)
     alias(libs.plugins.com.android.test) apply false
     id("project-report")
+    alias(libs.plugins.com.android.application) apply false
     base
 }
 

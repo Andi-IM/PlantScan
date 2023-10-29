@@ -1,6 +1,6 @@
 package com.github.andiim.plantscan.feature.findplant
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**

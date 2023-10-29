@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.github.andiim.plantscan.app.ui.AppState
-import com.github.andiim.plantscan.core.ui.navigation.Camera
 import com.github.andiim.plantscan.feature.camera.cameraScreen
+import com.github.andiim.plantscan.feature.findplant.navigation.FindPlant
+import com.github.andiim.plantscan.feature.findplant.navigation.findPlantScreen
+import com.github.andiim.plantscan.feature.web.webViewScreen
 
 @Composable
 fun Host(state: AppState, modifier: Modifier = Modifier) {
@@ -13,8 +15,10 @@ fun Host(state: AppState, modifier: Modifier = Modifier) {
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Camera.route
+        startDestination = FindPlant.route
     ) {
+        findPlantScreen(onItemClick = {}, onCameraClick = {}, onPlantClick = {})
         cameraScreen()
+        webViewScreen(onBackClick = {})
     }
 }

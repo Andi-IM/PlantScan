@@ -21,9 +21,7 @@ android {
         versionCode = AppCoordinates.APP_VERSION_CODE
         versionName = AppCoordinates.APP_VERSION_NAME
 
-        targetSdk = libs.versions.target.sdk.version.get().toInt()
-
-        testInstrumentationRunner = "com.github.andiim.plantscan.app.PlantScanTestRunner"
+        testInstrumentationRunner = "com.github.andiim.plantscan.core.testing.PlantScanTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -78,6 +76,7 @@ android {
 
 dependencies {
     implementation(project(":feature:camera"))
+    implementation(project(":feature:findplant"))
     implementation(project(":feature:web"))
 
     implementation(project(":core:common"))

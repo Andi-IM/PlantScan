@@ -1,7 +1,7 @@
 package com.github.andiim.plantscan.core.network.retrofit
 
-import com.github.andiim.plantscan.core.network.AppNetworkDataSource
 import com.github.andiim.plantscan.core.network.BuildConfig
+import com.github.andiim.plantscan.core.network.PsNetworkDataSource
 import com.github.andiim.plantscan.core.network.model.DetectionResponse
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -29,7 +29,7 @@ class RetrofitNetwork @Inject constructor(
     networkJson: Json,
     okHttpCallFactory: Call.Factory,
     client: OkHttpClient,
-) : AppNetworkDataSource {
+) : PsNetworkDataSource {
 
     companion object {
         private const val BASE_URL: String = BuildConfig.BACKEND_URL

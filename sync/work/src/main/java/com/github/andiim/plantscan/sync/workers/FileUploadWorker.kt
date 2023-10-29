@@ -41,6 +41,7 @@ class FileUploadWorker @AssistedInject constructor(
     private val notificationManager: NotificationManagerCompat
 ) : CoroutineWorker(appContext, workerParams) {
     private val storageRef: StorageReference = Firebase.storage.getReference("testing")
+
     override suspend fun doWork(): Result = withContext(ioDispatcher) {
         val uri = inputData.getString("fileUri")!!.toUri()
         return@withContext try {

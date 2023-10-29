@@ -150,6 +150,7 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
 firebase-perf = { group = "com.google.firebase", name = "firebase-perf-ktx" }
 firebase-perf-plugin = { group = "com.google.firebase", name = "perf-plugin", version = "1.4.2" }
 firebase-storage = { module = "com.google.firebase:firebase-storage-ktx" }
+google-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 google-oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "googleOss" }
 google-oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "googleOssPlugin" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
@@ -223,5 +224,6 @@ org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.re
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "benmanesversion" }
-ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 com-android-test = { id = "com.android.test", version.ref = "agp" }
+com-android-application = { id = "com.android.application", version.ref = "agp" }

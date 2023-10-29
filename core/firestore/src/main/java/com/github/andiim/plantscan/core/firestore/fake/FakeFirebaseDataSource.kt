@@ -8,6 +8,7 @@ import com.github.andiim.plantscan.core.firestore.model.SuggestionDocument
 import com.github.andiim.plantscan.core.network.AppDispatchers.IO
 import com.github.andiim.plantscan.core.network.Dispatcher
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -20,13 +21,13 @@ class FakeFirebaseDataSource @Inject constructor(
     private val assets: FakeAssetManager = FirestoreJvmUnitTestFakeAssetManager
 ) : FirebaseDataSource {
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun getPlants(limit: Long, query: String): List<PlantDocument> =
+    override suspend fun getPlants(): Flow<List<PlantDocument>> =
         withContext(ioDispatcher) {
             assets.open(PLANTS_ASSET).use(networkJson::decodeFromStream)
         }
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun getPlantById(id: String): PlantDocument =
+    override suspend fun getPlantById(id: String): Flow<PlantDocument> =
         withContext(ioDispatcher) {
             assets.open(PLANT_ASSET).use(networkJson::decodeFromStream)
         }
@@ -34,7 +35,7 @@ class FakeFirebaseDataSource @Inject constructor(
     override suspend fun recordDetection(detection: HistoryDocument): String = ""
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun getDetectionsList(id: String): List<HistoryDocument> =
+    override suspend fun getDetectionHistories(id: String): List<HistoryDocument> =
         withContext(ioDispatcher) {
             assets.open(HISTORY_ASSET).use(networkJson::decodeFromStream)
         }

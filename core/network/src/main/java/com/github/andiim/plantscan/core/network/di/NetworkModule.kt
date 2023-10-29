@@ -8,7 +8,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.json.Json
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -20,14 +19,8 @@ import javax.inject.Singleton
 object NetworkModule {
     @Provides
     @Singleton
-    fun providesNetworkJson(): Json = Json {
-        ignoreUnknownKeys = true
-    }
-
-    @Provides
-    @Singleton
     fun providesFakeAssetManager(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): FakeAssetManager = FakeAssetManager(context.assets::open)
 
     @Provides

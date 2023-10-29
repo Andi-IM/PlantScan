@@ -23,13 +23,14 @@ import com.google.accompanist.web.rememberWebViewState
 @Composable
 fun WebRoute(
     popUpScreen: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: WebViewModel = hiltViewModel()
 ) {
     val state = rememberWebViewState(url = "https://${viewModel.webUrl}")
     Scaffold(
         topBar = {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {

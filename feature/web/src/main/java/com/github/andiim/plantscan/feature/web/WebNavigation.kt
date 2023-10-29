@@ -1,10 +1,13 @@
 package com.github.andiim.plantscan.feature.web
 
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import com.github.andiim.plantscan.core.ui.navigation.Web
+import androidx.navigation.navArgument
+import com.github.andiim.plantscan.core.ui.navigation.AppDestination
 import java.net.URLDecoder
 import java.net.URLEncoder
 
@@ -14,8 +17,8 @@ internal class WebArgs(val url: String) {
     constructor(savedStateHandle: SavedStateHandle) : this(
         URLDecoder.decode(
             checkNotNull(savedStateHandle[Web.webArg]),
-            urlCharacterEncoding
-        )
+            urlCharacterEncoding,
+        ),
     )
 }
 
@@ -26,12 +29,22 @@ fun NavController.navigateToWeb(url: String) {
     }
 }
 
+object Web : AppDestination {
+    override val icon: ImageVector? = null
+    override val route: String = "web"
+    const val webArg = "url"
+    val routeWithArgs = "$route/$webArg"
+    val arguments = listOf(
+        navArgument(webArg) { type = NavType.StringType },
+    )
+}
+
 fun NavGraphBuilder.webViewScreen(
     onBackClick: () -> Unit,
 ) {
     composable(
         route = Web.route,
-        arguments = Web.arguments
+        arguments = Web.arguments,
     ) {
         WebRoute(popUpScreen = onBackClick)
     }

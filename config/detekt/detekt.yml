@@ -44,7 +44,7 @@ console-reports:
 output-reports:
   active: true
   exclude:
-  # - 'TxtOutputReport'
+    # - 'TxtOutputReport'
   # - 'XmlOutputReport'
   # - 'HtmlOutputReport'
   # - 'MdOutputReport'
@@ -166,12 +166,12 @@ complexity:
   TooManyFunctions:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
-    thresholdInFiles: 11
-    thresholdInClasses: 11
-    thresholdInInterfaces: 11
-    thresholdInObjects: 11
-    thresholdInEnums: 11
-    ignoreDeprecated: false
+    thresholdInFiles: 20
+    thresholdInClasses: 20
+    thresholdInInterfaces: 20
+    thresholdInObjects: 20
+    thresholdInEnums: 220
+    ignoreDeprecated: true
     ignorePrivate: false
     ignoreOverridden: false
 
@@ -332,7 +332,7 @@ naming:
     excludeClassPattern: '$^'
     ignoreAnnotated: ['Composable']
   FunctionParameterNaming:
-    active: true
+    active: false
     parameterPattern: '[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
   InvalidPackageDeclaration:

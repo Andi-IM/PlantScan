@@ -16,12 +16,6 @@
     <string name="plants_label">Plants</string>
     <string name="plants_exit">Back</string>
 
-    <!--  FindPlant Screen  -->
-    <string name="search_placeholder">Search Plant</string>
-    <string name="search_icon_description">Search Icon</string>
-    <string name="search_icon_close_description">Close search bar</string>
-    <string name="search_using_camera_icon_description">Search using camera detection</string>
-    <string name="search_find_by_type_button">Find by plant type</string>
 
     <!-- Local Stack -->
     <string name="label_garden_screen">My Garden</string>
