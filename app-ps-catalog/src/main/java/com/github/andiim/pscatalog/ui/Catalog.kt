@@ -21,13 +21,13 @@ import com.github.andiim.plantscan.core.designsystem.component.PsButton
 import com.github.andiim.plantscan.core.designsystem.component.PsOutlinedButton
 import com.github.andiim.plantscan.core.designsystem.component.PsTextButton
 import com.github.andiim.plantscan.core.designsystem.icon.PsIcons
-import com.github.andiim.plantscan.core.designsystem.theme.PlantScanTheme
+import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Suppress("LongMethod")
 @Composable
 fun PsCatalog(modifier: Modifier = Modifier) {
-    PlantScanTheme {
+    PsTheme {
         Surface(modifier = modifier.fillMaxSize()) {
             val contentPadding = WindowInsets
                 .systemBars

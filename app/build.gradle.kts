@@ -9,9 +9,8 @@ plugins {
     alias(libs.plugins.android.hilt)
     alias(libs.plugins.android.application.firebase)
     alias(libs.plugins.protobuf)
-    id("org.jetbrains.kotlin.kapt")
+    kotlin("kapt")
     id("jacoco")
-    id("kotlinx-serialization")
     id("com.google.android.gms.oss-licenses-plugin")
 }
 
@@ -21,7 +20,7 @@ android {
         versionCode = AppCoordinates.APP_VERSION_CODE
         versionName = AppCoordinates.APP_VERSION_NAME
 
-        testInstrumentationRunner = "com.github.andiim.plantscan.core.testing.PlantScanTestRunner"
+        testInstrumentationRunner = "com.github.andiim.plantscan.core.testing.PsAppTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -36,7 +35,7 @@ android {
             applicationIdSuffix = PsBuildType.RELEASE.applicationIdSuffix
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("debug")
 
@@ -75,8 +74,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature:camera"))
     implementation(project(":feature:findplant"))
+    implementation(project(":feature:history"))
+    implementation(project(":feature:settings"))
+
+    implementation(project(":feature:camera"))
     implementation(project(":feature:web"))
 
     implementation(project(":core:common"))
@@ -96,6 +98,7 @@ dependencies {
     androidTestImplementation(libs.navigation.testing)
     androidTestImplementation(libs.accompanist.testharness)
     androidTestImplementation(kotlin("test"))
+
     debugImplementation(libs.compose.ui.test.manifest)
     debugImplementation(project(":ui-test-hilt-manifest"))
 

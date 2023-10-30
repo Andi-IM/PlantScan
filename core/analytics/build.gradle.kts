@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.github.andiim.core.analytics"
+    namespace = "com.github.andiim.plantscan.core.analytics"
 }
 
 dependencies {

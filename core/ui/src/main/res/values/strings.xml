@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="car_tap_action">Open Resource Link</string>
+    <string name="back">Back</string>
+</resources>

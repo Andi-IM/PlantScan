@@ -1,7 +1,7 @@
 package com.github.andiim.plantscan.core.testing.util
 
-import com.github.andiim.core.analytics.AnalyticsEvent
-import com.github.andiim.core.analytics.AnalyticsHelper
+import com.github.andiim.plantscan.core.analytics.AnalyticsEvent
+import com.github.andiim.plantscan.core.analytics.AnalyticsHelper
 
 class TestAnalyticsHelper : AnalyticsHelper {
     private val events = mutableListOf<AnalyticsEvent>()

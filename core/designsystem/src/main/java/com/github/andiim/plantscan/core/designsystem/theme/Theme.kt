@@ -97,7 +97,7 @@ val darkColorScheme = darkColorScheme(
  *        supported.
  */
 @Composable
-fun PlantScanTheme(
+fun PsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     disableDynamicTheming: Boolean = true,
     content: @Composable () -> Unit

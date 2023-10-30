@@ -3,9 +3,9 @@ package com.github.andiim.plantscan.feature.findplant
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.andiim.core.analytics.AnalyticsEvent
-import com.github.andiim.core.analytics.AnalyticsEvent.Param
-import com.github.andiim.core.analytics.AnalyticsHelper
+import com.github.andiim.plantscan.core.analytics.AnalyticsEvent
+import com.github.andiim.plantscan.core.analytics.AnalyticsEvent.Param
+import com.github.andiim.plantscan.core.analytics.AnalyticsHelper
 import com.github.andiim.plantscan.core.data.repository.RecentSearchRepository
 import com.github.andiim.plantscan.core.domain.GetRecentSearchQueriesUseCase
 import com.github.andiim.plantscan.core.domain.GetSearchContentsCountUseCase

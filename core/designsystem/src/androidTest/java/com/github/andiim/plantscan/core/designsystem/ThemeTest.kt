@@ -3,15 +3,14 @@ package com.github.andiim.plantscan.core.designsystem
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.junit4.createComposeRule
-import com.github.andiim.plantscan.core.designsystem.theme.PlantScanTheme
+import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
 import com.github.andiim.plantscan.core.designsystem.theme.lightColorScheme
-import com.github.andiim.plantscan.core.designsystem.theme.darkColorScheme
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
 
 /**
- * Tests [PlantScanTheme] using different combinations of the theme mode parameters:
+ * Tests [PsTheme] using different combinations of the theme mode parameters:
  * darkTheme, disableDynamicTheming
  *
  * It verifies that the various composition locals - [MaterialTheme], [LocalBackgroundTheme]
@@ -23,7 +22,7 @@ class ThemeTest {
     @Test
     fun darkThemeFalse_dynamicColorFalse(){
         composeTestRule.setContent {
-            PlantScanTheme(
+            PsTheme(
                 darkTheme = false,
                 disableDynamicTheming = true
             ) {

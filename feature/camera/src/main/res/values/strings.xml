@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_permission_error_text">Please grant the permission to use the camera to use the core functionality of this app.</string>
+    <string name="request_permission_text">Grant permission</string>
+    <string name="back_from_camera">Back</string>
+</resources>

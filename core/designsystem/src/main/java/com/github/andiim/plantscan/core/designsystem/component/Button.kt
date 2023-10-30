@@ -138,7 +138,7 @@ fun PsOutlinedButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     text: @Composable () -> Unit,
-    leadingIcon: @Composable (() -> Unit)? = null
+    leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     OutlinedButton(
         onClick = onClick,
@@ -161,11 +161,11 @@ fun PsOutlinedButton(
             ButtonDefaults.ButtonWithIconContentPadding
         } else {
             ButtonDefaults.ContentPadding
-        }
+        },
     ) {
         PsButtonContent(
             text = text,
-            leadingIcon = leadingIcon
+            leadingIcon = leadingIcon,
         )
     }
 }
@@ -213,7 +213,7 @@ fun PsTextButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     text: @Composable () -> Unit,
-    leadingIcon: @Composable (() -> Unit)? = null
+    leadingIcon: @Composable (() -> Unit)? = null,
 ) {
     TextButton(
         onClick = onClick,

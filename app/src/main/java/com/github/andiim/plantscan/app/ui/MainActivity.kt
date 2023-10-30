@@ -24,12 +24,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.metrics.performance.JankStats
 import androidx.profileinstaller.ProfileVerifier
-import com.github.andiim.core.analytics.AnalyticsHelper
-import com.github.andiim.core.analytics.LocalAnalyticsHelper
+import com.github.andiim.plantscan.core.analytics.AnalyticsHelper
+import com.github.andiim.plantscan.core.analytics.LocalAnalyticsHelper
 import com.github.andiim.plantscan.app.ui.MainActivityUiState.Loading
 import com.github.andiim.plantscan.app.ui.MainActivityUiState.Success
 import com.github.andiim.plantscan.core.data.util.NetworkMonitor
-import com.github.andiim.plantscan.core.designsystem.theme.PlantScanTheme
+import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
 import com.github.andiim.plantscan.core.model.data.DarkThemeConfig
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
             }
 
             CompositionLocalProvider(LocalAnalyticsHelper provides analyticsHelper) {
-                PlantScanTheme(
+                PsTheme(
                     darkTheme = darkTheme,
                     disableDynamicTheming = shouldDisableDynamicTheming(uiState)
                 ) {

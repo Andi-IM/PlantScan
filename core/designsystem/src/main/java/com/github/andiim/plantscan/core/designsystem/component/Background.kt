@@ -12,12 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.github.andiim.plantscan.core.designsystem.theme.LocalBackgroundtheme
-import com.github.andiim.plantscan.core.designsystem.theme.PlantScanTheme
+import com.github.andiim.plantscan.core.designsystem.theme.LocalBackgroundTheme
+import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
 
 /**
  * The main background for the app.
- * Uses [LocalBackgroundtheme] to set the color and tonal elevation of a [Surface].
+ * Uses [LocalBackgroundTheme] to set the color and tonal elevation of a [Surface].
  *
  * @param modifier Modifier to be applied to the background.
  * @param content The background content.
@@ -27,8 +27,8 @@ fun PlantScanBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    val color = LocalBackgroundtheme.current.color
-    val tonalElevation = LocalBackgroundtheme.current.tonalElevation
+    val color = LocalBackgroundTheme.current.color
+    val tonalElevation = LocalBackgroundTheme.current.tonalElevation
     Surface(
         color = if (color == Color.Unspecified) Color.Transparent else color,
         tonalElevation = if (tonalElevation == Dp.Unspecified) 0.dp else tonalElevation,
@@ -51,7 +51,7 @@ annotation class ThemePreviews
 @ThemePreviews
 @Composable
 fun BackgroundDefault() {
-    PlantScanTheme(disableDynamicTheming = true) {
+    PsTheme(disableDynamicTheming = true) {
         PlantScanBackground(Modifier.size(100.dp), content = {})
     }
 }
@@ -59,7 +59,7 @@ fun BackgroundDefault() {
 @ThemePreviews
 @Composable
 fun BackgroundDynamic() {
-    PlantScanTheme(disableDynamicTheming = false) {
+    PsTheme(disableDynamicTheming = false) {
         PlantScanBackground(Modifier.size(100.dp), content = {})
     }
 }

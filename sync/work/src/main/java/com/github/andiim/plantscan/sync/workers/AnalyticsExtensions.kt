@@ -1,7 +1,7 @@
 package com.github.andiim.plantscan.sync.workers
 
-import com.github.andiim.core.analytics.AnalyticsEvent
-import com.github.andiim.core.analytics.AnalyticsHelper
+import com.github.andiim.plantscan.core.analytics.AnalyticsEvent
+import com.github.andiim.plantscan.core.analytics.AnalyticsHelper
 
 fun AnalyticsHelper.logSyncStarted() = logEvent(AnalyticsEvent(type = "upload_data_started"))
 

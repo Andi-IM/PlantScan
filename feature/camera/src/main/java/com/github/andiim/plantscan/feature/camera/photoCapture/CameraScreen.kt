@@ -46,6 +46,7 @@ import java.util.concurrent.Executor
 
 @Composable
 fun CameraScreen(
+    onBackClick: () -> Unit,
     viewModel: CameraViewModel = hiltViewModel(),
 ) {
     val cameraState: CameraState by viewModel.state.collectAsStateWithLifecycle()

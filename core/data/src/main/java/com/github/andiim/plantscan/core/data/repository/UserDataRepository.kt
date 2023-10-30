@@ -1,6 +1,6 @@
 package com.github.andiim.plantscan.core.data.repository
 
-import com.github.andiim.core.analytics.AnalyticsHelper
+import com.github.andiim.plantscan.core.analytics.AnalyticsHelper
 import com.github.andiim.plantscan.core.datastore.AppPreferencesDataSource
 import com.github.andiim.plantscan.core.model.data.UserData
 import kotlinx.coroutines.flow.Flow

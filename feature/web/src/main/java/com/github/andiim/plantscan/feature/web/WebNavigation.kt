@@ -1,6 +1,5 @@
 package com.github.andiim.plantscan.feature.web
 
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -30,7 +29,6 @@ fun NavController.navigateToWeb(url: String) {
 }
 
 object Web : AppDestination {
-    override val icon: ImageVector? = null
     override val route: String = "web"
     const val webArg = "url"
     val routeWithArgs = "$route/$webArg"
@@ -43,7 +41,7 @@ fun NavGraphBuilder.webViewScreen(
     onBackClick: () -> Unit,
 ) {
     composable(
-        route = Web.route,
+        route = Web.routeWithArgs,
         arguments = Web.arguments,
     ) {
         WebRoute(popUpScreen = onBackClick)

@@ -25,9 +25,9 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 interface DataModule {
     @Binds
-    fun bindsUserDataRepository(
-        userDataRepository: DefaultUserDataRepository,
-    ): UserDataRepository
+    fun bindsCameraRepository(
+        cameraRepository: DefaultCameraRepository,
+    ): CameraRepository
 
     @Binds
     fun bindDetectHistoryRepository(
@@ -55,9 +55,9 @@ interface DataModule {
     ): SearchContentsRepository
 
     @Binds
-    fun bindsCameraRepository(
-        cameraRepository: DefaultCameraRepository,
-    ): CameraRepository
+    fun bindsUserDataRepository(
+        userDataRepository: DefaultUserDataRepository,
+    ): UserDataRepository
 
     @Binds
     fun bindsNetworkModule(

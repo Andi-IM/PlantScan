@@ -27,8 +27,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +43,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -48,11 +55,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.andiim.plantscan.core.designsystem.component.PsButton
+import com.github.andiim.plantscan.core.designsystem.component.RoundIconButton
 import com.github.andiim.plantscan.core.designsystem.component.scrollbar.DraggableScrollbar
 import com.github.andiim.plantscan.core.designsystem.component.scrollbar.rememberDraggableScroller
 import com.github.andiim.plantscan.core.designsystem.component.scrollbar.scrollbarState
 import com.github.andiim.plantscan.core.designsystem.icon.PsIcons
+import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
 import com.github.andiim.plantscan.core.model.data.Plant
+import com.github.andiim.plantscan.core.ui.DevicePreviews
+import com.github.andiim.plantscan.core.ui.PlantCard
 import com.github.andiim.plantscan.core.ui.TrackScreenViewEvent
 import com.github.andiim.plantscan.feature.findplant.R.string as AppText
 
@@ -81,6 +92,7 @@ internal fun FindPlantRoute(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FindPlantScreen(
     modifier: Modifier = Modifier,
@@ -98,32 +110,56 @@ internal fun FindPlantScreen(
 
     TrackScreenViewEvent(screenName = "FindPlant")
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize()
+            .semantics { isTraversalGroup = true },
     ) {
-        PsButton(onClick = onCameraClick) {
-            Text(text = "To Camera")
-        }
-
-        PsButton(onClick = onPlantsClick) {
-            Text(text = "To list")
-        }
-
         SearchContent(
             query = searchQuery,
             onQueryChange = onQueryChanged,
             onSearch = onSearchTriggered,
             active = active,
-            onActiveChange = { active = !active },
+            onActiveChange = { status -> active = status },
             onItemClick = onPlantClick,
             onClearRecentSearches = onClearRecentSearches,
             recentSearchUiState = recentSearchUiState,
             searchResultUiState = searchResultUiState,
-            modifier = modifier.align(Alignment.TopCenter)
+            modifier = Modifier
+                .align(Alignment.TopCenter),
         )
+
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            TooltipBox(
+                positionProvider = TooltipDefaults.rememberRichTooltipPositionProvider(),
+                tooltip = {
+                    PlainTooltip {
+                        Text(stringResource(R.string.camera_button_tooltip))
+                    }
+                },
+                state = rememberTooltipState(),
+            ) {
+                RoundIconButton(
+                    imageVector = PsIcons.Camera,
+                    contentDescription = stringResource(R.string.camera_button_tooltip),
+                    onClick = onCameraClick,
+                )
+            }
+        }
+
+        PsButton(
+            onClick = onPlantsClick,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(0.8f)
+                .padding(horizontal = 16.dp),
+        ) {
+            Text(text = "To list")
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Suppress("detekt:LongMethod")
 @Composable
 private fun SearchContent(
     query: String,
@@ -148,7 +184,12 @@ private fun SearchContent(
         },
         trailingIcon = {
             if (active) {
-                IconButton(onClick = { onActiveChange(false) }) {
+                IconButton(
+                    onClick = {
+                        onActiveChange(false)
+                        onQueryChange("")
+                    },
+                ) {
                     Icon(
                         PsIcons.Close,
                         contentDescription = stringResource(AppText.search_icon_close_description),
@@ -162,6 +203,7 @@ private fun SearchContent(
             SearchResultUiState.Loading,
             SearchResultUiState.LoadFailed,
             -> Unit
+
             SearchResultUiState.SearchNotReady -> SearchNotReadyBody()
             SearchResultUiState.EmptyQuery -> {
                 if (recentSearchUiState is RecentSearchQueriesUiState.Success) {
@@ -175,6 +217,7 @@ private fun SearchContent(
                     )
                 }
             }
+
             is SearchResultUiState.Success -> {
                 if (searchResultUiState.isEmpty()) {
                     EmptySearchResultBody(searchQuery = query)
@@ -192,7 +235,6 @@ private fun SearchContent(
                     SearchResultBody(
                         onPlantClick = onItemClick,
                         plants = searchResultUiState.plants,
-                        searchQuery = query,
                     )
                 }
             }
@@ -231,7 +273,7 @@ fun RecentSearchesBody(
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("")
+                        append(stringResource(R.string.recent_searches))
                     }
                 },
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -292,7 +334,6 @@ fun EmptySearchResultBody(
 private fun SearchResultBody(
     plants: List<Plant>,
     onPlantClick: (String) -> Unit,
-    searchQuery: String = "",
 ) {
     val state = rememberLazyGridState()
     Box(
@@ -319,11 +360,19 @@ private fun SearchResultBody(
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                 append("Plants")
                             }
-                        }
+                        },
                     )
                 }
                 plants.forEach { plant ->
                     val plantId = plant.name
+                    item(
+                        key = "plant-$plantId",
+                        span = {
+                            GridItemSpan(maxLineSpan)
+                        },
+                    ) {
+                        PlantCard(plant = plant, onClick = { onPlantClick(plantId) })
+                    }
                 }
             }
         }
@@ -341,5 +390,21 @@ private fun SearchResultBody(
             orientation = Orientation.Vertical,
             onThumbMoved = state.rememberDraggableScroller(itemsAvailable = itemsAvailable),
         )
+    }
+}
+
+@DevicePreviews
+@Composable
+fun Preview_CameraContent() {
+    PsTheme {
+        Surface {
+            FindPlantScreen(
+                onSearchTriggered = {},
+                onQueryChanged = {},
+                onPlantClick = {},
+                onCameraClick = { /*TODO*/ },
+                onPlantsClick = { /*TODO*/ },
+            )
+        }
     }
 }

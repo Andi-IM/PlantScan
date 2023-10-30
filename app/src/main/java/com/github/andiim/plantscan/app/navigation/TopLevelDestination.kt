@@ -2,6 +2,9 @@ package com.github.andiim.plantscan.app.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.github.andiim.plantscan.core.designsystem.icon.PsIcons
+import com.github.andiim.plantscan.feature.findplant.R as findPlantR
+import com.github.andiim.plantscan.feature.history.R as historyR
+import com.github.andiim.plantscan.feature.settings.R as settingsR
 
 /**
  * Type for the top level destinations in the application. Each of these destinations
@@ -14,22 +17,22 @@ enum class TopLevelDestination(
     val iconTextId: Int,
     val titleTextId: Int,
 ) {
-    HOME(
-        selectedIcon = PsIcons.Settings,
-        unselectedIcon = PsIcons.SettingsBorder,
-        iconTextId = 1,
-        titleTextId = 1
+    FIND_PLANT(
+        selectedIcon = PsIcons.Home,
+        unselectedIcon = PsIcons.HomeBorder,
+        iconTextId = findPlantR.string.find_plant,
+        titleTextId = findPlantR.string.find_plant,
+    ),
+    HISTORY(
+        selectedIcon = PsIcons.Garden,
+        unselectedIcon = PsIcons.GardenBorder,
+        iconTextId = historyR.string.detection_history,
+        titleTextId = historyR.string.detection_history,
     ),
     SETTINGS(
         selectedIcon = PsIcons.Settings,
         unselectedIcon = PsIcons.SettingsBorder,
-        iconTextId = 1,
-        titleTextId = 1
+        iconTextId = settingsR.string.settings,
+        titleTextId = settingsR.string.settings,
     ),
-    HISTORY(
-        selectedIcon = PsIcons.Settings,
-        unselectedIcon = PsIcons.SettingsBorder,
-        iconTextId = 1,
-        titleTextId = 1
-    )
 }

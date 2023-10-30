@@ -18,4 +18,4 @@ data class BackgroundTheme(
 /**
  * A composition local for [BackgroundTheme].
  */
-val LocalBackgroundtheme: ProvidableCompositionLocal<BackgroundTheme> = staticCompositionLocalOf { BackgroundTheme() }
+val LocalBackgroundTheme: ProvidableCompositionLocal<BackgroundTheme> = staticCompositionLocalOf { BackgroundTheme() }
