@@ -39,12 +39,8 @@ enum class PsAnimatedVisibilityData(
     val exit: ExitTransition = shrinkOut() + fadeOut(),
 ) {
     BottomBar(
-        enter = slideInVertically(
-            initialOffsetY = { fullHeight -> 2 * fullHeight },
-        ),
-        exit = slideOutVertically(
-            targetOffsetY = { fullHeight -> 2 * fullHeight },
-        ),
+        enter = slideInVertically(initialOffsetY = { it }),
+        exit = slideOutVertically(targetOffsetY = { it }),
     ),
     Default(),
 }

@@ -3,4 +3,7 @@
     <string name="camera_permission_error_text">Please grant the permission to use the camera to use the core functionality of this app.</string>
     <string name="request_permission_text">Grant permission</string>
     <string name="back_from_camera">Back</string>
+    <string name="flip_camera">Flip Camera</string>
+    <string name="shutter">Shutter</string>
+    <string name="open_gallery">Open Gallery</string>
 </resources>
