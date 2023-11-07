@@ -12,6 +12,8 @@ android {
 }
 
 dependencies {
+    api(libs.kotlinx.coroutines.guava)
+    api(libs.kotlin.coroutines.android)
     implementation(libs.timber)
     implementation(libs.bundles.camera)
     implementation(libs.accompanist.permission)

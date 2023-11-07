@@ -1,6 +1,7 @@
 package com.github.andiim.plantscan.core.model.data
 
 data class ObjectDetection(
+    val time: Float,
     var image: Imgz,
     val predictions: List<Prediction>,
 )

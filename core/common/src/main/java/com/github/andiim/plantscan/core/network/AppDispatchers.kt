@@ -9,4 +9,5 @@ annotation class Dispatcher(val dispatcher: AppDispatchers)
 enum class AppDispatchers {
     Default,
     IO,
+    Main
 }

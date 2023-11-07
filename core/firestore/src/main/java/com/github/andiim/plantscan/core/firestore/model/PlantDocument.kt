@@ -12,7 +12,6 @@ data class PlantDocument(
     val description: String = "",
     @[Exclude ServerTimestamp] var date: Date? = null,
     val species: String = "",
-    @[Exclude ServerTimestamp] var updated: Date? = null,
     val name: String = "",
     val images: List<ImageDocument> = listOf(),
     val thumbnail: String = "",
@@ -21,18 +20,10 @@ data class PlantDocument(
     @set:PropertyName("common_name")
     var commonName: List<CommonName> = listOf()
 
-    data class CommonName(val name: String = "")
+    @[Exclude ServerTimestamp]
+    @get:PropertyName("Updated")
+    @set:PropertyName("Updated")
+    var updated: Date? = null
 
-    constructor(
-        id: String,
-        taxon: TaxonomyDocument,
-        description: String,
-        species: String,
-        name: String,
-        images: List<ImageDocument> = listOf(),
-        thumbnail: String,
-        commonName: List<String> = listOf(),
-    ) : this(id, taxon, description, null, species, null, name, images, thumbnail) {
-        this.commonName = commonName.map { CommonName(it) }
-    }
+    data class CommonName(val name: String = "")
 }

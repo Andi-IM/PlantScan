@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DetectionResponse(
+    val time: Float,
     val image: ImgzResponse,
     val predictions: List<PredictionResponse>
 )

@@ -7,6 +7,8 @@ option java_multiple_files = true;
 
 message UserPreferences {
   reserved 2;
+  bool is_login = 1;
+  string loginData = 3;
   DarkThemeConfigProto dark_theme_config = 17;
   bool should_hide_onboarding = 18;
   bool use_dynamic_color = 19;

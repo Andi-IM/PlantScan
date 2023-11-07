@@ -1,83 +1,57 @@
 package com.github.andiim.plantscan.feature.camera.component
 
 import android.util.TypedValue
-import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.view.isVisible
-import androidx.dynamicanimation.animation.DynamicAnimation
-import androidx.dynamicanimation.animation.SpringAnimation
-import androidx.dynamicanimation.animation.SpringForce
-
-private const val SPRING_STIFFNESS_ALPHA_OUT = 100f
-private const val SPRING_STIFFNESS = 800f
-private const val SPRING_DAMPING_RATIO = 0.35f
-private const val SCALE_X = 1.5f
-private const val SCALE_Y = 1.5f
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import com.github.andiim.plantscan.core.designsystem.component.PsBackground
+import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
+import kotlin.math.min
 
 @Composable
 fun FocusPoint(
-    x: Float,
-    y: Float,
+    scale: Float,
+    alpha: Float,
+    modifier: Modifier = Modifier,
 ) {
-    AndroidView(
-        factory = { context ->
-            View(context).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                )
-            }.also { view ->
-                val drawable = FocusPointDrawable()
-                val strokeWidth =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        3f,
-                        context.resources.displayMetrics,
-                    )
-                drawable.setStrokeWidth(strokeWidth)
+    val context = LocalContext.current
 
-                val alphaAnimation =
-                    SpringAnimation(view, DynamicAnimation.ALPHA, 1f).apply {
-                        spring.stiffness = SPRING_STIFFNESS
-                        spring.dampingRatio = SPRING_DAMPING_RATIO
+    Canvas(modifier = modifier.fillMaxSize()) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        val strokeWidth = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            3f,
+            context.resources.displayMetrics,
+        )
+        val radius = (min(canvasWidth, canvasHeight) / 2) - (strokeWidth / 2)
+        scale(scale = scale, pivot = Offset(0f, 0f)) {
+            drawCircle(
+                color = Color.White,
+                radius = radius,
+                style = Stroke(
+                    width = strokeWidth,
+                ),
+                alpha = alpha,
+                center = Offset(0f, 0f),
+            )
+        }
+    }
+}
 
-                        addEndListener { _, _, _, _ ->
-                            SpringAnimation(view, DynamicAnimation.ALPHA, 0f)
-                                .apply {
-                                    spring.stiffness = SPRING_STIFFNESS_ALPHA_OUT
-                                    spring.dampingRatio = SpringForce.DAMPING_RATIO_NO_BOUNCY
-                                }
-                                .start()
-                        }
-                    }
-                val scaleAnimationX =
-                    SpringAnimation(view, DynamicAnimation.SCALE_X, 1f).apply {
-                        spring.stiffness = SPRING_STIFFNESS
-                        spring.dampingRatio = SPRING_DAMPING_RATIO
-                    }
-                val scaleAnimationY =
-                    SpringAnimation(view, DynamicAnimation.SCALE_Y, 1f).apply {
-                        spring.stiffness = SPRING_STIFFNESS
-                        spring.dampingRatio = SPRING_DAMPING_RATIO
-                    }
-
-                with(view) {
-                    background = drawable
-                    isVisible = true
-                    translationX = x - width / 2f
-                    translationY = y - height / 2f
-                    alpha = 0f
-                    scaleX = SCALE_X
-                    scaleY = SCALE_Y
-                }
-
-                alphaAnimation.start()
-                scaleAnimationX.start()
-                scaleAnimationY.start()
-            }
-        },
-    )
+@Preview
+@Composable
+fun FocusPoint_Preview() {
+    PsTheme(darkTheme = true) {
+        PsBackground {
+            FocusPoint(scale = 1f, alpha = 1f)
+        }
+    }
 }

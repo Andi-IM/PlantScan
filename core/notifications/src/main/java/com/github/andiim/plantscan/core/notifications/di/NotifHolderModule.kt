@@ -42,7 +42,7 @@ object NotificationModule {
         return NotificationCompat.Builder(context, MAIN_CHANNEL_ID)
             .setContentTitle(NOTIFICATION_TITLE)
             .setContentText(MAIN_NOTIFICATION_CHANNEL_DESCRIPTION)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.icon_base)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
             .setPublicVersion(
@@ -62,7 +62,7 @@ object NotificationModule {
         @ApplicationContext context: Context,
     ): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, SECOND_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.icon_base)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
     }

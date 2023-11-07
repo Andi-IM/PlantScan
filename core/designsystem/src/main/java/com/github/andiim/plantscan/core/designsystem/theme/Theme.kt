@@ -10,10 +10,12 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import org.jetbrains.annotations.VisibleForTesting
 
@@ -100,7 +102,7 @@ val darkColorScheme = darkColorScheme(
 fun PsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     disableDynamicTheming: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     // Color scheme
     val colorScheme = when {
@@ -108,6 +110,7 @@ fun PsTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
+
         else -> if (darkTheme) darkColorScheme else lightColorScheme
     }
     val view = LocalView.current
@@ -119,7 +122,22 @@ fun PsTheme(
         }
     }
 
-    MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
+    val backgroundTheme = BackgroundTheme(
+        color = colorScheme.surface,
+        tonalElevation = 2.dp,
+    )
+
+    val tintTheme = when {
+        !disableDynamicTheming && supportsDynamicTheming() -> TintTheme(colorScheme.primary)
+        else -> TintTheme()
+    }
+
+    CompositionLocalProvider(
+        LocalBackgroundTheme provides backgroundTheme,
+        LocalTintTheme provides tintTheme,
+    ) {
+        MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
+    }
 }
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.S)

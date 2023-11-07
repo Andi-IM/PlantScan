@@ -12,6 +12,8 @@ class AppPreferencesDataSource @Inject constructor(
     val userData = userPreferences.data
         .map {
             UserData(
+                isLogin = it.isLogin,
+                userId = it.loginData,
                 darkThemeConfig = when (it.darkThemeConfig) {
                     null,
                     DarkThemeConfigProto.DARK_THEME_CONFIG_UNSPECIFIED,
@@ -26,9 +28,26 @@ class AppPreferencesDataSource @Inject constructor(
                     DarkThemeConfigProto.DARK_THEME_CONFIG_DARK -> DarkThemeConfig.DARK
                 },
                 shouldHideOnboarding = it.shouldHideOnboarding,
-                useDynamicColor = it.useDynamicColor
+                useDynamicColor = it.useDynamicColor,
             )
         }
+
+    suspend fun setUserData(userId: String, isAnonymous: Boolean) {
+        userPreferences.updateData {
+            it.copy {
+                this.isLogin = !isAnonymous
+                this.loginData = userId
+            }
+        }
+    }
+
+    suspend fun setDynamicColorPreference(useDynamicColor: Boolean) {
+        userPreferences.updateData {
+            it.copy {
+                this.useDynamicColor = useDynamicColor
+            }
+        }
+    }
 
     suspend fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
         userPreferences.updateData {
@@ -36,6 +55,7 @@ class AppPreferencesDataSource @Inject constructor(
                 this.darkThemeConfig = when (darkThemeConfig) {
                     DarkThemeConfig.FOLLOW_SYSTEM ->
                         DarkThemeConfigProto.DARK_THEME_CONFIG_FOLLOW_SYSTEM
+
                     DarkThemeConfig.LIGHT -> DarkThemeConfigProto.DARK_THEME_CONFIG_LIGHT
                     DarkThemeConfig.DARK -> DarkThemeConfigProto.DARK_THEME_CONFIG_DARK
                 }

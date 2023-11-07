@@ -23,7 +23,7 @@ import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
  * @param content The background content.
  */
 @Composable
-fun PlantScanBackground(
+fun PsBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -52,7 +52,7 @@ annotation class ThemePreviews
 @Composable
 fun BackgroundDefault() {
     PsTheme(disableDynamicTheming = true) {
-        PlantScanBackground(Modifier.size(100.dp), content = {})
+        PsBackground(Modifier.size(100.dp), content = {})
     }
 }
 
@@ -60,6 +60,6 @@ fun BackgroundDefault() {
 @Composable
 fun BackgroundDynamic() {
     PsTheme(disableDynamicTheming = false) {
-        PlantScanBackground(Modifier.size(100.dp), content = {})
+        PsBackground(Modifier.size(100.dp), content = {})
     }
 }

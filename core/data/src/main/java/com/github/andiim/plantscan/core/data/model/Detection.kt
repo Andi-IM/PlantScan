@@ -8,6 +8,7 @@ import com.github.andiim.plantscan.core.network.model.ImgzResponse
 import com.github.andiim.plantscan.core.network.model.PredictionResponse
 
 fun DetectionResponse.asExternalModel() = ObjectDetection(
+    time = time,
     image = image.asExternalModel(),
     predictions = predictions.map { it.asExternalModel() },
 )

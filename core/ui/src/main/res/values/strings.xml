@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="car_tap_action">Open Resource Link</string>
+    <string name="fetch_image_error">Fetch image failed</string>
     <string name="back">Back</string>
 </resources>

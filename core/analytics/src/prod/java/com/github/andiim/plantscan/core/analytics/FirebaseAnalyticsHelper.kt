@@ -1,8 +1,6 @@
 
 package com.github.andiim.plantscan.core.analytics
 
-import com.github.andiim.core.analytics.AnalyticsEvent
-import com.github.andiim.core.analytics.AnalyticsHelper
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 import javax.inject.Inject

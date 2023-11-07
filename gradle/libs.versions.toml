@@ -188,6 +188,7 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
 benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmark-macro-junit4" }
+hilt-common = { group = "androidx.hilt", name = "hilt-common", version = "1.1.0" }
 
 
 [bundles]

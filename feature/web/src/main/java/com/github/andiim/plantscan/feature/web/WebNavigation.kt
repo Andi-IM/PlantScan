@@ -31,7 +31,7 @@ fun NavController.navigateToWeb(url: String) {
 object Web : AppDestination {
     override val route: String = "web"
     const val webArg = "url"
-    val routeWithArgs = "$route/$webArg"
+    val routeWithArgs = "$route/{$webArg}"
     val arguments = listOf(
         navArgument(webArg) { type = NavType.StringType },
     )

@@ -11,7 +11,7 @@ import java.util.Date
  * note: ID dan Timestamp must be exist!
  */
 fun HistoryDocument.asExternalModel() = DetectionHistory(
-    id = id!!,
+    id = id,
     plantRef = plantRef,
     userId = userId,
     acc = accuracy,

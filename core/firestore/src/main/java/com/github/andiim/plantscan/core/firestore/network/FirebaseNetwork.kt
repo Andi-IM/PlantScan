@@ -9,25 +9,25 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class FirebaseNetwork @Inject constructor(
     private val db: FirebaseFirestore,
 ) : FirebaseDataSource {
-    override suspend fun getPlants(): Flow<List<PlantDocument>> =
-        flowOf(querySnapshotHandling(db.collection(PLANT_COLLECTION)))
+    override suspend fun getPlants(): List<PlantDocument> =
+        querySnapshotHandling(db.collection(PLANT_COLLECTION))
 
-    override suspend fun getPlantById(id: String): Flow<PlantDocument> =
-        flowOf(documentSnapshotHandling(db.collection(PLANT_COLLECTION).document(id)))
+    override suspend fun getPlantById(id: String): PlantDocument =
+        documentSnapshotHandling(db.collection(PLANT_COLLECTION).document(id))
 
     override suspend fun recordDetection(detection: HistoryDocument): String =
         db.collection(DETECT_COLLECTION).add(detection).await().id
 
     override suspend fun getDetectionHistories(id: String): List<HistoryDocument> =
-        querySnapshotHandling(db.collection(DETECT_COLLECTION).whereEqualTo(USER_ID_FIELD, id))
+        querySnapshotHandling(
+            db.collection(DETECT_COLLECTION).whereEqualTo(USER_ID_FIELD, id),
+        )
 
     override suspend fun sendSuggestion(suggestionDocument: SuggestionDocument): String =
         db.collection(SUGGESTION_COLLECTION).add(suggestionDocument).await().id
@@ -47,6 +47,5 @@ class FirebaseNetwork @Inject constructor(
         private const val SUGGESTION_COLLECTION = "suggestions"
         private const val DETECT_COLLECTION = "detections"
         private const val USER_ID_FIELD = "userId"
-        private const val NAME_FIELD = "name"
     }
 }

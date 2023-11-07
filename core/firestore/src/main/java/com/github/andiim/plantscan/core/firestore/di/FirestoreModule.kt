@@ -24,5 +24,10 @@ object FirestoreModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseFirestore(): FirebaseFirestore = Firebase.firestore
+    fun provideFirebaseFirestore(): FirebaseFirestore = Firebase.firestore.also {
+        it.useEmulator(HOST, PORT)
+    }
+
+    private const val HOST = "10.0.2.2"
+    private const val PORT = 8080
 }

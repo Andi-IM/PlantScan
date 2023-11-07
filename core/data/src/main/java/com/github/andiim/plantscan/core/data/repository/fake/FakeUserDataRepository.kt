@@ -2,6 +2,7 @@ package com.github.andiim.plantscan.core.data.repository.fake
 
 import com.github.andiim.plantscan.core.data.repository.UserDataRepository
 import com.github.andiim.plantscan.core.datastore.AppPreferencesDataSource
+import com.github.andiim.plantscan.core.model.data.DarkThemeConfig
 import com.github.andiim.plantscan.core.model.data.UserData
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -19,5 +20,17 @@ class FakeUserDataRepository @Inject constructor(
 
     override suspend fun setShouldHideOnboarding(shouldHideOnboarding: Boolean) {
         appPreferencesDataSource.setShouldHideOnboarding(shouldHideOnboarding)
+    }
+
+    override suspend fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
+        appPreferencesDataSource.setDarkThemeConfig(darkThemeConfig)
+    }
+
+    override suspend fun setDynamicColorPreference(useDynamicColor: Boolean) {
+        appPreferencesDataSource.setDynamicColorPreference(useDynamicColor)
+    }
+
+    override suspend fun setLoginInfo(userId: String, isAnonymous: Boolean) {
+        appPreferencesDataSource.setUserData(userId, isAnonymous)
     }
 }

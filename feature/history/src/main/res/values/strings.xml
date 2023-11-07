@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="detection_history">Detection History</string>
+    <string name="detection_history">History</string>
 </resources>

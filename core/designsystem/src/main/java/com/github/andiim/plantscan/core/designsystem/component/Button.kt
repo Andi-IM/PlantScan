@@ -1,5 +1,10 @@
 package com.github.andiim.plantscan.core.designsystem.component
 
+import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,10 +15,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 /**
  * Plantscan filled button with generic content slot. Wraps Material 3 [Button]
@@ -44,6 +52,32 @@ fun PsButton(
         contentPadding = contentPadding,
         content = content,
     )
+}
+
+@Composable
+fun PsButton(
+    @StringRes text: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+) {
+    PsButton(
+        onClick = onClick,
+        modifier = modifier,
+        enabled = enabled,
+        contentPadding = contentPadding,
+    ) {
+        AnimatedContent(
+            targetState = text,
+            transitionSpec = {
+                fadeIn() togetherWith fadeOut()
+            },
+            label = "PsButton_anim",
+        ) { target ->
+            Text(text = stringResource(target), fontSize = 16.sp)
+        }
+    }
 }
 
 /**

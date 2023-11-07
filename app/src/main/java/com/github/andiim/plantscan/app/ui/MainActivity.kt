@@ -19,15 +19,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.metrics.performance.JankStats
 import androidx.profileinstaller.ProfileVerifier
-import com.github.andiim.plantscan.core.analytics.AnalyticsHelper
-import com.github.andiim.plantscan.core.analytics.LocalAnalyticsHelper
 import com.github.andiim.plantscan.app.ui.MainActivityUiState.Loading
 import com.github.andiim.plantscan.app.ui.MainActivityUiState.Success
+import com.github.andiim.plantscan.core.analytics.AnalyticsHelper
+import com.github.andiim.plantscan.core.analytics.LocalAnalyticsHelper
 import com.github.andiim.plantscan.core.data.util.NetworkMonitor
 import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
 import com.github.andiim.plantscan.core.model.data.DarkThemeConfig
@@ -57,12 +58,12 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var analyticsHelper: AnalyticsHelper
 
-    val viewModel: MainActivityViewModel by viewModels()
+    private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         var uiState: MainActivityUiState by mutableStateOf(Loading)
 
         // Update the uiState
@@ -113,12 +114,12 @@ class MainActivity : ComponentActivity() {
             CompositionLocalProvider(LocalAnalyticsHelper provides analyticsHelper) {
                 PsTheme(
                     darkTheme = darkTheme,
-                    disableDynamicTheming = shouldDisableDynamicTheming(uiState)
+                    disableDynamicTheming = shouldDisableDynamicTheming(uiState),
                 ) {
                     MainApp(
                         networkMonitor = networkMonitor,
                         windowSizeClass = calculateWindowSizeClass(this),
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
             }
@@ -191,8 +192,8 @@ private fun shouldDisableDynamicTheming(
 private fun shouldUseDarkTheme(
     uiState: MainActivityUiState,
 ): Boolean = when (uiState) {
-    MainActivityUiState.Loading -> isSystemInDarkTheme()
-    is MainActivityUiState.Success -> when (uiState.userData.darkThemeConfig) {
+    Loading -> isSystemInDarkTheme()
+    is Success -> when (uiState.userData.darkThemeConfig) {
         DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
         DarkThemeConfig.LIGHT -> false
         DarkThemeConfig.DARK -> true

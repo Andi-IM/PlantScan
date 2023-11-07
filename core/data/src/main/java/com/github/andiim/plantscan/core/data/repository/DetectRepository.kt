@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 interface DetectRepository {
-    fun detect(base64ImageData: String, confidence: Int): Flow<ObjectDetection>
+    fun detect(base64ImageData: String, confidence: Int = 40): Flow<ObjectDetection>
 }
 
 class JustOnlineDetectRepository @Inject constructor(

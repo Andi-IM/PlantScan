@@ -5,10 +5,15 @@ import android.animation.AnimatorListenerAdapter
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.github.andiim.plantscan.core.designsystem.extensions.withSemantics
+import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
 import com.github.andiim.plantscan.feature.camera.R
 
 private const val HALF_CLOCKWISE = 180f
@@ -20,8 +25,9 @@ fun ChangeCameraBtn(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val ctx = LocalContext.current
     AndroidView(
-        modifier = modifier,
+        modifier = modifier.withSemantics(ctx.getString(R.string.flip_camera)),
         factory = { context ->
             ImageView(context).apply {
                 layoutParams = LinearLayout.LayoutParams(
@@ -53,5 +59,10 @@ fun ChangeCameraBtn(
 @Preview
 @Composable
 fun RotatingIconButtonPreview() {
-    ChangeCameraBtn(onClick = {})
+    PsTheme {
+        ChangeCameraBtn(
+            modifier = Modifier.size(64.dp),
+            onClick = {},
+        )
+    }
 }

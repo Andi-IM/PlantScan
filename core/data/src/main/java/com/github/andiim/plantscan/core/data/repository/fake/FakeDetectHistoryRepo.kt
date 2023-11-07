@@ -9,6 +9,7 @@ import com.github.andiim.plantscan.core.model.data.DetectionHistory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**

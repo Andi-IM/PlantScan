@@ -1,6 +1,6 @@
 package com.github.andiim.plantscan.app.ui
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -43,9 +43,9 @@ import com.github.andiim.plantscan.app.utils.BOTTOM_BAR_TAG
 import com.github.andiim.plantscan.app.utils.NAV_RAIL_TAG
 import com.github.andiim.plantscan.app.utils.snackbar.showMessage
 import com.github.andiim.plantscan.core.data.util.NetworkMonitor
-import com.github.andiim.plantscan.core.designsystem.component.PlantScanBackground
 import com.github.andiim.plantscan.core.designsystem.component.PsAnimatedVisibility
 import com.github.andiim.plantscan.core.designsystem.component.PsAnimatedVisibilityData
+import com.github.andiim.plantscan.core.designsystem.component.PsBackground
 import com.github.andiim.plantscan.core.designsystem.component.PsNavigationBar
 import com.github.andiim.plantscan.core.designsystem.component.PsNavigationBarItem
 import com.github.andiim.plantscan.core.designsystem.component.PsNavigationRail
@@ -68,7 +68,7 @@ fun MainApp(
         windowSizeClass = windowSizeClass,
     ),
 ) {
-    PlantScanBackground {
+    PsBackground {
         val snackbarHostState = remember { SnackbarHostState() }
         val isOffline by appState.isOffline.collectAsStateWithLifecycle()
         val message = stringResource(R.string.not_connected)
@@ -87,9 +87,16 @@ fun MainApp(
                 .semantics {
                     testTagsAsResourceId = true
                 },
+            topBar = {
+                destination?.let { topDest ->
+                    AnimatedVisibility(topDest != FIND_PLANT) {
+                        PsTopAppBar(titleRes = topDest.titleTextId)
+                    }
+                }
+            },
             containerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.onBackground,
-            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            contentWindowInsets = WindowInsets.safeDrawing,
             snackbarHost = { SnackbarHost(snackbarHostState) },
             bottomBar = {
                 PsAnimatedVisibility(
@@ -126,21 +133,16 @@ fun MainApp(
                             .safeDrawingPadding(),
                     )
                 }
-                Column(modifier.fillMaxSize()) {
-                    if (destination != null && destination != FIND_PLANT) {
-                        PsTopAppBar(titleRes = destination.titleTextId)
-                    }
-                    PsHost(
-                        appState = appState,
-                        onShowSnackbar = { message, action, duration ->
-                            snackbarHostState.showMessage(
-                                message = message,
-                                actionLabel = action,
-                                duration = duration,
-                            ) == SnackbarResult.ActionPerformed
-                        },
-                    )
-                }
+                PsHost(
+                    appState = appState,
+                    onShowSnackbar = { message, action, duration ->
+                        snackbarHostState.showMessage(
+                            message = message,
+                            actionLabel = action,
+                            duration = duration ?: SnackbarDuration.Short,
+                        ) == SnackbarResult.ActionPerformed
+                    },
+                )
             }
         }
     }

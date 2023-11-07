@@ -130,6 +130,7 @@ fun PlantCardContent(
         Text(
             knownName,
             style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.outline,
             overflow = TextOverflow.Ellipsis,
         )
     }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="NightAdjusted.Theme.PlantScan" parent="android:Theme.Material.NoActionBar" />
+
+    <style name="NightAdjusted.Theme.Splash" parent="Theme.SplashScreen">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+
+    <style name="Theme.PlantScan.Splash" parent="NightAdjusted.Theme.Splash">
+        <item name="windowSplashScreenBackground">#365950</item>
+    </style>
+</resources>

@@ -9,6 +9,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:auth"))
     implementation(project(":core:data"))
     implementation(project(":core:model"))
     implementation(libs.hilt.android)

@@ -1,175 +1,204 @@
 package com.github.andiim.plantscan.feature.camera.photoCapture
 
+import android.Manifest
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.ImageProxy
-import androidx.camera.view.LifecycleCameraController
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.MeteringPoint
 import androidx.camera.view.PreviewView
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Camera
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.andiim.plantscan.feature.camera.rotateBitmap
-import timber.log.Timber
-import java.util.concurrent.Executor
+import com.github.andiim.plantscan.core.designsystem.icon.PsIcons
+import com.github.andiim.plantscan.core.ui.TrackScreenViewEvent
+import com.github.andiim.plantscan.feature.camera.component.CameraPreviewView
+import com.github.andiim.plantscan.feature.camera.model.CameraUIAction
+import com.github.andiim.plantscan.feature.camera.model.CameraUiState
+import com.github.andiim.plantscan.feature.camera.model.CaptureState
+import com.github.andiim.plantscan.feature.camera.noPermission.NoPermissionScreen
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CameraScreen(
+fun CameraRoute(
     onBackClick: () -> Unit,
+    onShowSnackbar: suspend (String, String?, SnackbarDuration?) -> Boolean,
+    onImageCaptured: (String) -> Unit,
     viewModel: CameraViewModel = hiltViewModel(),
 ) {
-    val cameraState: CameraState by viewModel.state.collectAsStateWithLifecycle()
-    CameraContent(
-        onPhotoCaptured = viewModel::storePhotoToGallery,
-        lastCapturedPhoto = cameraState.capturedImage,
-    )
-}
+    val cameraPermissionState: PermissionState = rememberPermissionState(Manifest.permission.CAMERA)
+    val cameraState: CameraUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val captureState by viewModel.captureState.collectAsStateWithLifecycle()
 
-@Composable
-fun CameraContent(
-    onPhotoCaptured: (Bitmap) -> Unit,
-    modifier: Modifier = Modifier,
-    lastCapturedPhoto: Bitmap? = null,
-) {
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val cameraController = remember { LifecycleCameraController(context) }
-    var cameraSelector: MutableState<CameraSelector> =
-        remember { mutableStateOf(CameraSelector.DEFAULT_BACK_CAMERA) }
-    var focusPoint by remember { mutableStateOf(Offset(0f, 0f)) }
+    LaunchedEffect(cameraPermissionState) {
+        cameraPermissionState.launchPermissionRequest()
+    }
 
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    capturePhoto(context, cameraController, onPhotoCaptured)
-                },
-            ) {
-                Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera capture icon")
-                Text(text = "TakePhoto")
-            }
-        },
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .animateContentSize()
-                .fillMaxSize(),
-        ) {
-            AndroidView(
-                modifier = Modifier
-                    .matchParentSize()
-                    .padding(paddingValues)
-                    .pointerInput(Unit) {
-                        detectTapGestures { focusPoint = it }
-                    },
-                factory = { context ->
-                    PreviewView(context).apply {
-                        layoutParams = LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                        )
-                        setBackgroundColor(Color.BLACK)
-                        scaleType = PreviewView.ScaleType.FILL_START
-                    }.also { previewView ->
-                        previewView.controller = cameraController
-                        cameraController.bindToLifecycle(lifecycleOwner)
-                    }
-                },
-            )
-
-            if (lastCapturedPhoto != null) {
-                LastPhotoPreview(
-                    modifier = Modifier.align(alignment = Alignment.BottomStart),
-                    lastCapturedPhoto = lastCapturedPhoto,
-                )
-            }
+    if (cameraPermissionState.status.isGranted) {
+        LaunchedEffect(cameraState) {
+            viewModel.initializeCamera()
         }
+
+        CameraScreen(
+            onBackPressed = onBackClick,
+            cameraUiState = cameraState,
+            captureState = captureState,
+            onCameraStartPreview = viewModel::startPreview,
+            onCameraSwitch = viewModel::switchCamera,
+            onCameraCapture = viewModel::capturePhoto,
+            onCameraZoom = viewModel::scale,
+            onCameraFocus = viewModel::focus,
+            onModeChanged = viewModel::setExtensionMode,
+            onImageCaptured = { uri ->
+                onImageCaptured(uri)
+                viewModel.resetCaptureState()
+            },
+            onShowSnackbar = onShowSnackbar,
+        )
+    } else {
+        NoPermissionScreen(
+            onBackClick = onBackClick,
+            onRequestPermission = cameraPermissionState::launchPermissionRequest,
+        )
     }
 }
 
-fun capturePhoto(
-    context: Context,
-    cameraController: LifecycleCameraController,
-    onPhotoCaptured: (Bitmap) -> Unit,
-) {
-    val mainExecutor: Executor = ContextCompat.getMainExecutor(context)
-    cameraController.takePicture(
-        mainExecutor,
-        object : ImageCapture.OnImageCapturedCallback() {
-            override fun onCaptureSuccess(image: ImageProxy) {
-                val correctedBitmap: Bitmap = image
-                    .toBitmap()
-                    .rotateBitmap(image.imageInfo.rotationDegrees)
+private const val DELAY_MILLIS = 700L
 
-                onPhotoCaptured(correctedBitmap)
-                image.close()
-            }
-
-            override fun onError(exception: ImageCaptureException) {
-                Timber.tag("CameraContent").e(exception, "Error capturing image")
-            }
-        },
-    )
-}
-
+@Suppress("detekt:LongParameterList", "LongMethod")
 @Composable
-fun LastPhotoPreview(
-    lastCapturedPhoto: Bitmap,
+fun CameraScreen(
+    cameraUiState: CameraUiState,
+    captureState: CaptureState,
+    onBackPressed: () -> Unit,
+    onCameraStartPreview: (LifecycleOwner, PreviewView) -> Unit,
+    onCameraSwitch: () -> Unit,
+    onCameraCapture: (Context) -> Unit,
+    onCameraZoom: (Float) -> Unit,
+    onCameraFocus: (MeteringPoint) -> Unit,
+    onModeChanged: (Int) -> Unit,
+    onImageCaptured: (String) -> Unit,
+    onShowSnackbar: suspend (String, String?, SnackbarDuration?) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val capturedPhoto: ImageBitmap =
-        remember(lastCapturedPhoto.hashCode()) { lastCapturedPhoto.asImageBitmap() }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var galleryLauncherOpened by remember { mutableStateOf(false) }
+    val galleryLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.GetContent(),
+    ) { uri: Uri? -> if (uri != null) onImageCaptured(uri.toString()) }
 
-    Card(
-        modifier = modifier
-            .size(128.dp)
-            .padding(16.dp),
-        elevation = CardDefaults.cardElevation(8.dp),
-        shape = MaterialTheme.shapes.large,
-    ) {
-        Image(
-            bitmap = capturedPhoto,
-            contentDescription = "Last captured photo",
-            contentScale = ContentScale.Crop,
-        )
+    TrackScreenViewEvent(screenName = "Camera")
+
+    LaunchedEffect(galleryLauncherOpened) {
+        if (galleryLauncherOpened) {
+            delay(DELAY_MILLIS)
+            galleryLauncher.launch("image/*").also {
+                galleryLauncherOpened = false
+            }
+        }
+    }
+
+    LaunchedEffect(captureState) {
+        when (captureState) {
+            CaptureState.CaptureNotReady -> Unit
+            is CaptureState.ImageObtained -> {
+                captureState.uri?.let {
+                    onImageCaptured(it.toString())
+                }
+            }
+
+            is CaptureState.CaptureFailed -> {
+                scope.launch {
+                    onShowSnackbar(
+                        captureState.toString(),
+                        null,
+                        SnackbarDuration.Short,
+                    )
+                }
+            }
+        }
+    }
+
+    Box(modifier = modifier) {
+        CameraPreviewView(
+            camera = cameraUiState.camera,
+            lensFacing = cameraUiState.cameraLens,
+            extensionMode = cameraUiState.extensionMode,
+            availableExtensions = cameraUiState.availableExtensions,
+            onPreviewStart = onCameraStartPreview,
+        ) { cameraUIAction ->
+            when (cameraUIAction) {
+                is CameraUIAction.OnCameraClick -> {
+                    onCameraCapture(context)
+                }
+
+                is CameraUIAction.OnSwitchCameraClick -> onCameraSwitch.invoke()
+                is CameraUIAction.OnGalleryViewClick -> {
+                    galleryLauncherOpened = true
+                }
+
+                is CameraUIAction.Scale -> {
+                    onCameraZoom(cameraUIAction.scaleFactor)
+                }
+
+                is CameraUIAction.Focus -> {
+                    onCameraFocus(cameraUIAction.meteringPoint)
+                }
+
+                is CameraUIAction.SelectCameraExtension -> {
+                    onModeChanged(cameraUIAction.extension)
+                }
+            }
+        }
+
+        Column(
+            modifier = Modifier.align(Alignment.TopStart),
+            horizontalAlignment = Alignment.Start,
+        ) {
+            Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
+            IconButton(
+                onClick = onBackPressed,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = CircleShape,
+                    ),
+            ) {
+                Icon(PsIcons.Back, null, tint = Color.Black)
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ import com.github.andiim.plantscan.core.firestore.model.HistoryDocument
 import com.github.andiim.plantscan.core.model.data.DetectionHistory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 interface DetectHistoryRepo {

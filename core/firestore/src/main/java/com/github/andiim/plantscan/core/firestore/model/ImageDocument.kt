@@ -13,5 +13,9 @@ data class ImageDocument(
 ) {
     @get:PropertyName("desc")
     @set:PropertyName("desc")
+    var desc: String = ""
+
+    @get:PropertyName("description")
+    @set:PropertyName("description")
     var description: String = ""
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.andiim.plantscan.core.designsystem.icon.PsIcons
 import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
+import com.github.andiim.plantscan.core.ui.TrackScreenViewEvent
 import com.github.andiim.plantscan.feature.camera.R
 
 @Composable
@@ -45,6 +46,7 @@ fun NoPermissionContent(
     onRequestPermission: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    TrackScreenViewEvent(screenName = "Blocked Camera")
     Box(
         modifier = modifier
             .fillMaxSize()

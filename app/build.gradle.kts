@@ -75,21 +75,28 @@ android {
 
 dependencies {
     implementation(project(":feature:findplant"))
+    implementation(project(":feature:plant"))
+    implementation(project(":feature:plantDetail"))
     implementation(project(":feature:history"))
     implementation(project(":feature:settings"))
 
     implementation(project(":feature:camera"))
-    implementation(project(":feature:web"))
+    implementation(project(":feature:detect"))
+    implementation(project(":feature:suggest"))
+    implementation(project(":feature:account"))
 
     implementation(project(":core:common"))
     implementation(project(":core:ui"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:data"))
+    implementation(project(":core:domain"))
     implementation(project(":core:model"))
-    implementation(project(":core:analytics"))
-    implementation(project(":core:firestore"))
 
-    implementation(project(":sync:work"))
+    implementation(project(":core:auth"))
+    implementation(project(":core:analytics"))
+    implementation(project(":core:storage-upload"))
+    implementation(project(":core:firestore"))
+    implementation(project(":core:workers"))
 
     androidTestImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:datastore-test"))

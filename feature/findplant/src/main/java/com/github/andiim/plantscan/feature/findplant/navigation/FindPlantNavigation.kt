@@ -11,7 +11,7 @@ import com.github.andiim.plantscan.core.ui.navigation.AppDestination
 import com.github.andiim.plantscan.feature.findplant.FindPlantRoute
 
 fun NavController.navigateToFindPlant(navOptions: NavOptions? = null) {
-    this.navigate(FindPlant.route, navOptions)
+    this.navigate(FindPlantGraph.route, navOptions)
 }
 
 object FindPlantGraph : AppDestination {
@@ -25,19 +25,19 @@ object FindPlant : AppDestination {
 fun NavGraphBuilder.findPlantGraph(
     onItemClick: (String) -> Unit,
     onCameraClick: () -> Unit,
-    onPlantClick: () -> Unit,
+    onPlantsClick: () -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit,
 ) {
     navigation(
         route = FindPlantGraph.route,
         startDestination = FindPlant.route,
     ) {
-        composable(route = FindPlant.route) {
+        composable(FindPlant.route) {
             FindPlantRoute(
                 modifier = Modifier.fillMaxSize(),
                 onPlantClick = onItemClick,
                 onCameraClick = onCameraClick,
-                onPlantsClick = onPlantClick,
+                onPlantsClick = onPlantsClick,
             )
         }
         nestedGraphs()
