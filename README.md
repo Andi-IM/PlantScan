@@ -1,10 +1,9 @@
-# kotlin-android-template 🤖
+# PlantScan Android Project Repository 🤖
 
-[![Use this template](https://img.shields.io/badge/from-kotlin--android--template-brightgreen?logo=dropbox)](https://github.com/cortinico/kotlin-android-template/generate) ![Pre Merge Checks](https://github.com/cortinico/kotlin-android-template/workflows/Pre%20Merge%20Checks/badge.svg)  ![License](https://img.shields.io/github/license/cortinico/kotlin-android-template.svg) ![Language](https://img.shields.io/github/languages/top/cortinico/kotlin-android-template?color=blue&logo=kotlin)
+[![Use this template](https://img.shields.io/badge/from-kotlin--android--template-brightgreen?logo=dropbox)](https://github.com/cortinico/kotlin-android-template/generate) ![Pre Merge Checks](https://github.com/Andi-IM/PlantScan/workflows/Pre%20Merge%20Checks/badge.svg)  ![License](https://img.shields.io/github/license/Andi-IM/PlantScan.svg)  ![Language](https://img.shields.io/github/languages/top/Andi-IM/PlantScan?color=blue&logo=kotlin)
 
-A simple Github template that lets you create an **Android/Kotlin** project and be up and running in a **few seconds**. 
+Lets identify `Orchid` flower around you! ~ A final project by [Andi Irham](https://github.com/Andi-IM)
 
-This template is focused on delivering a project with **static analysis** and **continuous integration** already in place.
 
 ## How to use 👣
 
@@ -19,7 +18,7 @@ Once created don't forget to update the:
 
 - **100% Kotlin-only template**.
 - 4 Sample modules (Android app, Android library, Kotlin library, Jetpack Compose Activity).
-- Jetpack Compose setup ready to use. 
+- Jetpack Compose setup ready to use.
 - Sample Espresso, Instrumentation & JUnit tests.
 - 100% Gradle Kotlin DSL setup.
 - CI Setup with GitHub Actions.
@@ -53,45 +52,10 @@ There are currently the following workflows available:
 - [Publish Snapshot](.github/workflows/publish-snapshot.yaml) - Will publish a `-SNAPSHOT` of the libraries to Sonatype.
 - [Publish Release](.github/workflows/publish-release.yaml) - Will publish a new release version of the libraries to Maven Central on tag pushes.
 
-## Publishing 🚀
-
-The template is setup to be **ready to publish** a library/artifact on a Maven Repository.
-
-For every module you want to publish you simply have to add the `publish` plugin:
-
-```
-plugins {
-    publish
-}
-```
-
-### To Maven Central
-
-In order to use this template to publish on Maven Central, you need to configure some secrets on your repository:
-
-| Secret name | Value |
-| --- | --- | 
-| `ORG_GRADLE_PROJECT_NEXUS_USERNAME` | The username you use to access Sonatype's services (such as [Nexus](https://oss.sonatype.org/) and [Jira](https://issues.sonatype.org/)) |
-| `ORG_GRADLE_PROJECT_NEXUS_PASSWORD` | The password you use to access Sonatype's services (such as [Nexus](https://oss.sonatype.org/) and [Jira](https://issues.sonatype.org/)) |
-| `ORG_GRADLE_PROJECT_SIGNING_KEY` | The GPG Private key to sign your artifacts. You can obtain it with `gpg --armor --export-secret-keys <your@email.here>` or you can create one key online on [pgpkeygen.com](https://pgpkeygen.com). The key starts with a `-----BEGIN PGP PRIVATE KEY BLOCK-----`. |
-| `ORG_GRADLE_PROJECT_SIGNING_PWD` | The passphrase to unlock your private key (you picked it when creating the key). |
-
-The template already attaches `-sources.jar` to your publications via the new AGP publishing DSL.
-
-Once set up, the following workflows will take care of publishing:
-
-- [Publish Snapshot](.github/workflows/publish-snapshot.yaml) - To publish `-SNAPSHOT` versions to Sonatype. The workflow is setup to run either manually (with `workflow_dispatch`) or on every merge.
-- [Publish Release](.github/workflows/publish-release.yaml) - Will publish a new release version of the libraries to Maven Central on tag pushes. You can trigger the workflow also manually if needed.
-
-### To Jitpack
-
-If you're using [JitPack](https://jitpack.io/), you don't need any further configuration and you can just configure the repo on JitPack.
-
-You probably want to disable the [Publish Snapshot] and [Publish Release](.github/workflows/publish-release.yaml) workflows (delete the files), as Jitpack will take care of that for you.
 
 ## Project Structure
 
-The project includes three sub-projects, each in their own subdirectories:
+This project structure was inspired from [Now in Android](https://github.com/android/nowinandroid) repository. The project includes three sub-projects, each in their own subdirectories:
 
 - **`app`:** The source for the final Android application.
 - **`library-android`:** The source for an Android library including UI.
