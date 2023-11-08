@@ -1,0 +1,16 @@
+{
+  "predictions": [
+    {
+      "x": 189.5,
+      "y": 100,
+      "width": 163,
+      "height": 186,
+      "class": "helmet",
+      "confidence": 0.544
+    }
+  ],
+  "image": {
+    "width": 2048,
+    "height": 1371
+  }
+}

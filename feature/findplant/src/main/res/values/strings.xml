@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="find_plant">Find plant</string>
+    <string name="search_placeholder">Search Plant</string>
+    <string name="search_icon_description">Search Icon</string>
+    <string name="search_icon_close_description">Close search bar</string>
+    <string name="search_using_camera_icon_description">Search using camera detection</string>
+    <string name="search_find_by_type_button">Find by plant type</string>
+    <string name="search_result_not_found">Sorry, there is no plant with name \"%1$s\"</string>
+    <string name="testing">Testing</string>
+    <string name="search_clear_search_text">Clear searches</string>
+    <string name="recent_searches">Recent searches</string>
+    <string name="camera_button_tooltip">Detect with camera</string>
+</resources>
