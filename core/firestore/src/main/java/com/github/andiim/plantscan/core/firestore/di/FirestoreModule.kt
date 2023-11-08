@@ -1,6 +1,7 @@
 package com.github.andiim.plantscan.core.firestore.di
 
 import android.content.Context
+import com.github.andiim.plantscan.core.firestore.BuildConfig
 import com.github.andiim.plantscan.core.firestore.fake.FakeAssetManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -25,7 +26,9 @@ object FirestoreModule {
     @Provides
     @Singleton
     fun provideFirebaseFirestore(): FirebaseFirestore = Firebase.firestore.also {
-        it.useEmulator(HOST, PORT)
+        if (BuildConfig.USE_EMULTAOR.toBoolean()) {
+            it.useEmulator(HOST, PORT)
+        }
     }
 
     private const val HOST = "10.0.2.2"

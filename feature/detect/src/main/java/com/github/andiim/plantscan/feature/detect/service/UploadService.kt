@@ -4,11 +4,13 @@ import android.app.Service
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import com.github.andiim.plantscan.core.bitmap.asImageFromBase64
 import com.github.andiim.plantscan.core.domain.PostDetectionRecord
 import com.github.andiim.plantscan.core.model.data.DetectionHistory
+import com.github.andiim.plantscan.core.model.data.LabelPredict
 import com.github.andiim.plantscan.core.storageUpload.StorageHelper
-import com.github.andiim.plantscan.core.bitmap.asImageFromBase64
 import com.github.andiim.plantscan.feature.detect.service.model.DetectionResult
+import com.github.andiim.plantscan.feature.detect.service.model.mapToLabelPredict
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +18,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -41,20 +45,33 @@ class UploadService : Service() {
                 intent.getParcelableExtra(EXTRA_DETECTION)
             }
 
-            data?.let {
-                val image = it.imgB64.asImageFromBase64()
-                val imageLink = storageHelper.upload(image, "history/${data.userId}").first()
-                record(
-                    DetectionHistory(
-                        null,
-                        Clock.System.now(),
-                        "N/A",
-                        data.userId,
-                        data.accuracy,
-                        image = imageLink,
-                    ),
-                )
-                Timber.d("Recorded")
+            @Suppress("detekt:TooGenericExceptionCaught")
+            try {
+                data?.let { result ->
+                    val timestamp = Clock.System.now()
+                    val utcDatetime = timestamp.toLocalDateTime(TimeZone.UTC).date
+                    val image = result.imgB64.asImageFromBase64()
+                    val baseLocation = "history/$utcDatetime/${timestamp}_${data.userId}"
+
+                    val imageLink = storageHelper.upload(image, baseLocation).first()
+                    val detections = data.detections.map(HashMap<String, String>::mapToLabelPredict)
+                    val recordId = record(
+                        DetectionHistory(
+                            id = "${Clock.System.now()}_${data.userId}",
+                            timeStamp = Clock.System.now(),
+                            plantRef = detections.first {
+                                it.confidence == detections.maxOf(LabelPredict::confidence)
+                            }.objectClass,
+                            userId = data.userId,
+                            acc = data.accuracy,
+                            image = imageLink,
+                            detections = detections,
+                        ),
+                    ).first()
+                    Timber.d("Recorded $recordId")
+                }
+            } catch (e: Exception) {
+                Timber.e("onStartCommand: Error", e)
             }
             stopSelf()
         }

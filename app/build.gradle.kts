@@ -96,7 +96,6 @@ dependencies {
     implementation(project(":core:analytics"))
     implementation(project(":core:storage-upload"))
     implementation(project(":core:firestore"))
-    implementation(project(":core:workers"))
 
     androidTestImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:datastore-test"))
@@ -113,7 +112,6 @@ dependencies {
     implementation(libs.camera.core)
     implementation(libs.camera.view)
 
-    implementation(libs.androidx.hilt.work)
     implementation(libs.compose.activity)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)

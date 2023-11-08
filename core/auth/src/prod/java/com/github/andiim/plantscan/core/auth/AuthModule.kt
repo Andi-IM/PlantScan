@@ -26,7 +26,9 @@ abstract class AuthModule {
         @Singleton
         fun provideFirebaseAuth(): FirebaseAuth {
             return Firebase.auth.also {
-                it.useEmulator(HOST, PORT)
+                if (BuildConfig.USE_EMULTAOR.toBoolean()) {
+                    it.useEmulator(HOST, PORT)
+                }
             }
         }
     }

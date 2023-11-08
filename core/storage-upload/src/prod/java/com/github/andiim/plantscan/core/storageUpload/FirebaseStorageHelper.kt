@@ -11,15 +11,17 @@ import javax.inject.Inject
 class FirebaseStorageHelper @Inject constructor(
     private val storage: FirebaseStorage,
 ) : StorageHelper {
-
+    companion object {
+        private const val COMPRESS_QUALITY = 100
+    }
     override fun upload(
         image: Bitmap,
         baseLocation: String,
         onProgress: ((Double) -> Double)?,
     ): Flow<String> = flow {
-        val ref = storage.reference.child(baseLocation) // refers to base
+        val ref = storage.reference.child("$baseLocation.jpg") // refers to base
         val outputStream = ByteArrayOutputStream()
-        image.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        image.compress(Bitmap.CompressFormat.JPEG, COMPRESS_QUALITY, outputStream)
         val data = outputStream.toByteArray()
         val downloadUrl = ref.putBytes(data).await().storage.downloadUrl.await()
         emit(downloadUrl.toString())

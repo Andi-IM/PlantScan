@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,20 +28,26 @@ import com.github.andiim.plantscan.feature.camera.R
 
 @Composable
 fun NoPermissionScreen(
+    shouldShowRationale: Boolean,
     onBackClick: () -> Unit,
     onRequestPermission: () -> Unit,
+    onGalleryLauncherOpened: () -> Unit,
 ) {
     NoPermissionContent(
+        shouldShowRationale = shouldShowRationale,
         onBackClick = onBackClick,
         onRequestPermission = onRequestPermission,
+        onGalleryLauncherOpened = onGalleryLauncherOpened,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoPermissionContent(
+    shouldShowRationale: Boolean,
     onBackClick: () -> Unit,
     onRequestPermission: () -> Unit,
+    onGalleryLauncherOpened: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TrackScreenViewEvent(screenName = "Blocked Camera")
@@ -77,10 +81,22 @@ fun NoPermissionContent(
                 .padding(horizontal = 16.dp)
                 .align(Alignment.Center),
         ) {
-            Text(text = stringResource(R.string.camera_permission_error_text))
+            Text(
+                text = stringResource(
+                    if (shouldShowRationale) {
+                        R.string.camera_permission_denied_error_text
+                    } else {
+                        R.string.camera_permission_error_text
+                    },
+                ),
+            )
             Button(onClick = onRequestPermission) {
-                Icon(imageVector = Icons.Default.Camera, contentDescription = null)
+                Icon(imageVector = PsIcons.Camera, contentDescription = null)
                 Text(text = stringResource(R.string.request_permission_text))
+            }
+            Button(onClick = onGalleryLauncherOpened) {
+                Icon(imageVector = PsIcons.Gallery, contentDescription = null)
+                Text(text = stringResource(R.string.open_gallery))
             }
         }
     }
@@ -92,8 +108,10 @@ fun Preview_NoPermissionContent() {
     PsTheme {
         Surface {
             NoPermissionContent(
+                shouldShowRationale = false,
                 onBackClick = {},
                 onRequestPermission = {},
+                onGalleryLauncherOpened = {},
             )
         }
     }

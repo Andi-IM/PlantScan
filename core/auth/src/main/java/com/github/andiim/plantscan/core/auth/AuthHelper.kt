@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthHelper {
     val currentUser: Flow<User>
-    suspend fun authenticate(email: String, password: String): Flow<Unit>
-    suspend fun sendRecoveryEmail(email: String): Flow<Unit>
+    fun authenticate(email: String, password: String): Flow<Unit>
+    fun sendRecoveryEmail(email: String): Flow<Unit>
     fun createAnonymousAccount(): Flow<Unit>
     fun linkAccount(email: String, password: String): Flow<Unit>
     fun deleteAccount(): Flow<Unit>

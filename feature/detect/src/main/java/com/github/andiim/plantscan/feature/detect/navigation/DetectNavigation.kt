@@ -41,7 +41,7 @@ object Detect : AppDestination {
 
 fun NavGraphBuilder.detectScreen(
     onBackClick: () -> Unit,
-    onDetectSuggest: (String) -> Unit,
+    onDetectSuggest: () -> Unit,
     onShowSnackbar: suspend (String, String?, SnackbarDuration?) -> Boolean,
 ) {
     composable(route = Detect.routeWithArgs, arguments = Detect.arguments) {

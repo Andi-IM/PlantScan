@@ -48,13 +48,12 @@ class AuthViewModel @Inject constructor(
         }
         viewModelScope.launch {
             try {
-                authHelper.authenticate(formUiState.email, formUiState.password).collect {
-                    getUserLoginInfoUseCase().collectLatest { info ->
-                        userDataRepository.setLoginInfo(
-                            userId = info.userId,
-                            isAnonymous = info.isAnonymous,
-                        )
-                    }
+                authHelper.authenticate(formUiState.email, formUiState.password).collect()
+                getUserLoginInfoUseCase().collectLatest { info ->
+                    userDataRepository.setLoginInfo(
+                        userId = info.userId,
+                        isAnonymous = info.isAnonymous,
+                    )
                 }
                 onSuccess()
             } catch (e: Exception) {

@@ -16,4 +16,12 @@ data class HistoryDocument(
     val userId: String = "",
     val plantRef: String = "",
     val accuracy: Float = 0f,
+    val image: String = "",
+    val detections: List<LabelPredictDocument> = listOf(),
+)
+
+@Serializable
+data class LabelPredictDocument(
+    val objectClass: String = "",
+    val confidence: Float = 0f,
 )

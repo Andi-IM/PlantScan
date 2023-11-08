@@ -7,7 +7,7 @@ import javax.inject.Qualifier
  * Interface representing network calls to the backend.
  */
 interface PsNetworkDataSource {
-    suspend fun detect(@Base64String image: String, confidence: Int): DetectionResponse
+    suspend fun detect(@Base64String image: String, confidence: Int, overlap: Int): DetectionResponse
 }
 
 @Qualifier

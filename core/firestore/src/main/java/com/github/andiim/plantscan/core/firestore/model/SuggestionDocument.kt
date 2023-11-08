@@ -9,5 +9,5 @@ data class SuggestionDocument(
     val userId: String = "",
     @ServerTimestamp val date: Date? = null,
     val description: String = "",
-    val images: List<ImageDocument> = listOf(),
+    val images: List<String> = listOf(),
 )

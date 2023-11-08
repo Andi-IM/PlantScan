@@ -74,13 +74,13 @@ fun PsHost(
         suggestScreen(
             onBackClick = navController::popBackStack,
             onShowSnackbar = onShowSnackbar,
+            onLoginPressed = navController::navigateToAuth,
         )
 
         historyScreen()
 
         settingsGraph(
             onLoginClick = navController::navigateToAuth,
-            clearAndNavigate = navController::clearAndNavigateSettings,
             nestedGraphs = {
                 authScreen(
                     onBackPressed = navController::popBackStack,

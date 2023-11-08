@@ -35,7 +35,6 @@ object Settings : AppDestination {
 }
 
 fun NavGraphBuilder.settingsGraph(
-    clearAndNavigate: () -> Unit,
     onLoginClick: () -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit,
 ) {
@@ -46,7 +45,6 @@ fun NavGraphBuilder.settingsGraph(
         composable(Settings.route) {
             SettingsRoute(
                 routeToAuth = onLoginClick,
-                restartScreen = clearAndNavigate,
             )
         }
         nestedGraphs()

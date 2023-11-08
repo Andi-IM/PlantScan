@@ -24,7 +24,6 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:network"))
     implementation(project(":core:firestore"))
-    implementation(project(":core:workers"))
     implementation(project(":core:storage-upload"))
     implementation(project(":core:notifications"))
     implementation(libs.androidx.core.ktx)

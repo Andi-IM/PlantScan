@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
 import androidx.camera.core.MeteringPoint
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
@@ -22,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +49,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -58,18 +62,30 @@ fun CameraRoute(
     viewModel: CameraViewModel = hiltViewModel(),
 ) {
     val cameraPermissionState: PermissionState = rememberPermissionState(Manifest.permission.CAMERA)
+    var galleryLauncherOpened by remember { mutableStateOf(false) }
+    val galleryLauncher =
+        rememberLauncherForActivityResult(PickVisualMedia()) { uri: Uri? ->
+            if (uri != null) onImageCaptured(uri.toString())
+        }
+
     val cameraState: CameraUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val captureState by viewModel.captureState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(cameraPermissionState) {
-        cameraPermissionState.launchPermissionRequest()
+    LaunchedEffect(galleryLauncherOpened) {
+        if (galleryLauncherOpened) {
+            delay(DELAY_MILLIS)
+            galleryLauncher
+                .launch(PickVisualMediaRequest(ImageOnly))
+                .also {
+                    galleryLauncherOpened = false
+                }
+        }
     }
 
     if (cameraPermissionState.status.isGranted) {
-        LaunchedEffect(cameraState) {
+        SideEffect {
             viewModel.initializeCamera()
         }
-
         CameraScreen(
             onBackPressed = onBackClick,
             cameraUiState = cameraState,
@@ -85,11 +101,18 @@ fun CameraRoute(
                 viewModel.resetCaptureState()
             },
             onShowSnackbar = onShowSnackbar,
+            onGalleryLauncherOpened = {
+                galleryLauncherOpened = true
+            },
         )
     } else {
         NoPermissionScreen(
+            shouldShowRationale = cameraPermissionState.status.shouldShowRationale,
             onBackClick = onBackClick,
-            onRequestPermission = cameraPermissionState::launchPermissionRequest,
+            onGalleryLauncherOpened = { galleryLauncherOpened = true },
+            onRequestPermission = {
+                cameraPermissionState.launchPermissionRequest()
+            },
         )
     }
 }
@@ -109,27 +132,14 @@ fun CameraScreen(
     onCameraFocus: (MeteringPoint) -> Unit,
     onModeChanged: (Int) -> Unit,
     onImageCaptured: (String) -> Unit,
+    onGalleryLauncherOpened: () -> Unit,
     onShowSnackbar: suspend (String, String?, SnackbarDuration?) -> Boolean,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var galleryLauncherOpened by remember { mutableStateOf(false) }
-    val galleryLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetContent(),
-    ) { uri: Uri? -> if (uri != null) onImageCaptured(uri.toString()) }
 
     TrackScreenViewEvent(screenName = "Camera")
-
-    LaunchedEffect(galleryLauncherOpened) {
-        if (galleryLauncherOpened) {
-            delay(DELAY_MILLIS)
-            galleryLauncher.launch("image/*").also {
-                galleryLauncherOpened = false
-            }
-        }
-    }
-
     LaunchedEffect(captureState) {
         when (captureState) {
             CaptureState.CaptureNotReady -> Unit
@@ -165,9 +175,7 @@ fun CameraScreen(
                 }
 
                 is CameraUIAction.OnSwitchCameraClick -> onCameraSwitch.invoke()
-                is CameraUIAction.OnGalleryViewClick -> {
-                    galleryLauncherOpened = true
-                }
+                is CameraUIAction.OnGalleryViewClick -> onGalleryLauncherOpened.invoke()
 
                 is CameraUIAction.Scale -> {
                     onCameraZoom(cameraUIAction.scaleFactor)

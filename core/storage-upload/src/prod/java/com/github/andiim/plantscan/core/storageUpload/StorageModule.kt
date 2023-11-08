@@ -19,13 +19,15 @@ abstract class StorageModule {
     ): StorageHelper
 
     companion object {
-        private const val HOST = "localhost"
+        private const val HOST = "10.0.2.2"
         private const val PORT = 9199
 
         @Provides
         @Singleton
         fun provideFirebaseStorage(): FirebaseStorage = Firebase.storage.also {
-            it.useEmulator(HOST, PORT)
+            if (BuildConfig.USE_EMULTAOR.toBoolean()) {
+                it.useEmulator(HOST, PORT)
+            }
         }
     }
 }

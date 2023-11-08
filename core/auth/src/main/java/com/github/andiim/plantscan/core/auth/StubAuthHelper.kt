@@ -16,19 +16,23 @@ import javax.inject.Singleton
 class StubAuthHelper @Inject constructor() : AuthHelper {
     private val _currentUser = MutableStateFlow(User())
     override val currentUser: Flow<User> = _currentUser.asStateFlow()
-    override suspend fun authenticate(email: String, password: String): Flow<Unit> = flow {
+    override fun authenticate(email: String, password: String): Flow<Unit> = flow {
         _currentUser.value = _currentUser.value.copy(isAnonymous = false)
     }
-    override suspend fun sendRecoveryEmail(email: String): Flow<Unit> = flowOf()
+
+    override fun sendRecoveryEmail(email: String): Flow<Unit> = flowOf()
     override fun createAnonymousAccount(): Flow<Unit> = flow {
         _currentUser.value = _currentUser.value.copy(id = "demo", isAnonymous = true)
     }
+
     override fun linkAccount(email: String, password: String): Flow<Unit> = flow {
         _currentUser.value = _currentUser.value.copy(isAnonymous = false)
     }
+
     override fun deleteAccount(): Flow<Unit> = flow {
         _currentUser.value = _currentUser.value.copy(isAnonymous = true)
     }
+
     override fun signOut(): Flow<Unit> = flow {
         _currentUser.value = _currentUser.value.copy(isAnonymous = true)
     }

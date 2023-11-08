@@ -19,8 +19,8 @@ private interface RetrofitNetworkApi {
     @POST("/orchid-flower-detection/3")
     suspend fun uploadImage(
         @Query("api_key") apiKey: String,
-//        @Query("confidence") confidence: Int = 40,
-//        @Query("overlap") overlap: Int = 30,
+        @Query("confidence") confidence: Int,
+        @Query("overlap") overlap: Int,
         @Body base64Image: String,
     ): DetectionResponse
 }
@@ -42,10 +42,11 @@ class RetrofitPsNetwork @Inject constructor(
             networkJson.asConverterFactory("application/json".toMediaType()),
         ).client(client).build().create(RetrofitNetworkApi::class.java)
 
-    override suspend fun detect(image: String, confidence: Int): DetectionResponse =
+    override suspend fun detect(image: String, confidence: Int, overlap: Int): DetectionResponse =
         networkApi.uploadImage(
             apiKey = API_KEY,
-            // confidence = confidence,
+            confidence = confidence,
+            overlap = overlap,
             base64Image = image,
         )
 }

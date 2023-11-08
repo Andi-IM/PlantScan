@@ -61,16 +61,16 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
+import com.github.andiim.plantscan.core.bitmap.asImageFromBase64
 import com.github.andiim.plantscan.core.designsystem.component.PsButton
 import com.github.andiim.plantscan.core.designsystem.component.PsTopAppBar
 import com.github.andiim.plantscan.core.designsystem.icon.PsIcons
 import com.github.andiim.plantscan.core.model.data.ObjectDetection
-import com.github.andiim.plantscan.core.bitmap.asImageFromBase64
 
 @Composable
 fun DetectRoute(
     onBackClick: () -> Unit,
-    onSuggestClick: (String) -> Unit,
+    onSuggestClick: () -> Unit,
     viewModel: DetectViewModel = hiltViewModel(),
     onShowSnackbar: suspend (String, String?, SnackbarDuration?) -> Boolean,
 ) {
@@ -100,7 +100,7 @@ fun DetectRoute(
                     is DetectUiState.Success -> {
                         DetectScreen(
                             onBackClick = onBackClick,
-                            onSuggestClick = { onSuggestClick(userId) },
+                            onSuggestClick = onSuggestClick,
                             result = state.detection,
                         )
                     }
@@ -130,7 +130,7 @@ fun DetectPreview(
         Image(
             painter = painter,
             null,
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .fillMaxSize()
                 .align(Alignment.Center),
@@ -187,6 +187,7 @@ fun AlertDialogLoading() {
 
 private const val PERCENTAGE = 100
 
+@Suppress("detekt:LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetectScreen(
@@ -240,13 +241,13 @@ fun DetectScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = Color.Black)
+                    .background(color = Color.Black),
             ) {
                 Image(
                     painter = painter,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 )
 
                 Column(modifier = Modifier.align(Alignment.TopStart)) {

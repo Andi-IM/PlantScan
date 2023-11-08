@@ -42,7 +42,6 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 
 @Composable
 fun SettingsRoute(
-    restartScreen: () -> Unit,
     routeToAuth: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {

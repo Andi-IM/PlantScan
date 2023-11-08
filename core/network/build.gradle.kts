@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.android.library.jacoco)
@@ -21,7 +23,6 @@ android {
 secrets {
     defaultPropertiesFileName = "secrets.defaults.properties"
 }
-
 
 dependencies {
     implementation(project(":core:common"))

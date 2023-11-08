@@ -1,6 +1,5 @@
 package com.github.andiim.plantscan.core.auth
 
-import android.util.Log
 import com.github.andiim.plantscan.core.auth.model.User
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -27,12 +26,12 @@ class FirebaseAuthHelper @Inject constructor(
         awaitClose { auth.removeAuthStateListener(listener) }
     }
 
-    override suspend fun authenticate(email: String, password: String): Flow<Unit> = flow {
-        auth.signInWithEmailAndPassword(email, password)
+    override fun authenticate(email: String, password: String): Flow<Unit> = flow {
+        auth.signInWithEmailAndPassword(email, password).await()
     }
 
-    override suspend fun sendRecoveryEmail(email: String): Flow<Unit> = flow {
-        auth.sendPasswordResetEmail(email)
+    override fun sendRecoveryEmail(email: String): Flow<Unit> = flow {
+        auth.sendPasswordResetEmail(email).await()
     }
 
     override fun createAnonymousAccount(): Flow<Unit> = flow {

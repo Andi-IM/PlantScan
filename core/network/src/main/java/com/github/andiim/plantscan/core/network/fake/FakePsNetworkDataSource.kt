@@ -18,7 +18,7 @@ class FakePsNetworkDataSource @Inject constructor(
     private val assets: FakeAssetManager = NetworkJvmUnitTestFakeAssetManager,
 ) : PsNetworkDataSource {
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun detect(image: String, confidence: Int): DetectionResponse =
+    override suspend fun detect(image: String, confidence: Int, overlap: Int): DetectionResponse =
         withContext(ioDispatcher) {
             assets.open(DETECT_ASSET).use(networkJson::decodeFromStream)
         }

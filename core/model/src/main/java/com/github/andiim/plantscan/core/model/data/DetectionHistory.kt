@@ -8,5 +8,11 @@ data class DetectionHistory(
     val plantRef: String,
     val userId: String,
     val acc: Float,
-    val image: String? = null
+    val image: String,
+    val detections: List<LabelPredict>,
+)
+
+data class LabelPredict(
+    val objectClass: String = "",
+    val confidence: Float = 0f,
 )
