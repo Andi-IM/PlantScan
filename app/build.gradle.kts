@@ -82,6 +82,7 @@ dependencies {
 
     implementation(project(":feature:camera"))
     implementation(project(":feature:detect"))
+    implementation(project(":feature:detect-detail"))
     implementation(project(":feature:suggest"))
     implementation(project(":feature:account"))
 

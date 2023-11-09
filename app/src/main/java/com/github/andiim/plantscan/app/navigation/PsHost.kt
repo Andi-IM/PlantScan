@@ -10,6 +10,8 @@ import com.github.andiim.plantscan.feature.account.navigation.authScreen
 import com.github.andiim.plantscan.feature.account.navigation.navigateToAuth
 import com.github.andiim.plantscan.feature.camera.navigation.cameraScreen
 import com.github.andiim.plantscan.feature.camera.navigation.navigateToCamera
+import com.github.andiim.plantscan.feature.detect.detail.navigation.detectDetailScreen
+import com.github.andiim.plantscan.feature.detect.detail.navigation.navigateToDetectionDetail
 import com.github.andiim.plantscan.feature.detect.navigation.detectScreen
 import com.github.andiim.plantscan.feature.detect.navigation.navigateToDetection
 import com.github.andiim.plantscan.feature.findplant.navigation.FindPlantGraph
@@ -68,7 +70,12 @@ fun PsHost(
         detectScreen(
             onBackClick = navController::popBackStack,
             onShowSnackbar = onShowSnackbar,
-            onDetectSuggest = navController::navigateToSuggest,
+            onSuggestClick = navController::navigateToSuggest,
+        )
+
+        detectDetailScreen(
+            onBackClick = navController::popBackStack,
+            onSuggestClick = navController::navigateToSuggest
         )
 
         suggestScreen(
@@ -77,7 +84,9 @@ fun PsHost(
             onLoginPressed = navController::navigateToAuth,
         )
 
-        historyScreen()
+        historyScreen(
+            onDetailClick = navController::navigateToDetectionDetail,
+        )
 
         settingsGraph(
             onLoginClick = navController::navigateToAuth,

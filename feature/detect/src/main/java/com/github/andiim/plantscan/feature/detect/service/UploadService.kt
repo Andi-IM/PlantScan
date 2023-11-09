@@ -34,7 +34,6 @@ class UploadService : Service() {
     private var serviceJob = Job()
 
     private var scope = CoroutineScope(Dispatchers.Main + serviceJob)
-
     override fun onBind(intent: Intent?): IBinder? = null
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         scope.launch {
@@ -69,6 +68,10 @@ class UploadService : Service() {
                         ),
                     ).first()
                     Timber.d("Recorded $recordId")
+                    sendBroadcast(
+                        Intent(ACTION_RETURN_SERVICE)
+                            .putExtra(EXTRA_RETURN_DETECTION, recordId),
+                    )
                 }
             } catch (e: Exception) {
                 Timber.e("onStartCommand: Error", e)
@@ -76,7 +79,7 @@ class UploadService : Service() {
             stopSelf()
         }
 
-        return super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY
     }
 
     override fun onDestroy() {
@@ -86,6 +89,8 @@ class UploadService : Service() {
     }
 
     companion object {
+        const val ACTION_RETURN_SERVICE = "action_return_service"
         const val EXTRA_DETECTION = "extra_detection"
+        const val EXTRA_RETURN_DETECTION = "extra_return_detection"
     }
 }

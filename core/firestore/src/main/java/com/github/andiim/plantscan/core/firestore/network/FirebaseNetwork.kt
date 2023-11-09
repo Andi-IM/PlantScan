@@ -24,10 +24,13 @@ class FirebaseNetwork @Inject constructor(
     override suspend fun recordDetection(detection: HistoryDocument): String =
         db.collection(DETECT_COLLECTION).add(detection).await().id
 
-    override suspend fun getDetectionHistories(id: String): List<HistoryDocument> =
+    override suspend fun getDetectionHistories(userId: String): List<HistoryDocument> =
         querySnapshotHandling(
-            db.collection(DETECT_COLLECTION).whereEqualTo(USER_ID_FIELD, id),
+            db.collection(DETECT_COLLECTION).whereEqualTo(USER_ID_FIELD, userId),
         )
+
+    override suspend fun getDetectionDetail(historyId: String): HistoryDocument =
+        documentSnapshotHandling(db.collection(DETECT_COLLECTION).document(historyId))
 
     override suspend fun sendSuggestion(suggestionDocument: SuggestionDocument): String =
         db.collection(SUGGESTION_COLLECTION).add(suggestionDocument).await().id

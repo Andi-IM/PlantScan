@@ -34,7 +34,13 @@ class FakeFirebaseDataSource @Inject constructor(
     override suspend fun recordDetection(detection: HistoryDocument): String = ""
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun getDetectionHistories(id: String): List<HistoryDocument> =
+    override suspend fun getDetectionHistories(userId: String): List<HistoryDocument> =
+        withContext(ioDispatcher) {
+            assets.open(HISTORY_ASSET).use(networkJson::decodeFromStream)
+        }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    override suspend fun getDetectionDetail(historyId: String): HistoryDocument =
         withContext(ioDispatcher) {
             assets.open(HISTORY_ASSET).use(networkJson::decodeFromStream)
         }

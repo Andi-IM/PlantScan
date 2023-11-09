@@ -18,5 +18,5 @@ data class Prediction(
 data class Imgz(
     val width: Float,
     val height: Float,
-    val base64: String? = null,
+    val base64: String = "",
 )

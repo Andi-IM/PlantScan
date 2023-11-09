@@ -17,7 +17,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.andiim.plantscan.core.bitmap.asBase64
 import com.github.andiim.plantscan.core.bitmap.getBitmap
 import com.github.andiim.plantscan.core.data.repository.DetectRepository
-import com.github.andiim.plantscan.core.domain.GetUserLoginInfoUseCase
+import com.github.andiim.plantscan.core.domain.GetUserIdUsecase
 import com.github.andiim.plantscan.core.model.data.ObjectDetection
 import com.github.andiim.plantscan.core.model.data.Prediction
 import com.github.andiim.plantscan.core.result.Result
@@ -27,11 +27,7 @@ import com.github.andiim.plantscan.feature.detect.service.UploadService
 import com.github.andiim.plantscan.feature.detect.service.model.DetectionResult
 import com.github.andiim.plantscan.feature.detect.service.model.buildDetectionDataFromPrediction
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -39,19 +35,11 @@ import javax.inject.Inject
 @HiltViewModel
 class DetectViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getUserLoginInfo: GetUserLoginInfoUseCase,
+    private val getUserLoginInfo: GetUserIdUsecase,
     private val detectRepository: DetectRepository,
 ) : ViewModel() {
     private val args: DetectArgs = DetectArgs(savedStateHandle)
     val uri = args.uri.toUri()
-
-    val userId: StateFlow<String> = getUserLoginInfo().map {
-        if (it.isAnonymous) "Anonymous" else it.userId
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = "Anonymous",
-    )
 
     var status by mutableStateOf<DetectStatus>(DetectStatus.Preview)
         private set
@@ -89,7 +77,7 @@ class DetectViewModel @Inject constructor(
                                 val intent = Intent(context, UploadService::class.java)
                                 val historyData = DetectionResult(
                                     imgB64 = imgResult.asBase64(),
-                                    userId = userId.value,
+                                    userId = getUserLoginInfo().ifEmpty { "Anonymous" },
                                     accuracy = predict.confidence,
                                     detections = detections,
                                 )
@@ -109,6 +97,10 @@ class DetectViewModel @Inject constructor(
             }
             status = DetectStatus.Result
         }
+    }
+
+    fun onDetectSuccess(){
+
     }
 
     private fun findObjects(predictions: List<Prediction>): List<BoxWithText> =

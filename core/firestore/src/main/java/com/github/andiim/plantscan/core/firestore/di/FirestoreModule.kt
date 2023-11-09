@@ -4,7 +4,9 @@ import android.content.Context
 import com.github.andiim.plantscan.core.firestore.BuildConfig
 import com.github.andiim.plantscan.core.firestore.fake.FakeAssetManager
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.MemoryCacheSettings
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
@@ -28,6 +30,9 @@ object FirestoreModule {
     fun provideFirebaseFirestore(): FirebaseFirestore = Firebase.firestore.also {
         if (BuildConfig.USE_EMULTAOR.toBoolean()) {
             it.useEmulator(HOST, PORT)
+            it.firestoreSettings = firestoreSettings {
+                setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
+            }
         }
     }
 

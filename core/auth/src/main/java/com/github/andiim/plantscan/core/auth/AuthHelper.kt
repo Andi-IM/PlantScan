@@ -4,6 +4,8 @@ import com.github.andiim.plantscan.core.auth.model.User
 import kotlinx.coroutines.flow.Flow
 
 interface AuthHelper {
+    val currentUserId: String
+    val hasUser: Boolean
     val currentUser: Flow<User>
     fun authenticate(email: String, password: String): Flow<Unit>
     fun sendRecoveryEmail(email: String): Flow<Unit>

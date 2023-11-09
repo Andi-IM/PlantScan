@@ -11,6 +11,7 @@ interface FirebaseDataSource {
     suspend fun getPlants(): List<PlantDocument>
     suspend fun getPlantById(id: String): PlantDocument
     suspend fun recordDetection(detection: HistoryDocument): String
-    suspend fun getDetectionHistories(id: String): List<HistoryDocument>
+    suspend fun getDetectionHistories(userId: String): List<HistoryDocument>
+    suspend fun getDetectionDetail(historyId: String): HistoryDocument
     suspend fun sendSuggestion(suggestionDocument: SuggestionDocument): String
 }
