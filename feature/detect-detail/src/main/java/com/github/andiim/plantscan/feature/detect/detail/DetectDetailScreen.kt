@@ -1,6 +1,6 @@
 package com.github.andiim.plantscan.feature.detect.detail
 
- import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
@@ -24,6 +24,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.andiim.plantscan.core.designsystem.component.PsTopAppBar
 import com.github.andiim.plantscan.core.designsystem.icon.PsIcons
+import com.github.andiim.plantscan.core.ui.components.DetectImage
+import com.github.andiim.plantscan.core.ui.components.DetectResultImage
+import com.github.andiim.plantscan.core.ui.components.SuggestButton
+import com.github.andiim.plantscan.core.ui.extensions.toFormattedDate
 
 @Composable
 fun DetectDetailRoute(

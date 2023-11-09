@@ -50,6 +50,9 @@ import com.github.andiim.plantscan.core.designsystem.component.PsButton
 import com.github.andiim.plantscan.core.designsystem.component.PsTopAppBar
 import com.github.andiim.plantscan.core.designsystem.icon.PsIcons
 import com.github.andiim.plantscan.core.model.data.ObjectDetection
+import com.github.andiim.plantscan.core.ui.components.DetectImage
+import com.github.andiim.plantscan.core.ui.components.DetectResultImage
+import com.github.andiim.plantscan.core.ui.components.SuggestButton
 
 @Composable
 fun DetectRoute(
