@@ -62,7 +62,6 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun deleteAccount() {
-        Log.d("SETTINGS", "deleteAccount")
         viewModelScope.launch {
             authHelper.deleteAccount().collect()
             userDataRepository.setLoginInfo()

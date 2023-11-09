@@ -24,4 +24,8 @@ class FakeDetectHistoryRepo @Inject constructor(
     override fun getDetectionHistories(userId: String): Flow<List<DetectionHistory>> = flow {
         emit(dataSource.getDetectionHistories(userId).map(HistoryDocument::asExternalModel))
     }
+
+    override fun getDetectionDetail(historyId: String): Flow<DetectionHistory> = flow {
+        emit(dataSource.getDetectionDetail(historyId).asExternalModel())
+    }
 }

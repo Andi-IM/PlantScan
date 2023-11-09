@@ -15,8 +15,7 @@ fun DetectionResponse.asExternalModel() = ObjectDetection(
 
 fun ImgzResponse.asExternalModel() = Imgz(
     width = width,
-    height = height,
-    base64 = null,
+    height = height
 )
 
 fun PredictionResponse.asExternalModel() = Prediction(

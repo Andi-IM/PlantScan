@@ -16,12 +16,19 @@ import javax.inject.Inject
 class FirebaseAuthHelper @Inject constructor(
     private val auth: FirebaseAuth,
 ) : AuthHelper {
+    override val currentUserId: String
+        get() = auth.currentUser?.uid.orEmpty()
+
+    override val hasUser: Boolean
+        get() = auth.currentUser != null
+
     override val currentUser: Flow<User> = callbackFlow {
-        val listener = FirebaseAuth.AuthStateListener { auth ->
-            trySend(
-                auth.currentUser?.let { User(it.uid, it.isAnonymous) } ?: User(),
-            )
-        }
+        val listener =
+            FirebaseAuth.AuthStateListener { auth ->
+                trySend(
+                    auth.currentUser?.let { User(it.uid, it.isAnonymous) } ?: User(),
+                )
+            }
         auth.addAuthStateListener(listener)
         awaitClose { auth.removeAuthStateListener(listener) }
     }

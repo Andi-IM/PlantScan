@@ -1,21 +1,15 @@
 package com.github.andiim.plantscan.feature.detect
 
-import android.graphics.Bitmap
 import android.net.Uri
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -23,9 +17,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Dangerous
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -48,16 +39,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
@@ -152,7 +136,7 @@ fun DetectPreview(
 
         Column(modifier = Modifier.align(Alignment.BottomCenter)) {
             PsButton(onClick = onDetectClick) {
-                Text(text = "Detect this image")
+                Text(text = stringResource(R.string.detect_this_image))
             }
             Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
         }
@@ -197,14 +181,12 @@ fun DetectScreen(
 ) {
     val scrollState = rememberLazyListState()
     var showPreview by remember { mutableStateOf(false) }
-    val imgBitmap = result.image.base64?.asImageFromBase64()
+    val imgBitmap = result.image.base64.asImageFromBase64()
 
     Box {
         LazyColumn(state = scrollState, horizontalAlignment = Alignment.CenterHorizontally) {
             item {
                 Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-            }
-            item {
                 PsTopAppBar(
                     titleRes = R.string.detect_screen_title,
                     navigationIcon = {
@@ -213,20 +195,18 @@ fun DetectScreen(
                         }
                     },
                 )
-            }
-            item {
-                DetectImage(image = imgBitmap, onImageClick = { showPreview = !showPreview })
+                DetectImage(imageData = imgBitmap, onImageClick = { showPreview = !showPreview })
             }
 
             if (result.predictions.isEmpty()) {
                 item { Text(text = stringResource(R.string.predict_is_empty)) }
             }
-
             result.predictions.forEach { data ->
                 item {
+                    val acc = data.confidence.times(PERCENTAGE)
                     ListItem(
                         headlineContent = { Text(text = data.jsonMemberClass) },
-                        trailingContent = { Text(text = "${data.confidence.times(PERCENTAGE)}%") },
+                        trailingContent = { Text(text = "%.2f%%".format(acc)) },
                     )
                 }
             }
@@ -235,113 +215,10 @@ fun DetectScreen(
         }
 
         if (showPreview) {
-            val painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current).data(imgBitmap).build(),
+            DetectResultImage(
+                imageData = imgBitmap,
+                onShowPreview = { showPreview = !showPreview },
             )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = Color.Black),
-            ) {
-                Image(
-                    painter = painter,
-                    contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.fillMaxSize(),
-                )
-
-                Column(modifier = Modifier.align(Alignment.TopStart)) {
-                    Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-                    IconButton(
-                        onClick = { showPreview = !showPreview },
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.surface,
-                                shape = CircleShape,
-                            ),
-                    ) {
-                        Icon(PsIcons.Close, null, tint = Color.Black)
-                    }
-                }
-            }
         }
     }
-}
-
-@Composable
-fun DetectImage(
-    image: Bitmap?,
-    onImageClick: () -> Unit,
-) {
-    val imageSize = 32
-    SubcomposeAsyncImage(
-        model =
-        ImageRequest.Builder(LocalContext.current)
-            .data(image)
-            .size(imageSize)
-            .crossfade(true)
-            .build(),
-        loading = {
-            if (LocalInspectionMode.current) {
-                ImageInspection()
-            } else {
-                Box(modifier = Modifier.height(30.dp), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(modifier = Modifier.width(24.dp))
-                }
-            }
-        },
-        error = {
-            Box(modifier = Modifier.height(30.dp), contentAlignment = Alignment.Center) {
-                Icon(
-                    imageVector = Icons.Default.Dangerous,
-                    contentDescription = stringResource(R.string.fetch_image_error),
-                )
-            }
-        },
-        contentDescription = "image",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .animateContentSize()
-            .clickable { onImageClick() },
-    )
-}
-
-@Composable
-fun ImageInspection() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        Image(
-            painter = painterResource(R.drawable.orchid),
-            contentScale = ContentScale.FillHeight,
-            contentDescription = null,
-        )
-    }
-}
-
-@Composable
-fun SuggestButton(onClick: () -> Unit) {
-    val context = LocalContext.current
-
-    val annotatedText = buildAnnotatedString {
-        withStyle(style = SpanStyle()) { append(context.getString(R.string.suggestion_button_label)) }
-        append(" ")
-        withStyle(
-            style =
-            SpanStyle(color = (MaterialTheme.colorScheme).primary, fontWeight = FontWeight.Bold),
-        ) {
-            append(context.getString(R.string.suggestion_action_label))
-        }
-    }
-
-    ClickableText(
-        text = annotatedText,
-        onClick = { onClick() },
-    )
 }

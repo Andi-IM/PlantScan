@@ -62,9 +62,6 @@ import com.github.andiim.plantscan.core.designsystem.component.scrollbar.scrollb
 import com.github.andiim.plantscan.core.designsystem.icon.PsIcons
 import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
 import com.github.andiim.plantscan.core.model.data.Plant
-import com.github.andiim.plantscan.core.ui.DevicePreviews
-import com.github.andiim.plantscan.core.ui.PlantCard
-import com.github.andiim.plantscan.core.ui.TrackScreenViewEvent
 import com.github.andiim.plantscan.feature.findplant.R.string as AppText
 
 @Composable
@@ -199,6 +196,12 @@ private fun SearchContent(
         },
         modifier = modifier,
     ) {
+        Text(
+            text = "Still under construction ...",
+            style = MaterialTheme.typography.displaySmall,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+        )
         when (searchResultUiState) {
             SearchResultUiState.Loading,
             SearchResultUiState.LoadFailed,

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="car_tap_action">Open Resource Link</string>
-    <string name="fetch_image_error">Fetch image failed</string>
     <string name="back">Back</string>
+
+    <!-- Only for suggestion -->
+    <string name="fetch_image_error">Fetch image failed</string>
+    <string name="card_meta_data_text">%1$s • %2$s</string>
+    <string name="suggestion_button_label">Not sure for the result?</string>
+    <string name="suggestion_action_label">give a suggestion</string>
 </resources>

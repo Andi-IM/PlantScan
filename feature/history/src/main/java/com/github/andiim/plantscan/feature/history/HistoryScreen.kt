@@ -29,20 +29,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.andiim.plantscan.core.model.data.DetectionHistory
 import com.github.andiim.plantscan.core.ui.TrackScreenViewEvent
 import com.github.andiim.plantscan.core.ui.TrackScrollJank
+import com.github.andiim.plantscan.core.ui.extensions.toFormattedDate
 import com.github.andiim.plantscan.feature.history.navigation.History
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import timber.log.Timber
 
 @Composable
 internal fun HistoryRoute(
     modifier: Modifier = Modifier,
+    onItemClick: (String) -> Unit,
     viewModel: HistoryViewModel = hiltViewModel(),
 ) {
     val historyUiState by viewModel.historyUiState.collectAsState()
     TrackScreenViewEvent(screenName = History.route)
     HistoryScreen(
         historyState = historyUiState,
+        onItemClick = onItemClick,
         modifier = modifier,
     )
 }
@@ -50,10 +50,10 @@ internal fun HistoryRoute(
 @Composable
 internal fun HistoryScreen(
     historyState: HistoryUiState,
+    onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberLazyListState()
-    Timber.d("STATE $historyState")
     TrackScrollJank(scrollableState = scrollState, stateName = "detectionHistory")
     Box(modifier = modifier) {
         LazyColumn(
@@ -70,7 +70,7 @@ internal fun HistoryScreen(
 
                 is HistoryUiState.Success -> handleSuccess(
                     historyState.data,
-                    onItemClick = {},
+                    onItemClick = onItemClick,
                     modifier = Modifier.align(Alignment.Center),
                 )
             }
@@ -106,9 +106,9 @@ private fun LazyListScope.handleSuccess(
             key = { "${it.id}${it.plantRef}" },
             itemContent = { history ->
                 val acc = history.acc * 100
-                val time = history.timeStamp.toLocalDateTime(TimeZone.UTC)
+                val time = history.timeStamp.toFormattedDate()
                 Card(
-                    onClick = { onItemClick(history.plantRef) },
+                    onClick = { onItemClick(history.id!!) },
                     shape = RectangleShape,
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
                     elevation = CardDefaults.cardElevation(),
@@ -121,11 +121,7 @@ private fun LazyListScope.handleSuccess(
                             containerColor = Color.Transparent,
                         ),
                         headlineContent = { Text(history.plantRef) },
-                        supportingContent = {
-                            Text(
-                                "$time",
-                            )
-                        },
+                        supportingContent = { Text(time) },
                         trailingContent = { Text("%.2f%%".format(acc)) },
                     )
                 }
