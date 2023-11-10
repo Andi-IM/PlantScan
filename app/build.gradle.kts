@@ -1,116 +1,131 @@
+import com.github.andiim.plantscan.app.PsBuildType
+import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
+
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.application.compose)
+    alias(libs.plugins.android.application.flavors)
+    alias(libs.plugins.android.application.jacoco)
+    alias(libs.plugins.android.hilt)
+    alias(libs.plugins.android.application.firebase)
+    alias(libs.plugins.protobuf)
     kotlin("kapt")
-    id("com.google.dagger.hilt.android")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
-    id("com.google.firebase.firebase-perf")
+    id("jacoco")
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
-    compileSdk = libs.versions.compile.sdk.version.get().toInt()
-
     defaultConfig {
-        minSdk = libs.versions.min.sdk.version.get().toInt()
-        targetSdk = libs.versions.target.sdk.version.get().toInt()
-        namespace = "com.github.andiim.plantscan.app"
-
         applicationId = AppCoordinates.APP_ID
         versionCode = AppCoordinates.APP_VERSION_CODE
         versionName = AppCoordinates.APP_VERSION_NAME
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
-    composeOptions { kotlinCompilerExtensionVersion = libs.versions.compose.compilerextension.get() }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions { jvmTarget = JavaVersion.VERSION_17.toString() }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+
+        testInstrumentationRunner = "com.github.andiim.plantscan.core.testing.PsAppTestRunner"
+        vectorDrawables {
+            useSupportLibrary = true
         }
     }
 
-    lint {
-        warningsAsErrors = true
-        abortOnError = true
-        baseline = File("lint-baseline.xml")
+    buildTypes {
+        debug {
+            applicationIdSuffix = PsBuildType.DEBUG.applicationIdSuffix
+        }
+        val release by getting {
+            isMinifyEnabled = true
+            applicationIdSuffix = PsBuildType.RELEASE.applicationIdSuffix
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+            signingConfig = signingConfigs.getByName("debug")
+
+            firebaseAppDistribution {
+                artifactType = "APK"
+            }
+        }
+        create("benchmark") {
+            initWith(release)
+            matchingFallbacks.add("release")
+            signingConfig = signingConfigs.getByName("debug")
+            proguardFiles("benchmark-rules.pro")
+            isMinifyEnabled = true
+            applicationIdSuffix = PsBuildType.BENCHMARK.applicationIdSuffix
+        }
     }
 
-    // Use this block to configure different flavors
-//    flavorDimensions("version")
-//    productFlavors {
-//        create("full") {
-//            dimension = "version"
-//            applicationIdSuffix = ".full"
-//        }
-//        create("demo") {
-//            dimension = "version"
-//            applicationIdSuffix = ".demo"
-//        }
-//    }
+    packaging {
+        resources {
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+        }
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+        animationsDisabled = true
+    }
+
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
+    namespace = "com.github.andiim.plantscan.app"
 }
 
 dependencies {
-    // Logging
-    implementation(libs.timber)
+    implementation(project(":feature:findplant"))
+    implementation(project(":feature:plant"))
+    implementation(project(":feature:plantDetail"))
+    implementation(project(":feature:history"))
+    implementation(project(":feature:settings"))
 
-    // UI
-    implementation(libs.material)
+    implementation(project(":feature:camera"))
+    implementation(project(":feature:detect"))
+    implementation(project(":feature:detect-detail"))
+    implementation(project(":feature:suggest"))
+    implementation(project(":feature:account"))
 
-    // Hilt
-    implementation(libs.dagger.hilt)
-    implementation(libs.dagger.hilt.navigation.compose)
-    kapt(libs.dagger.hilt.compiler)
+    implementation(project(":core:common"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:data"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:model"))
 
-    // Ext. Module
-    implementation(projects.libraryAndroid)
-    implementation(projects.libraryKotlin)
+    implementation(project(":core:auth"))
+    implementation(project(":core:analytics"))
+    implementation(project(":core:storage-upload"))
+    implementation(project(":core:firestore"))
 
-    // Compose
-    implementation(platform(libs.compose.bom))
-    implementation(libs.bundles.compose)
-    debugImplementation(libs.bundles.compose.debug)
-    implementation(libs.bundles.lifecycle)
+    androidTestImplementation(project(":core:testing"))
+    androidTestImplementation(project(":core:datastore-test"))
+    androidTestImplementation(project(":core:data-test"))
+    androidTestImplementation(project(":core:network"))
+    androidTestImplementation(libs.navigation.testing)
+    androidTestImplementation(libs.accompanist.testharness)
+    androidTestImplementation(kotlin("test"))
 
-    // Accompanist
-    implementation(libs.accompanist.permission)
-    implementation(libs.accompanist.webview)
+    debugImplementation(libs.compose.ui.test.manifest)
+    debugImplementation(project(":ui-test-hilt-manifest"))
 
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.bundles.firebase)
-    implementation(libs.play.services.auth)
+    implementation(libs.camera)
+    implementation(libs.camera.core)
+    implementation(libs.camera.view)
 
-    // compat
+    implementation(libs.compose.activity)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
-
-    // Unit tests
-    testImplementation(libs.junit)
-    testImplementation(libs.dagger.hilt.testing)
-    kaptTest(libs.dagger.hilt.compiler)
-
-    // Instrument test
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.dagger.hilt.testing)
-    androidTestImplementation(libs.kotlin.coroutines.test)
-    androidTestImplementation(libs.truth)
-    kaptAndroidTest(libs.dagger.hilt.compiler)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.compose.runtime)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.compose.runtimeTracing)
+    implementation(libs.compose.materialWindow)
+    implementation(libs.dagger.hilt.navigation.compose)
+    implementation(libs.navigation.compose)
+    implementation(libs.androidx.window)
+    implementation(libs.androidx.profileinstaller)
+    implementation(libs.kotlinx.coroutines.guava)
+    implementation(libs.coil)
+    implementation(libs.timber)
 }
-
-kapt { correctErrorTypes = true }
-hilt { enableAggregatingTask = true }

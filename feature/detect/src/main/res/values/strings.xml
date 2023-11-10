@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="detect_screen_title">Result</string>
+
+    <string name="predict_is_empty">Can\'t detect or not available in dataset!</string>
+    <string name="detect_this_image">Detect this image</string>
+    <string name="return_error_data">Data can\'t be null</string>
+</resources>

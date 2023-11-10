@@ -1,5 +1,5 @@
 build:
-  maxIssues: 0
+  maxIssues: 100
   excludeCorrectable: false
   weights:
     # complexity: 2
@@ -8,7 +8,7 @@ build:
     # comments: 1
 
 config:
-  validation: true
+  validation: false
   warningsAsErrors: false
   checkExhaustiveness: false
   # when writing own rules with new properties, exclude the property path e.g.: 'my_rule_set,.*>.*>[my_property]'
@@ -44,7 +44,7 @@ console-reports:
 output-reports:
   active: true
   exclude:
-  # - 'TxtOutputReport'
+    # - 'TxtOutputReport'
   # - 'XmlOutputReport'
   # - 'HtmlOutputReport'
   # - 'MdOutputReport'
@@ -62,7 +62,7 @@ comments:
   DeprecatedBlockTag:
     active: false
   EndOfSentenceFormat:
-    active: false
+    active: true
     endOfSentenceFormat: '([.?!][ \t\n\r\f<])|([.?!:]$)'
   KDocReferencesNonPublicProperty:
     active: false
@@ -105,7 +105,7 @@ complexity:
     ignoreOverloaded: false
   CyclomaticComplexMethod:
     active: true
-    threshold: 15
+    threshold: 28
     ignoreSingleWhenExpression: false
     ignoreSimpleWhenEntries: false
     ignoreNestingFunctions: false
@@ -130,9 +130,9 @@ complexity:
     threshold: 60
   LongParameterList:
     active: true
-    functionThreshold: 6
-    constructorThreshold: 7
-    ignoreDefaultParameters: false
+    functionThreshold: 10
+    constructorThreshold: 11
+    ignoreDefaultParameters: true
     ignoreDataClasses: true
     ignoreAnnotatedParameter: []
   MethodOverloading:
@@ -166,12 +166,12 @@ complexity:
   TooManyFunctions:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
-    thresholdInFiles: 11
-    thresholdInClasses: 11
-    thresholdInInterfaces: 11
-    thresholdInObjects: 11
-    thresholdInEnums: 11
-    ignoreDeprecated: false
+    thresholdInFiles: 20
+    thresholdInClasses: 20
+    thresholdInInterfaces: 20
+    thresholdInObjects: 20
+    thresholdInEnums: 220
+    ignoreDeprecated: true
     ignorePrivate: false
     ignoreOverridden: false
 
@@ -305,7 +305,6 @@ naming:
   BooleanPropertyNaming:
     active: false
     allowedPattern: '^(is|has|are)'
-    ignoreOverridden: true
   ClassNaming:
     active: true
     classPattern: '[A-Z][a-zA-Z0-9]*'
@@ -314,7 +313,6 @@ naming:
     parameterPattern: '[a-z][A-Za-z0-9]*'
     privateParameterPattern: '[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
-    ignoreOverridden: true
   EnumNaming:
     active: true
     enumEntryPattern: '[A-Z][_a-zA-Z0-9]*'
@@ -330,15 +328,13 @@ naming:
   FunctionNaming:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
-    functionPattern: '[a-z][a-zA-Z0-9]*'
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
     excludeClassPattern: '$^'
-    ignoreOverridden: true
-    ignoreAnnotated: 'Composable'
+    ignoreAnnotated: ['Composable']
   FunctionParameterNaming:
-    active: true
+    active: false
     parameterPattern: '[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
-    ignoreOverridden: true
   InvalidPackageDeclaration:
     active: true
     rootPackage: ''
@@ -380,7 +376,6 @@ naming:
     variablePattern: '[a-z][A-Za-z0-9]*'
     privateVariablePattern: '(_)?[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
-    ignoreOverridden: true
 
 performance:
   active: true
@@ -531,12 +526,14 @@ style:
     includeLineWrapping: false
   ForbiddenComment:
     active: true
-    values:
-      - 'FIXME:'
-      - 'STOPSHIP:'
-      - 'TODO:'
-    allowedPatterns: ''
-    customMessage: ''
+    comments:
+      # Repeat the default configuration if it's still needed.
+      - reason: 'Forbidden FIXME todo marker in comment, please fix the problem.'
+        value: 'FIXME:'
+      - reason: 'Forbidden STOPSHIP todo marker in comment, please address the problem before shipping the code.'
+        value: 'STOPSHIP:'
+      - reason: 'Forbidden TODO todo marker in comment, please do the changes.'
+        value: 'TODO:'
   ForbiddenImport:
     active: false
     imports: []
@@ -572,8 +569,8 @@ style:
       - '1'
       - '2'
     ignoreHashCodeFunction: true
-    ignorePropertyDeclaration: false
-    ignoreLocalVariableDeclaration: false
+    ignorePropertyDeclaration: true
+    ignoreLocalVariableDeclaration: true
     ignoreConstantDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
     ignoreAnnotation: false
@@ -581,8 +578,6 @@ style:
     ignoreEnums: false
     ignoreRanges: false
     ignoreExtensionFunctions: true
-  MandatoryBracesIfStatements:
-    active: false
   MandatoryBracesLoops:
     active: false
   MaxChainedCallsOnSameLine:
@@ -632,7 +627,7 @@ style:
     active: false
   ReturnCount:
     active: true
-    max: 2
+    max: 3
     excludedFunctions:
       - 'equals'
     excludeLabeled: false
@@ -684,6 +679,7 @@ style:
   UnusedPrivateMember:
     active: true
     allowedNames: '(_|ignored|expected|serialVersionUID)'
+    ignoreAnnotated: ['Preview']
   UseAnyOrNoneInsteadOfFind:
     active: true
   UseArrayLiteralsInAnnotations:
@@ -731,6 +727,7 @@ formatting:
   AnnotationOnSeparateLine:
     active: true
     autoCorrect: true
+    indentSize: 4
   AnnotationSpacing:
     active: true
     autoCorrect: true
@@ -739,18 +736,34 @@ formatting:
     autoCorrect: true
     indentSize: 4
     maxLineLength: 120
-  BlockCommentInitialStarAlignment:
+  BinaryExpressionWrapping:
     active: false
+    autoCorrect: true
+    maxLineLength: 120
+    indentSize: 4
+  BlankLineBeforeDeclaration:
+    active: false
+    autoCorrect: true
+  BlockCommentInitialStarAlignment:
+    active: true
     autoCorrect: true
   ChainWrapping:
     active: true
     autoCorrect: true
+    indentSize: 4
+  ClassName:
+    active: false
   CommentSpacing:
     active: true
     autoCorrect: true
   CommentWrapping:
+    active: true
+    autoCorrect: true
+    indentSize: 4
+  ContextReceiverMapping:
     active: false
     autoCorrect: true
+    maxLineLength: 120
     indentSize: 4
   DiscouragedCommentLocation:
     active: false
@@ -758,6 +771,10 @@ formatting:
   EnumEntryNameCase:
     active: true
     autoCorrect: true
+  EnumWrapping:
+    active: false
+    autoCorrect: true
+    indentSize: 4
   Filename:
     active: true
   FinalNewline:
@@ -765,11 +782,14 @@ formatting:
     autoCorrect: true
     insertFinalNewLine: true
   FunKeywordSpacing:
-    active: false
+    active: true
     autoCorrect: true
+  FunctionName:
+    active: false
   FunctionReturnTypeSpacing:
-    active: false
+    active: true
     autoCorrect: true
+    maxLineLength: 120
   FunctionSignature:
     active: false
     autoCorrect: true
@@ -778,11 +798,19 @@ formatting:
     maxLineLength: 120
     indentSize: 4
   FunctionStartOfBodySpacing:
-    active: false
+    active: true
     autoCorrect: true
   FunctionTypeReferenceSpacing:
+    active: true
+    autoCorrect: true
+  IfElseBracing:
     active: false
     autoCorrect: true
+    indentSize: 4
+  IfElseWrapping:
+    active: false
+    autoCorrect: true
+    indentSize: 4
   ImportOrdering:
     active: true
     autoCorrect: true
@@ -792,7 +820,7 @@ formatting:
     autoCorrect: true
     indentSize: 4
   KdocWrapping:
-    active: false
+    active: true
     autoCorrect: true
     indentSize: 4
   MaximumLineLength:
@@ -800,7 +828,7 @@ formatting:
     maxLineLength: 120
     ignoreBackTickedIdentifier: false
   ModifierListSpacing:
-    active: false
+    active: true
     autoCorrect: true
   ModifierOrdering:
     active: true
@@ -808,8 +836,16 @@ formatting:
   MultiLineIfElse:
     active: true
     autoCorrect: true
+    indentSize: 4
+  MultilineExpressionWrapping:
+    active: false
+    autoCorrect: true
+    indentSize: 4
   NoBlankLineBeforeRbrace:
     active: true
+    autoCorrect: true
+  NoBlankLineInList:
+    active: false
     autoCorrect: true
   NoBlankLinesInChainedMethodCalls:
     active: true
@@ -817,9 +853,17 @@ formatting:
   NoConsecutiveBlankLines:
     active: true
     autoCorrect: true
+  NoConsecutiveComments:
+    active: false
   NoEmptyClassBody:
     active: true
     autoCorrect: true
+  NoEmptyFile:
+    active: false
+  NoEmptyFirstLineInClassBody:
+    active: false
+    autoCorrect: true
+    indentSize: 4
   NoEmptyFirstLineInMethodBlock:
     active: true
     autoCorrect: true
@@ -835,6 +879,10 @@ formatting:
   NoSemicolons:
     active: true
     autoCorrect: true
+  NoSingleLineBlockComment:
+    active: false
+    autoCorrect: true
+    indentSize: 4
   NoTrailingSpaces:
     active: true
     autoCorrect: true
@@ -848,17 +896,29 @@ formatting:
     active: true
     packagesToUseImportOnDemandProperty: 'java.util.*,kotlinx.android.synthetic.**'
   NullableTypeSpacing:
-    active: false
+    active: true
     autoCorrect: true
   PackageName:
     active: true
-    autoCorrect: true
   ParameterListSpacing:
     active: false
     autoCorrect: true
   ParameterListWrapping:
     active: true
     autoCorrect: true
+    maxLineLength: 120
+    indentSize: 4
+  ParameterWrapping:
+    active: true
+    autoCorrect: true
+    indentSize: 4
+    maxLineLength: 120
+  PropertyName:
+    active: false
+  PropertyWrapping:
+    active: true
+    autoCorrect: true
+    indentSize: 4
     maxLineLength: 120
   SpacingAroundAngleBrackets:
     active: true
@@ -900,11 +960,19 @@ formatting:
     active: true
     autoCorrect: true
   SpacingBetweenFunctionNameAndOpeningParenthesis:
+    active: true
+    autoCorrect: true
+  StatementWrapping:
     active: false
     autoCorrect: true
+    indentSize: 4
   StringTemplate:
     active: true
     autoCorrect: true
+  StringTemplateIndent:
+    active: false
+    autoCorrect: true
+    indentSize: 4
   TrailingCommaOnCallSite:
     active: false
     autoCorrect: true
@@ -913,16 +981,69 @@ formatting:
     active: false
     autoCorrect: true
     useTrailingCommaOnDeclarationSite: true
+  TryCatchFinallySpacing:
+    active: false
+    autoCorrect: true
+    indentSize: 4
   TypeArgumentListSpacing:
     active: false
     autoCorrect: true
+    indentSize: 4
   TypeParameterListSpacing:
     active: false
     autoCorrect: true
+    indentSize: 4
   UnnecessaryParenthesesBeforeTrailingLambda:
-    active: false
+    active: true
     autoCorrect: true
   Wrapping:
     active: true
     autoCorrect: true
     indentSize: 4
+    maxLineLength: 120
+
+# https://github.com/mrmans0n/compose-rules/blob/main/rules/detekt/src/main/resources/config/config.yml
+Compose:
+  CompositionLocalAllowlist:
+    active: true
+    allowedCompositionLocals: LocalAnalyticsHelper, LocalTintTheme, LocalBackgroundtheme
+  ContentEmitterReturningValues:
+    active: true
+  DefaultsVisibility:
+    active: true
+  ModifierClickableOrder:
+    active: true
+  ModifierComposable:
+    active: true
+  ModifierMissing:
+    active: true
+  ModifierNaming:
+    active: true
+  ModifierNotUsedAtRoot:
+    active: true
+  ModifierReused:
+    active: true
+  ModifierWithoutDefault:
+    active: true
+  MultipleEmitters:
+    active: true
+  MutableParams:
+    active: true
+  ComposableNaming:
+    active: true
+  ComposableParamOrder:
+    active: true
+  PreviewAnnotationNaming:
+    active: false
+  PreviewPublic:
+    active: false
+  RememberMissing:
+    active: true
+  RememberContentMissing:
+    active: true
+  UnstableCollections:
+    active: true
+  ViewModelForwarding:
+    active: true
+  ViewModelInjection:
+    active: true
