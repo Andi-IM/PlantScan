@@ -99,10 +99,6 @@ class DetectViewModel @Inject constructor(
         }
     }
 
-    fun onDetectSuccess(){
-
-    }
-
     private fun findObjects(predictions: List<Prediction>): List<BoxWithText> =
         predictions.map { results ->
             with(results) {

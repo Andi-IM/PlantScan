@@ -8,7 +8,7 @@ import com.github.andiim.plantscan.core.ui.navigation.AppDestination
 import com.github.andiim.plantscan.feature.camera.photoCapture.CameraRoute
 
 fun NavController.navigateToCamera() {
-    this.navigate(Camera.route){
+    this.navigate(Camera.route) {
         launchSingleTop = true
     }
 }

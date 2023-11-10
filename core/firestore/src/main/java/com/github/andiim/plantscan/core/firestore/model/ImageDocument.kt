@@ -10,12 +10,6 @@ data class ImageDocument(
     @ServerTimestamp val date: Date? = null,
     val attribution: String? = "",
     @Exclude val id: Long? = null,
-) {
-    @get:PropertyName("desc")
-    @set:PropertyName("desc")
-    var desc: String = ""
-
-    @get:PropertyName("description")
-    @set:PropertyName("description")
-    var description: String = ""
-}
+    @get:PropertyName("desc") @set:PropertyName("desc") var desc: String? = "",
+    @get:PropertyName("description") @set:PropertyName("description") var description: String? = "",
+)

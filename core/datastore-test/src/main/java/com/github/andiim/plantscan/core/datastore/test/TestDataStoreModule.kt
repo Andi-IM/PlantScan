@@ -40,5 +40,5 @@ fun TemporaryFolder.testUserPreferencesDataStore(
     serializer = userPreferencesSerializer,
     scope = coroutineScope,
 ) {
-    newFile("user_preferences_test.pb")
+    newFile("plantscan_user_preferences_test.pb")
 }

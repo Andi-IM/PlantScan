@@ -1,14 +1,11 @@
 package com.github.andiim.plantscan.core.data.repository
 
 import com.github.andiim.plantscan.core.data.model.asExternalModel
-import com.github.andiim.plantscan.core.database.dao.PlantDao
-import com.github.andiim.plantscan.core.database.model.asExternalModel
-import com.github.andiim.plantscan.core.firestore.FirebaseDataSource
+import com.github.andiim.plantscan.core.firestore.PsFirebaseDataSource
 import com.github.andiim.plantscan.core.firestore.model.PlantDocument
 import com.github.andiim.plantscan.core.model.data.Plant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 interface PlantRepository {
@@ -24,8 +21,7 @@ interface PlantRepository {
 }
 
 class DefaultPlantRepository @Inject constructor(
-    private val firebase: FirebaseDataSource,
-    private val plantDao: PlantDao,
+    private val firebase: PsFirebaseDataSource,
 ) : PlantRepository {
     override fun getPlants(): Flow<List<Plant>> = flow {
         emit(firebase.getPlants().map(PlantDocument::asExternalModel))

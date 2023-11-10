@@ -3,7 +3,7 @@ package com.github.andiim.plantscan.core.data.repository.fake
 import com.github.andiim.plantscan.core.data.model.asDocument
 import com.github.andiim.plantscan.core.data.model.asExternalModel
 import com.github.andiim.plantscan.core.data.repository.DetectRepository
-import com.github.andiim.plantscan.core.firestore.fake.FakeFirebaseDataSource
+import com.github.andiim.plantscan.core.firestore.fake.FakePsFirebaseDataSource
 import com.github.andiim.plantscan.core.model.data.ObjectDetection
 import com.github.andiim.plantscan.core.model.data.Suggestion
 import com.github.andiim.plantscan.core.network.AppDispatchers.IO
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class FakeDetectRepository @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val dataSource: FakePsNetworkDataSource,
-    private val firebase: FakeFirebaseDataSource,
+    private val firebase: FakePsFirebaseDataSource,
 ) : DetectRepository {
     override fun detect(
         base64ImageData: String,

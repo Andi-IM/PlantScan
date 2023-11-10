@@ -3,6 +3,7 @@ package com.github.andiim.plantscan.core.designsystem
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.junit4.createComposeRule
+import com.github.andiim.plantscan.core.designsystem.theme.LocalBackgroundTheme
 import com.github.andiim.plantscan.core.designsystem.theme.PsTheme
 import com.github.andiim.plantscan.core.designsystem.theme.lightColorScheme
 import org.junit.Rule
@@ -14,17 +15,18 @@ import kotlin.test.assertEquals
  * darkTheme, disableDynamicTheming
  *
  * It verifies that the various composition locals - [MaterialTheme], [LocalBackgroundTheme]
- * have the expected values for a given theme mode, as specifie by the design system.
+ * have the expected values for a given theme mode, as specific by the design system.
  */
 class ThemeTest {
     @get:Rule
     val composeTestRule = createComposeRule()
+
     @Test
-    fun darkThemeFalse_dynamicColorFalse(){
+    fun darkThemeFalse_dynamicColorFalse() {
         composeTestRule.setContent {
             PsTheme(
                 darkTheme = false,
-                disableDynamicTheming = true
+                disableDynamicTheming = true,
             ) {
                 val colorScheme = lightColorScheme
                 assertColorSchemesEqual(colorScheme, MaterialTheme.colorScheme)

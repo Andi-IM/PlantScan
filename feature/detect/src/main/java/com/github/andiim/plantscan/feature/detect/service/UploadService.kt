@@ -57,12 +57,12 @@ class UploadService : Service() {
                     val recordId = record(
                         DetectionHistory(
                             id = "${Clock.System.now()}_${data.userId}",
-                            timeStamp = Clock.System.now(),
+                            timestamp = Clock.System.now(),
                             plantRef = detections.first {
                                 it.confidence == detections.maxOf(LabelPredict::confidence)
                             }.objectClass,
                             userId = data.userId,
-                            acc = data.accuracy,
+                            accuracy = data.accuracy,
                             image = imageLink,
                             detections = detections,
                         ),

@@ -1,7 +1,7 @@
 package com.github.andiim.plantscan.core.firestore.di
 
-import com.github.andiim.plantscan.core.firestore.FirebaseDataSource
-import com.github.andiim.plantscan.core.firestore.network.FirebaseNetwork
+import com.github.andiim.plantscan.core.firestore.PsFirebaseDataSource
+import com.github.andiim.plantscan.core.firestore.network.PsFirebaseNetwork
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -11,5 +11,5 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 interface FlavoredFirestoreModule {
     @Binds
-    fun binds(firebase: FirebaseNetwork): FirebaseDataSource
+    fun binds(firebase: PsFirebaseNetwork): PsFirebaseDataSource
 }

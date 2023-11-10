@@ -7,8 +7,8 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import java.util.Base64
 import java.io.ByteArrayOutputStream
+import java.util.Base64
 
 fun Context.getBitmap(uri: Uri): Bitmap {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

@@ -50,7 +50,7 @@ fun RoundIconButton(
 @Composable
 fun ButtonPreview() {
     PsTheme {
-        Surface() {
+        Surface {
             Box(modifier = Modifier.padding(16.dp)) {
                 RoundIconButton(
                     imageVector = PsIcons.Camera,

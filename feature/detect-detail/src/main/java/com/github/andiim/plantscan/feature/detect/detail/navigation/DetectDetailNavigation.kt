@@ -46,4 +46,3 @@ fun NavGraphBuilder.detectDetailScreen(
         DetectDetailRoute(onBackClick = onBackClick, onSuggestClick = onSuggestClick)
     }
 }
-

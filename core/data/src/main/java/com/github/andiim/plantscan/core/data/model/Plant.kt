@@ -19,5 +19,5 @@ fun ImageDocument.asExternalModel() = PlantImage(
     id = id.toString(),
     attribution = attribution ?: "",
     url = url,
-    description = description
+    description = description ?: desc ?: ""
 )
