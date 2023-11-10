@@ -2,7 +2,7 @@ package com.github.andiim.plantscan.core.data.repository
 
 import com.github.andiim.plantscan.core.data.model.asDocument
 import com.github.andiim.plantscan.core.data.model.asExternalModel
-import com.github.andiim.plantscan.core.firestore.FirebaseDataSource
+import com.github.andiim.plantscan.core.firestore.PsFirebaseDataSource
 import com.github.andiim.plantscan.core.model.data.ObjectDetection
 import com.github.andiim.plantscan.core.model.data.Suggestion
 import com.github.andiim.plantscan.core.network.PsNetworkDataSource
@@ -22,7 +22,7 @@ interface DetectRepository {
 
 class JustOnlineDetectRepository @Inject constructor(
     private val network: PsNetworkDataSource,
-    private val firebase: FirebaseDataSource,
+    private val firebase: PsFirebaseDataSource,
 ) : DetectRepository {
     override fun detect(
         base64ImageData: String,

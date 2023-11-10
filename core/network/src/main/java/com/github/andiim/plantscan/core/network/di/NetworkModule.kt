@@ -43,7 +43,7 @@ object NetworkModule {
     fun provideLogging(): OkHttpClient {
         val loggingInterceptor = if (BuildConfig.DEBUG) {
 //            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS)
+            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS)
         } else {
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
         }

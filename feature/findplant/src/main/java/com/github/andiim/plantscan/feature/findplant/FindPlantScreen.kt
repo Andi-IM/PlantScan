@@ -35,6 +35,7 @@ import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -69,10 +70,10 @@ import com.github.andiim.plantscan.feature.findplant.R.string as AppText
 
 @Composable
 internal fun FindPlantRoute(
-    modifier: Modifier = Modifier,
     onPlantClick: (String) -> Unit,
     onCameraClick: () -> Unit,
     onPlantsClick: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: FindPlantViewModel = hiltViewModel(),
 ) {
     val recentSearchQueriesUiState by viewModel.recentSearchQueriesUiState.collectAsStateWithLifecycle()
@@ -97,12 +98,12 @@ internal fun FindPlantRoute(
 internal fun FindPlantScreen(
     modifier: Modifier = Modifier,
     onClearRecentSearches: () -> Unit = {},
-    onSearchTriggered: (String) -> Unit,
-    onQueryChanged: (String) -> Unit,
+    onSearchTriggered: (String) -> Unit = {},
+    onQueryChanged: (String) -> Unit = {},
     searchQuery: String = "",
-    onPlantClick: (String) -> Unit,
-    onCameraClick: () -> Unit,
-    onPlantsClick: () -> Unit,
+    onPlantClick: (String) -> Unit = {},
+    onCameraClick: () -> Unit = {},
+    onPlantsClick: () -> Unit = {},
     recentSearchUiState: RecentSearchQueriesUiState = RecentSearchQueriesUiState.Loading,
     searchResultUiState: SearchResultUiState = SearchResultUiState.Loading,
 ) {
@@ -124,8 +125,7 @@ internal fun FindPlantScreen(
             onClearRecentSearches = onClearRecentSearches,
             recentSearchUiState = recentSearchUiState,
             searchResultUiState = searchResultUiState,
-            modifier = Modifier
-                .align(Alignment.TopCenter),
+            modifier = Modifier.align(Alignment.TopCenter),
         )
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -146,11 +146,12 @@ internal fun FindPlantScreen(
             }
         }
 
+        val fraction = 0.8f
         PsButton(
             onClick = onPlantsClick,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .fillMaxWidth(0.8f)
+                .fillMaxWidth(fraction)
                 .padding(horizontal = 16.dp),
         ) {
             Text(text = "To list")
@@ -203,7 +204,9 @@ private fun SearchContent(
             text = "Still under construction ...",
             style = MaterialTheme.typography.displaySmall,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         )
         when (searchResultUiState) {
             SearchResultUiState.Loading,
@@ -219,7 +222,7 @@ private fun SearchContent(
                             onQueryChange(it)
                             onSearch(it)
                         },
-                        recentSearchQueries = recentSearchUiState.recentQueries.map { it.query },
+                        recentSearchQueries = SearchQueries(recentSearchUiState.recentQueries.map { it.query }),
                     )
                 }
             }
@@ -234,13 +237,13 @@ private fun SearchContent(
                                 onQueryChange(it)
                                 onSearch(it)
                             },
-                            recentSearchQueries = recentSearchUiState.recentQueries.map { it.query },
+                            recentSearchQueries = SearchQueries(recentSearchUiState.recentQueries.map { it.query }),
                         )
                     }
                 } else {
                     SearchResultBody(
                         onPlantClick = onItemClick,
-                        plants = searchResultUiState.plants,
+                        plants = Plants(searchResultUiState.plants),
                     )
                 }
             }
@@ -264,13 +267,17 @@ private fun SearchNotReadyBody() {
     }
 }
 
+@Immutable
+data class SearchQueries(val items: List<String>)
+
 @Composable
 fun RecentSearchesBody(
-    onClearRecentSearches: () -> Unit,
-    onRecentSearchClicked: (String) -> Unit,
-    recentSearchQueries: List<String>,
+    modifier: Modifier = Modifier,
+    onClearRecentSearches: () -> Unit = {},
+    onRecentSearchClicked: (String) -> Unit = {},
+    recentSearchQueries: SearchQueries = SearchQueries(listOf()),
 ) {
-    Column {
+    Column(modifier = modifier) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -285,7 +292,7 @@ fun RecentSearchesBody(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
 
-            if (recentSearchQueries.isNotEmpty()) {
+            if (recentSearchQueries.items.isNotEmpty()) {
                 IconButton(
                     onClick = onClearRecentSearches,
                     modifier = Modifier.padding(horizontal = 16.dp),
@@ -299,7 +306,7 @@ fun RecentSearchesBody(
             }
 
             LazyColumn(modifier = Modifier.padding(horizontal = 16.dp)) {
-                items(recentSearchQueries) { recentSearch ->
+                items(recentSearchQueries.items) { recentSearch ->
                     Text(
                         text = recentSearch,
                         style = MaterialTheme.typography.headlineSmall,
@@ -319,10 +326,12 @@ fun RecentSearchesBody(
 @Composable
 fun EmptySearchResultBody(
     searchQuery: String,
+    modifier: Modifier = Modifier,
 ) {
     val message = stringResource(id = AppText.search_icon_close_description, searchQuery)
     val start = message.indexOf(searchQuery)
     Text(
+        modifier = modifier,
         text = AnnotatedString(
             text = message,
             spanStyles = listOf(
@@ -336,9 +345,12 @@ fun EmptySearchResultBody(
     )
 }
 
+@Immutable
+data class Plants(val items: List<Plant>)
+
 @Composable
 private fun SearchResultBody(
-    plants: List<Plant>,
+    plants: Plants,
     onPlantClick: (String) -> Unit,
 ) {
     val state = rememberLazyGridState()
@@ -355,7 +367,7 @@ private fun SearchResultBody(
                 .testTag("search:plant"),
             state = state,
         ) {
-            if (plants.isNotEmpty()) {
+            if (plants.items.isNotEmpty()) {
                 item(
                     span = {
                         GridItemSpan(maxLineSpan)
@@ -369,7 +381,7 @@ private fun SearchResultBody(
                         },
                     )
                 }
-                plants.forEach { plant ->
+                plants.items.forEach { plant ->
                     val plantId = plant.name
                     item(
                         key = "plant-$plantId",
@@ -382,7 +394,7 @@ private fun SearchResultBody(
                 }
             }
         }
-        val itemsAvailable = plants.size
+        val itemsAvailable = plants.items.size
         val scrollbarState = state.scrollbarState(
             itemsAvailable = itemsAvailable,
         )

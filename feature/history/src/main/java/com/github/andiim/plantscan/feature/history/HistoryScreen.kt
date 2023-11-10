@@ -34,8 +34,8 @@ import com.github.andiim.plantscan.feature.history.navigation.History
 
 @Composable
 internal fun HistoryRoute(
-    modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: HistoryViewModel = hiltViewModel(),
 ) {
     val historyUiState by viewModel.historyUiState.collectAsState()
@@ -105,8 +105,8 @@ private fun LazyListScope.handleSuccess(
             items = detections,
             key = { "${it.id}${it.plantRef}" },
             itemContent = { history ->
-                val acc = history.acc * 100
-                val time = history.timeStamp.toFormattedDate()
+                val acc = history.accuracy * 100
+                val time = history.timestamp.toFormattedDate()
                 Card(
                     onClick = { onItemClick(history.id!!) },
                     shape = RectangleShape,

@@ -103,6 +103,7 @@ fun DetectPreview(
     uri: Uri,
     onBackPressed: () -> Unit,
     onDetectClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
@@ -110,7 +111,7 @@ fun DetectPreview(
             .size(Size.ORIGINAL).build(),
     )
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.Black),
     ) {
@@ -178,15 +179,16 @@ private const val PERCENTAGE = 100
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetectScreen(
+    result: ObjectDetection,
     onBackClick: () -> Unit,
     onSuggestClick: () -> Unit,
-    result: ObjectDetection,
+    modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberLazyListState()
     var showPreview by remember { mutableStateOf(false) }
     val imgBitmap = result.image.base64.asImageFromBase64()
 
-    Box {
+    Box(modifier = modifier) {
         LazyColumn(state = scrollState, horizontalAlignment = Alignment.CenterHorizontally) {
             item {
                 Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))

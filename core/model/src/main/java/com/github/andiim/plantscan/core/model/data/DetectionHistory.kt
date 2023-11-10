@@ -4,10 +4,10 @@ import kotlinx.datetime.Instant
 
 data class DetectionHistory(
     val id: String?,
-    val timeStamp: Instant,
+    val timestamp: Instant,
     val plantRef: String,
     val userId: String,
-    val acc: Float,
+    val accuracy: Float,
     val image: String,
     val detections: List<LabelPredict>,
 )

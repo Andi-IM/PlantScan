@@ -48,13 +48,14 @@ private const val PERCENTAGE = 100
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetectDetailScreen(
+    uiState: DetectDetailUiState,
     onBackClick: () -> Unit,
     onSuggestClick: () -> Unit,
-    uiState: DetectDetailUiState,
+    modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberLazyListState()
     var showPreview by remember { mutableStateOf(false) }
-    Box {
+    Box(modifier = modifier) {
         LazyColumn(state = scrollState, horizontalAlignment = Alignment.CenterHorizontally) {
             item {
                 Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
@@ -66,7 +67,7 @@ fun DetectDetailScreen(
 
                 is DetectDetailUiState.Success -> {
                     item {
-                        val date = uiState.history.timeStamp.toFormattedDate()
+                        val date = uiState.history.timestamp.toFormattedDate()
                         PsTopAppBar(
                             titleRes = R.string.detect_screen_title,
                             navigationIcon = {

@@ -8,22 +8,39 @@ import java.util.Date
 
 data class PlantDocument(
     @DocumentId val id: String = "",
-    var taxonomy: TaxonomyDocument? = null,
-    val description: String = "",
-    @[Exclude ServerTimestamp] var date: Date? = null,
-    val species: String = "",
     val name: String = "",
-    val images: List<ImageDocument> = listOf(),
+    val species: String = "",
+    val description: String = "",
     val thumbnail: String = "",
-) {
     @get:PropertyName("common_name")
     @set:PropertyName("common_name")
-    var commonName: List<CommonName> = listOf()
-
-    @[Exclude ServerTimestamp]
-    @get:PropertyName("Updated")
-    @set:PropertyName("Updated")
-    var updated: Date? = null
-
+    var commonName: List<CommonName> = listOf(),
+    val images: List<ImageDocument> = listOf(),
+    var taxonomy: TaxonomyDocument? = null,
+    @Exclude @ServerTimestamp var date: Date? = null,
+    @Exclude @ServerTimestamp @get:PropertyName("Updated") @set:PropertyName("Updated")
+    var updated: Date? = null,
+) {
     data class CommonName(val name: String = "")
+
+    constructor(
+        id: String,
+        name: String,
+        species: String,
+        description: String,
+        thumbnail: String,
+        commonName: List<CommonName>,
+        images: List<ImageDocument>,
+    ) : this(
+        id,
+        name,
+        species,
+        description,
+        thumbnail,
+        commonName,
+        images,
+        null,
+        null,
+        null,
+    )
 }

@@ -22,7 +22,7 @@ class PlantViewModel @Inject constructor(
         .map { result ->
             when (result) {
                 is Result.Error -> {
-                    PlantUiState.Error
+                    PlantUiState.Error(result.exception)
                 }
                 Result.Loading -> PlantUiState.Loading
                 is Result.Success -> PlantUiState.Success(result.data)
@@ -37,6 +37,6 @@ class PlantViewModel @Inject constructor(
 
 sealed interface PlantUiState {
     data class Success(val plants: List<Plant>) : PlantUiState
-    data object Error : PlantUiState
+    data class Error(val throwable: Throwable?) : PlantUiState
     data object Loading : PlantUiState
 }

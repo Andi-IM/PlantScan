@@ -1,6 +1,5 @@
 package com.github.andiim.plantscan.feature.settings
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.andiim.plantscan.core.auth.AuthHelper

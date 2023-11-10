@@ -24,13 +24,14 @@ import com.google.accompanist.web.rememberWebViewState
 fun WebRoute(
     popUpScreen: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: WebViewModel = hiltViewModel()
+    viewModel: WebViewModel = hiltViewModel(),
 ) {
     val state = rememberWebViewState(url = "https://${viewModel.webUrl}")
     Scaffold(
+        modifier = modifier,
         topBar = {
             Column(
-                modifier = modifier
+                Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
@@ -40,13 +41,13 @@ fun WebRoute(
                         IconButton(onClick = popUpScreen) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
-                    }
+                    },
                 )
                 if (state.isLoading) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
             }
-        }
+        },
     ) {
         WebView(state, Modifier.padding(it))
     }

@@ -2,7 +2,7 @@ package com.github.andiim.plantscan.core.data.repository
 
 import com.github.andiim.plantscan.core.data.model.asDocument
 import com.github.andiim.plantscan.core.data.model.asExternalModel
-import com.github.andiim.plantscan.core.firestore.FirebaseDataSource
+import com.github.andiim.plantscan.core.firestore.PsFirebaseDataSource
 import com.github.andiim.plantscan.core.firestore.model.HistoryDocument
 import com.github.andiim.plantscan.core.model.data.DetectionHistory
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +17,7 @@ interface DetectHistoryRepo {
 }
 
 class DefaultDetectHistoryRepo @Inject constructor(
-    private val firebase: FirebaseDataSource,
+    private val firebase: PsFirebaseDataSource,
 ) : DetectHistoryRepo {
     override fun recordDetection(detection: DetectionHistory): Flow<String> = flow {
         emit(firebase.recordDetection(detection.asDocument()))

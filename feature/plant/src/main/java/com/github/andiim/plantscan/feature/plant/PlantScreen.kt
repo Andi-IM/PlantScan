@@ -1,5 +1,6 @@
 package com.github.andiim.plantscan.feature.plant
 
+import android.util.Log
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,13 +43,14 @@ import com.github.andiim.plantscan.core.ui.plantCardItems
 import org.jetbrains.annotations.VisibleForTesting
 
 @Composable
-fun PlantRoute(
+internal fun PlantRoute(
     onBackClick: () -> Unit,
     onPlantClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PlantViewModel = hiltViewModel(),
 ) {
     val plantUiState: PlantUiState by viewModel.items.collectAsStateWithLifecycle()
+    Log.d("TAG", "PlantRoute: $plantUiState")
     TrackScreenViewEvent(screenName = "Plants")
     PlantScreen(
         plantUiState = plantUiState,
@@ -60,7 +62,7 @@ fun PlantRoute(
 
 @VisibleForTesting
 @Composable
-fun PlantScreen(
+internal fun PlantScreen(
     plantUiState: PlantUiState,
     onPlantClick: (String) -> Unit,
     onBackClick: () -> Unit,
@@ -82,7 +84,7 @@ fun PlantScreen(
                     CircularProgressIndicator(modifier = modifier)
                 }
 
-                PlantUiState.Error -> {}
+                is PlantUiState.Error -> {}
                 is PlantUiState.Success -> {
                     item {
                         PlantToolbar(
@@ -117,7 +119,7 @@ fun PlantScreen(
 private fun plantItemSize(
     plantUiState: PlantUiState,
 ) = when (plantUiState) {
-    PlantUiState.Error -> 0 // Nothing
+    is PlantUiState.Error -> 0 // Nothing
     PlantUiState.Loading -> 1 // Loading bar
     is PlantUiState.Success -> 2 + plantUiState.plants.size // Toolbar, header
 }
@@ -145,7 +147,7 @@ private fun LazyListScope.plantBody(
     plants: PlantUiState,
     onPlantClick: (String) -> Unit,
 
-    ) {
+) {
     plantResourceCards(plants, onPlantClick)
 }
 
@@ -166,7 +168,7 @@ private fun LazyListScope.plantResourceCards(
             CircularProgressIndicator()
         }
 
-        PlantUiState.Error -> item {
+        is PlantUiState.Error -> item {
             Text("Error")
         }
     }

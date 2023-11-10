@@ -62,11 +62,12 @@ fun SettingsScreen(
     onAuthAction: () -> Unit,
     onSignOutAction: () -> Unit,
     onDeleteAccountAction: () -> Unit,
-    supportDynamicColor: Boolean = supportsDynamicTheming(),
     onChangeDynamicColorPreference: (useDynamicColor: Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    supportDynamicColor: Boolean = supportsDynamicTheming(),
     onChangeDarkThemeConfig: (darkThemeConfig: DarkThemeConfig) -> Unit,
 ) {
-    LazyColumn(Modifier.padding(horizontal = 16.dp)) {
+    LazyColumn(modifier.padding(horizontal = 16.dp)) {
         when (uiState) {
             SettingsUiState.Loading -> {
                 item {
@@ -193,9 +194,10 @@ fun SettingsDialogThemeChooserRow(
     text: String,
     selected: Boolean,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        Modifier
+        modifier
             .fillMaxWidth()
             .selectable(
                 selected = selected,
