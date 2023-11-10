@@ -30,8 +30,8 @@ fun NavController.navigateToDetectionDetail(uri: String) {
 }
 
 object DetectDetail : AppDestination {
-    override val route: String = "detect_route"
-    const val historyArg = "uri"
+    override val route: String = "detect_detail_route"
+    const val historyArg = "historyId"
     val routeWithArgs = "$route/{$historyArg}"
     val arguments = listOf(
         navArgument(historyArg) { type = NavType.StringType },

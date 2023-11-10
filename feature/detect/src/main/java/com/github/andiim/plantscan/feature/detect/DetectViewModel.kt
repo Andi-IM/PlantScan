@@ -39,7 +39,7 @@ class DetectViewModel @Inject constructor(
     private val detectRepository: DetectRepository,
 ) : ViewModel() {
     private val args: DetectArgs = DetectArgs(savedStateHandle)
-    val uri = args.uri.toUri()
+    val uri = args.detectUri.toUri()
 
     var status by mutableStateOf<DetectStatus>(DetectStatus.Preview)
         private set

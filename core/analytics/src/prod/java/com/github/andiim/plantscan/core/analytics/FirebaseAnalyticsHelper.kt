@@ -2,7 +2,7 @@
 package com.github.andiim.plantscan.core.analytics
 
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.analytics.logEvent
 import javax.inject.Inject
 
 /**
@@ -13,12 +13,14 @@ class FirebaseAnalyticsHelper @Inject constructor(
 ) : AnalyticsHelper {
 
     override fun logEvent(event: AnalyticsEvent) {
+        val keyCharacters = 40
+        val valueCharacters = 100
         firebaseAnalytics.logEvent(event.type) {
             for (extra in event.extras) {
                 // Truncate parameter keys and values according to firebase maximum length values.
                 param(
-                    key = extra.key.take(40),
-                    value = extra.value.take(100),
+                    key = extra.key.take(keyCharacters),
+                    value = extra.value.take(valueCharacters),
                 )
             }
         }

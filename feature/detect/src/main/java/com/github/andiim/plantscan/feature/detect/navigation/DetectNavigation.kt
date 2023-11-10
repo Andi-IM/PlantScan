@@ -14,7 +14,7 @@ import java.net.URLEncoder
 
 private val urlCharacterEncoding: String = Charsets.UTF_8.name()
 
-internal class DetectArgs(val uri: String) {
+internal class DetectArgs(val detectUri: String) {
     constructor(savedStateHandle: SavedStateHandle) : this(
         URLDecoder.decode(
             checkNotNull(savedStateHandle[Detect.detectArg]),
@@ -32,7 +32,7 @@ fun NavController.navigateToDetection(uri: String) {
 
 object Detect : AppDestination {
     override val route: String = "detect_route"
-    const val detectArg = "uri"
+    const val detectArg = "detect_uri"
     val routeWithArgs = "$route/{$detectArg}"
     val arguments = listOf(
         navArgument(detectArg) { type = NavType.StringType },

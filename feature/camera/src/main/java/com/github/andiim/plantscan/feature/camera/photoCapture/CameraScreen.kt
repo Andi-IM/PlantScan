@@ -2,6 +2,7 @@ package com.github.andiim.plantscan.feature.camera.photoCapture
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -61,11 +62,16 @@ fun CameraRoute(
     onImageCaptured: (String) -> Unit,
     viewModel: CameraViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val cameraPermissionState: PermissionState = rememberPermissionState(Manifest.permission.CAMERA)
     var galleryLauncherOpened by remember { mutableStateOf(false) }
     val galleryLauncher =
         rememberLauncherForActivityResult(PickVisualMedia()) { uri: Uri? ->
-            if (uri != null) onImageCaptured(uri.toString())
+            if (uri != null) {
+                val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                context.contentResolver.takePersistableUriPermission(uri, flag)
+                onImageCaptured(uri.toString())
+            }
         }
 
     val cameraState: CameraUiState by viewModel.uiState.collectAsStateWithLifecycle()
