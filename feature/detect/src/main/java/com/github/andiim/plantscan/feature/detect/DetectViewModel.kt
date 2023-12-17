@@ -3,9 +3,6 @@ package com.github.andiim.plantscan.feature.detect
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Rect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +26,6 @@ import com.github.andiim.plantscan.feature.detect.service.model.buildDetectionDa
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,7 +56,8 @@ class DetectViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
-                        val imgResult = findObjects(it.data.predictions).applyToImage(img)
+                        val imgResult =
+                            findObjects(it.data.predictions).applyToImage(img)
                         val result = it.data.apply {
                             image = image.copy(base64 = imgResult.asBase64())
                         }
@@ -79,7 +76,7 @@ class DetectViewModel @Inject constructor(
                                     userId = getUserLoginInfo().ifEmpty { "Anonymous" },
                                     accuracy = predict.confidence,
                                     detections = detections,
-                                    time = result.time
+                                    time = result.time,
                                 )
                                 intent.putExtra(UploadService.EXTRA_DETECTION, historyData)
                                 context.startService(intent)
@@ -91,7 +88,7 @@ class DetectViewModel @Inject constructor(
 
                     is Result.Error -> {
                         uiState = DetectUiState.Error(it.exception?.message)
-                        Timber.tag("Camera Error").e(it.exception, "detect: %s", null)
+                        // Timber.tag("Camera Error").e(it.exception, "detect: %s", null)
                     }
                 }
             }
@@ -113,51 +110,19 @@ class DetectViewModel @Inject constructor(
             }
         }
 
-    private fun List<BoxWithText>.applyToImage(
-        image: Bitmap,
-        strokeWidth: Float = 8f,
-        maxFontSize: Float = 96f,
-    ): Bitmap {
+    private fun List<BoxWithText>.applyToImage(image: Bitmap): Bitmap {
         if (isEmpty()) return image
         val outputBitmap = image.copy(Bitmap.Config.ARGB_8888, true)
-        val canvas = Canvas(outputBitmap)
-        val pen = Paint().apply {
-            textAlign = Paint.Align.LEFT
-        }
-
-        this.forEach {
-            // draw bounding box
-            pen.color = Color.RED
-            pen.strokeWidth = strokeWidth
-            pen.style = Paint.Style.STROKE
-            val box = it.box
-            canvas.drawRect(box, pen)
-
-            val tagSize = Rect(0, 0, 0, 0)
-
-            // calculate the right font size
-            pen.style = Paint.Style.FILL_AND_STROKE
-            pen.color = Color.YELLOW
-            pen.strokeWidth = 2F
-
-            pen.textSize = maxFontSize
-            pen.getTextBounds(it.text, 0, it.text.length, tagSize)
-            val fontSize: Float = pen.textSize * box.width() / tagSize.width()
-
-            // adjust the font size so texts are inside the bounding box
-            if (fontSize < pen.textSize) pen.textSize = fontSize
-
-            var margin = (box.width() - tagSize.width()) / 2.0F
-            if (margin < 0F) margin = 0F
-            canvas.drawText(it.text, box.left + margin, box.top + tagSize.height().times(1F), pen)
+        DrawCanvas(outputBitmap).also {
+            it.setResults(this)
         }
         return outputBitmap
     }
 
-    fun deleteImageFromUri(context: Context) {
-        val contentResolver = context.contentResolver
-        contentResolver.delete(uri, null, null)
-    }
+//    fun deleteImageFromUri(context: Context) {
+//        val contentResolver = context.contentResolver
+//        contentResolver.delete(uri, null, null)
+//    }
 }
 
 data class BoxWithText(val box: Rect, val text: String)

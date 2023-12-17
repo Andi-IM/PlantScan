@@ -91,7 +91,6 @@ fun PlantDetailScreen(
                     item {
                         Toolbar(onBackClick = onBackClick)
                     }
-                    // Body
                     detailBody(uiState.data)
                 }
             }

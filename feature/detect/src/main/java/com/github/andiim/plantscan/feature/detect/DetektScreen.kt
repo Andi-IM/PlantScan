@@ -72,7 +72,7 @@ fun DetectRoute(
                     isDialogShow = showDialog,
                     onBackPressed = {
                         onBackClick()
-                        viewModel.deleteImageFromUri(context)
+                        // viewModel.deleteImageFromUri(context)
                     },
                     onDetectClick = { detect(context) },
                 )
