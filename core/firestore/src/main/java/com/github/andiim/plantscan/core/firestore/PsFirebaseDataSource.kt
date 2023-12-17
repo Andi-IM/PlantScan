@@ -9,6 +9,8 @@ import com.github.andiim.plantscan.core.firestore.model.SuggestionDocument
  */
 interface PsFirebaseDataSource {
     suspend fun getPlants(): List<PlantDocument>
+    suspend fun searchPlants(query: String): List<PlantDocument>
+    suspend fun countPlants(): Long
     suspend fun getPlantById(id: String): PlantDocument
     suspend fun recordDetection(detection: HistoryDocument): String
     suspend fun getDetectionHistories(userId: String): List<HistoryDocument>

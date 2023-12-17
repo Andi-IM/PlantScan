@@ -6,6 +6,7 @@ import com.github.andiim.plantscan.core.firestore.fake.FakePsFirebaseDataSource
 import com.github.andiim.plantscan.core.firestore.model.PlantDocument
 import com.github.andiim.plantscan.core.model.data.Plant
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -21,7 +22,16 @@ class FakePlantRepository @Inject constructor(
             dataSource.getPlants().map(PlantDocument::asExternalModel)
         }
 
+    override fun searchPlants(query: String): Flow<List<Plant>> =
+        flow {
+            dataSource.searchPlants(query).map(PlantDocument::asExternalModel)
+        }
+
     override fun getPlantById(id: String): Flow<Plant> {
         return getPlants().map { it.first { plant -> plant.id == id } }
+    }
+
+    override fun countPlant(): Flow<Int> = flow {
+        emit(getPlants().count())
     }
 }

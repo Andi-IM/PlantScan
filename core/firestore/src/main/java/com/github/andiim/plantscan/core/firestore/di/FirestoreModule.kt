@@ -3,11 +3,11 @@ package com.github.andiim.plantscan.core.firestore.di
 import android.content.Context
 import com.github.andiim.plantscan.core.firestore.BuildConfig
 import com.github.andiim.plantscan.core.firestore.fake.FakeAssetManager
+import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.MemoryCacheSettings
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.firestoreSettings
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.firestoreSettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

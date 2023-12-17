@@ -18,6 +18,7 @@ data class HistoryDocument(
     val accuracy: Float = 0f,
     val image: String = "",
     val detections: List<LabelPredictDocument> = listOf(),
+    val time: Float = 0f,
 )
 
 @Serializable

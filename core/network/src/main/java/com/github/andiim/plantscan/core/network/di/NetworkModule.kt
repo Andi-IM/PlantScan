@@ -51,4 +51,13 @@ object NetworkModule {
         return OkHttpClient.Builder().connectTimeout(TIME_OUT, TimeUnit.SECONDS)
             .readTimeout(TIME_OUT, TimeUnit.SECONDS).addInterceptor(loggingInterceptor).build()
     }
+
+//    @Provides
+//    @Singleton
+//    fun provideAlgoliaClient(): ClientSearch {
+//        return ClientSearch(
+//            applicationID = ApplicationID("H23OVSFHI8"),
+//            apiKey = APIKey("6ad963b56b299f7bb47f25f3b1441d13")
+//        )
+//    }
 }

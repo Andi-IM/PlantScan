@@ -3,6 +3,7 @@ package com.github.andiim.plantscan.feature.settings
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -30,6 +31,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.github.andiim.plantscan.core.designsystem.component.MinimalDialog
 import com.github.andiim.plantscan.core.designsystem.component.PsTextButton
 import com.github.andiim.plantscan.core.designsystem.icon.PsIcons
 import com.github.andiim.plantscan.core.designsystem.theme.supportsDynamicTheming
@@ -48,6 +50,7 @@ fun SettingsRoute(
     val uiState by viewModel.settingsUiState.collectAsStateWithLifecycle()
     SettingsScreen(
         uiState = uiState,
+        isDialogShow = viewModel.showDialog,
         onAuthAction = routeToAuth,
         onSignOutAction = viewModel::signOut,
         onDeleteAccountAction = viewModel::deleteAccount,
@@ -59,6 +62,7 @@ fun SettingsRoute(
 @Composable
 fun SettingsScreen(
     uiState: SettingsUiState,
+    isDialogShow: Boolean,
     onAuthAction: () -> Unit,
     onSignOutAction: () -> Unit,
     onDeleteAccountAction: () -> Unit,
@@ -67,32 +71,37 @@ fun SettingsScreen(
     supportDynamicColor: Boolean = supportsDynamicTheming(),
     onChangeDarkThemeConfig: (darkThemeConfig: DarkThemeConfig) -> Unit,
 ) {
-    LazyColumn(modifier.padding(horizontal = 16.dp)) {
-        when (uiState) {
-            SettingsUiState.Loading -> {
-                item {
-                    Text(
-                        stringResource(string.loading),
-                        modifier = Modifier.padding(vertical = 16.dp),
-                    )
+    Box {
+        LazyColumn(modifier.padding(horizontal = 16.dp)) {
+            when (uiState) {
+                SettingsUiState.Loading -> {
+                    item {
+                        Text(
+                            stringResource(string.loading),
+                            modifier = Modifier.padding(vertical = 16.dp),
+                        )
+                    }
                 }
-            }
 
-            is SettingsUiState.Success -> settingsPanel(
-                settings = uiState.settings,
-                supportDynamicColor = supportDynamicColor,
-                onAuthClick = onAuthAction,
-                onSignOutClick = onSignOutAction,
-                onDeleteAccountClick = onDeleteAccountAction,
-                onChangeDynamicColorPreference = onChangeDynamicColorPreference,
-                onChangeDarkThemeConfig = onChangeDarkThemeConfig,
-            )
+                is SettingsUiState.Success -> settingsPanel(
+                    settings = uiState.settings,
+                    supportDynamicColor = supportDynamicColor,
+                    onAuthClick = onAuthAction,
+                    onSignOutClick = onSignOutAction,
+                    onDeleteAccountClick = onDeleteAccountAction,
+                    onChangeDynamicColorPreference = onChangeDynamicColorPreference,
+                    onChangeDarkThemeConfig = onChangeDarkThemeConfig,
+                )
+            }
+            item {
+                HorizontalDivider(Modifier.padding(top = 8.dp))
+            }
+            item {
+                LinksPanel()
+            }
         }
-        item {
-            HorizontalDivider(Modifier.padding(top = 8.dp))
-        }
-        item {
-            LinksPanel()
+        if (isDialogShow) {
+            MinimalDialog(message = "Loading...")
         }
     }
 }

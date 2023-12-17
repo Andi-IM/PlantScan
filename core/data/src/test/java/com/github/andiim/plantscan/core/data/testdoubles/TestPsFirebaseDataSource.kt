@@ -21,6 +21,13 @@ class TestPsFirebaseDataSource : PsFirebaseDataSource {
     private val allPlants = runBlocking { source.getPlants() }
 
     override suspend fun getPlants(): List<PlantDocument> = allPlants
+    override suspend fun searchPlants(query: String): List<PlantDocument> {
+        return allPlants
+    }
+
+    override suspend fun countPlants(): Long {
+        return allPlants.size.toLong()
+    }
 
     override suspend fun getPlantById(id: String): PlantDocument = runBlocking {
         source.getPlantById(id)

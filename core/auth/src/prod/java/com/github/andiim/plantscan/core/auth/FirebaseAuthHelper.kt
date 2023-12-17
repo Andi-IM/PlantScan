@@ -34,6 +34,9 @@ class FirebaseAuthHelper @Inject constructor(
     }
 
     override fun authenticate(email: String, password: String): Flow<Unit> = flow {
+        if (auth.currentUser!!.isAnonymous) {
+            auth.currentUser!!.delete().await()
+        }
         auth.signInWithEmailAndPassword(email, password).await()
     }
 
@@ -55,11 +58,7 @@ class FirebaseAuthHelper @Inject constructor(
     }
 
     override fun signOut(): Flow<Unit> = flow {
-        if (auth.currentUser!!.isAnonymous) {
-            auth.currentUser!!.delete()
-            createAnonymousAccount()
-        } else {
-            auth.signOut()
-        }
+        auth.signOut()
+        createAnonymousAccount()
     }
 }

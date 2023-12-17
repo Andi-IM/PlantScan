@@ -15,6 +15,7 @@ plugins {
 }
 
 android {
+    ndkVersion = "25.1.8937393"
     defaultConfig {
         applicationId = AppCoordinates.APP_ID
         versionCode = AppCoordinates.APP_VERSION_CODE
@@ -55,7 +56,8 @@ android {
 
     packaging {
         resources {
-            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+            excludes += "META-INF/*.version"
+            excludes += "META-INF/**"
         }
     }
 
@@ -120,6 +122,7 @@ dependencies {
     implementation(libs.compose.runtime)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.compose.runtimeTracing)
+    implementation(libs.compose.ui)
     implementation(libs.compose.materialWindow)
     implementation(libs.dagger.hilt.navigation.compose)
     implementation(libs.navigation.compose)

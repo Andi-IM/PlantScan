@@ -15,12 +15,13 @@ import java.util.Date
  */
 fun HistoryDocument.asExternalModel() = DetectionHistory(
     id = id,
+    timestamp = timestamp?.toInstantKtx()!!,
     plantRef = plantRef,
     userId = userId,
     accuracy = accuracy,
-    timestamp = timestamp?.toInstantKtx()!!,
     image = image,
     detections = detections.map(LabelPredictDocument::asExternalModel),
+    time = time,
 )
 
 fun LabelPredictDocument.asExternalModel() = LabelPredict(
@@ -45,7 +46,8 @@ fun DetectionHistory.asDocument() = HistoryDocument(
     accuracy = accuracy,
     image = image,
     detections = detections.map(LabelPredict::asDocument),
-    timestamp = Date.from(timestamp.toJavaInstant())
+    timestamp = Date.from(timestamp.toJavaInstant()),
+    time = time,
 )
 
 fun LabelPredict.asDocument() = LabelPredictDocument(

@@ -68,12 +68,13 @@ class FirebaseDocumentKtTest {
 
     private val detectionHistory = DetectionHistory(
         id = "id",
+        timestamp = Clock.System.now(),
         plantRef = "plantRef",
         userId = "userId",
         accuracy = 100.0f,
-        timestamp = Clock.System.now(),
         image = "image",
         detections = listOf(labelPredict),
+        time = 1.0f,
     )
 
     @Test

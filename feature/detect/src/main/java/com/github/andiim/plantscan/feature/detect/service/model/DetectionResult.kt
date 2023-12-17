@@ -14,6 +14,7 @@ data class DetectionResult(
     val userId: String,
     val accuracy: Float,
     val detections: List<HashMap<String, String>>,
+    val time: Float,
 ) : Parcelable
 
 private const val OBJECT_CLASS = "objectClass"

@@ -10,7 +10,7 @@ import javax.inject.Inject
  * Fake implementation of the [SearchContentsRepository].
  */
 class FakeSearchContentsRepository @Inject constructor() : SearchContentsRepository {
-    override suspend fun populateFtsData() = Unit
+    // suspend fun populateFtsData() = Unit
     override fun searchContents(searchQuery: String): Flow<SearchResult> = flowOf()
     override fun getSearchContentsCount(): Flow<Int> = flowOf(1)
 }

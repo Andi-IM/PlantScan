@@ -10,6 +10,7 @@ data class DetectionHistory(
     val accuracy: Float,
     val image: String,
     val detections: List<LabelPredict>,
+    val time: Float,
 )
 
 data class LabelPredict(

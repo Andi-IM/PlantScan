@@ -12,12 +12,12 @@ fun PlantDocument.asExternalModel() = Plant(
     description = description,
     thumbnail = thumbnail,
     commonName = commonName.map { it.name },
-    images = images.map { it.asExternalModel() }
+    images = images.map { it.asExternalModel() },
 )
 
 fun ImageDocument.asExternalModel() = PlantImage(
     id = id.toString(),
     attribution = attribution ?: "",
     url = url,
-    description = description ?: desc ?: ""
+    description = description ?: desc ?: "",
 )

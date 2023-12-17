@@ -5,6 +5,7 @@ import com.github.andiim.plantscan.core.network.AppDispatchers.IO
 import com.github.andiim.plantscan.core.network.Dispatcher
 import com.github.andiim.plantscan.core.network.PsNetworkDataSource
 import com.github.andiim.plantscan.core.network.model.DetectionResponse
+import com.github.andiim.plantscan.core.network.model.QueryResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -23,7 +24,13 @@ class FakePsNetworkDataSource @Inject constructor(
             assets.open(DETECT_ASSET).use(networkJson::decodeFromStream)
         }
 
+    @OptIn(ExperimentalSerializationApi::class)
+    override suspend fun search(query: String): QueryResponse = withContext(ioDispatcher) {
+        assets.open(QUERY_ASSET).use(networkJson::decodeFromStream)
+    }
+
     companion object {
         const val DETECT_ASSET = "detect.json"
+        const val QUERY_ASSET = "query.json"
     }
 }

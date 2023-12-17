@@ -60,7 +60,6 @@ class DetectViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
-                        Timber.d("Log in ${it.data.time}")
                         val imgResult = findObjects(it.data.predictions).applyToImage(img)
                         val result = it.data.apply {
                             image = image.copy(base64 = imgResult.asBase64())
@@ -80,6 +79,7 @@ class DetectViewModel @Inject constructor(
                                     userId = getUserLoginInfo().ifEmpty { "Anonymous" },
                                     accuracy = predict.confidence,
                                     detections = detections,
+                                    time = result.time
                                 )
                                 intent.putExtra(UploadService.EXTRA_DETECTION, historyData)
                                 context.startService(intent)

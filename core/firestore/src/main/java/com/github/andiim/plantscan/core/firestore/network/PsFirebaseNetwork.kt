@@ -4,11 +4,12 @@ import com.github.andiim.plantscan.core.firestore.PsFirebaseDataSource
 import com.github.andiim.plantscan.core.firestore.model.HistoryDocument
 import com.github.andiim.plantscan.core.firestore.model.PlantDocument
 import com.github.andiim.plantscan.core.firestore.model.SuggestionDocument
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.firestore.ktx.toObjects
+import com.google.firebase.firestore.toObject
+import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -17,6 +18,22 @@ class PsFirebaseNetwork @Inject constructor(
 ) : PsFirebaseDataSource {
     override suspend fun getPlants(): List<PlantDocument> =
         querySnapshotHandling(db.collection(PLANT_COLLECTION))
+
+    override suspend fun searchPlants(query: String): List<PlantDocument> =
+        querySnapshotHandling(
+            db.collection(PLANT_COLLECTION)
+                .orderBy("name")
+                .startAt(query)
+                .endAt("$query~")
+//                .whereGreaterThanOrEqualTo("name", query)
+//                .whereLessThanOrEqualTo("name", query),
+        )
+
+    override suspend fun countPlants(): Long {
+        val query = db.collection(PLANT_COLLECTION)
+        val countQuery = query.count()
+        return countQuery.get(AggregateSource.SERVER).await().count
+    }
 
     override suspend fun getPlantById(id: String): PlantDocument =
         documentSnapshotHandling(db.collection(PLANT_COLLECTION).document(id))

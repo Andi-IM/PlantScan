@@ -1,6 +1,7 @@
 package com.github.andiim.plantscan.core.firestore.fake
 
 import FirestoreJvmUnitTestFakeAssetManager
+import android.annotation.SuppressLint
 import com.github.andiim.plantscan.core.firestore.PsFirebaseDataSource
 import com.github.andiim.plantscan.core.firestore.fake.model.PlantJson
 import com.github.andiim.plantscan.core.firestore.fake.model.toDocument
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class FakePsFirebaseDataSource @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val networkJson: Json,
-    private val assets: FakeAssetManager = FirestoreJvmUnitTestFakeAssetManager,
+    @SuppressLint("VisibleForTests") private val assets: FakeAssetManager = FirestoreJvmUnitTestFakeAssetManager,
 ) : PsFirebaseDataSource {
 
     private suspend fun getPlantsJson(): List<PlantJson> = withContext(ioDispatcher) {
@@ -29,6 +30,15 @@ class FakePsFirebaseDataSource @Inject constructor(
 
     override suspend fun getPlants(): List<PlantDocument> =
         getPlantsJson().map(PlantJson::toDocument)
+
+    override suspend fun searchPlants(query: String): List<PlantDocument> =
+        withContext(ioDispatcher) {
+            assets.open(PLANTS_ASSET).use(networkJson::decodeFromStream)
+        }
+
+    override suspend fun countPlants(): Long {
+        return 1_00
+    }
 
     private suspend fun getPlantJson(): PlantJson = withContext(ioDispatcher) {
         assets.open(PLANT_ASSET).use(networkJson::decodeFromStream)

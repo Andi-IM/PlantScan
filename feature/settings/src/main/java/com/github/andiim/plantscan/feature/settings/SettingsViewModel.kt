@@ -1,5 +1,8 @@
 package com.github.andiim.plantscan.feature.settings
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.andiim.plantscan.core.auth.AuthHelper
@@ -22,6 +25,9 @@ class SettingsViewModel @Inject constructor(
     private val authHelper: AuthHelper,
     getUserLoginInfoUseCase: GetUserLoginInfoUseCase,
 ) : ViewModel() {
+
+    var showDialog by mutableStateOf(false)
+        private set
 
     val settingsUiState = combine(
         getUserLoginInfoUseCase(),
@@ -54,16 +60,20 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun signOut() {
+        showDialog = true
         viewModelScope.launch {
             authHelper.signOut().collect()
             userDataRepository.setLoginInfo()
+            showDialog = false
         }
     }
 
     fun deleteAccount() {
+        showDialog = true
         viewModelScope.launch {
             authHelper.deleteAccount().collect()
             userDataRepository.setLoginInfo()
+            showDialog = false
         }
     }
 }

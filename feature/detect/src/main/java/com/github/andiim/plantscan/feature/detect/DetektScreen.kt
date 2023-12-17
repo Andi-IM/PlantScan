@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
@@ -40,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
@@ -203,9 +205,26 @@ fun DetectScreen(
                 DetectImage(imageData = imgBitmap, onImageClick = { showPreview = !showPreview })
             }
 
+            item {
+                ListItem(
+                    headlineContent = { Text(text = "Time Detecting: ") },
+                    trailingContent = { Text(text = "${result.time} ms") },
+                )
+            }
+            item {
+                Text(
+                    "Predictions: ",
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                )
+            }
             if (result.predictions.isEmpty()) {
                 item { Text(text = stringResource(R.string.predict_is_empty)) }
             }
+
             result.predictions.forEach { data ->
                 item {
                     val acc = data.confidence.times(PERCENTAGE)

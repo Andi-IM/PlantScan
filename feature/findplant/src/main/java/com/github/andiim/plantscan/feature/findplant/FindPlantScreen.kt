@@ -1,5 +1,6 @@
 package com.github.andiim.plantscan.feature.findplant
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
@@ -180,6 +181,7 @@ private fun SearchContent(
         onSearch = onSearch,
         active = active,
         onActiveChange = onActiveChange,
+        placeholder = { Text(stringResource(R.string.find_plant_placeholder)) },
         leadingIcon = {
             Icon(PsIcons.Search, contentDescription = stringResource(R.string.testing))
         },
@@ -200,14 +202,7 @@ private fun SearchContent(
         },
         modifier = modifier,
     ) {
-        Text(
-            text = "Still under construction ...",
-            style = MaterialTheme.typography.displaySmall,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-        )
+        Log.d("SearchResult", "SearchContent: $searchResultUiState")
         when (searchResultUiState) {
             SearchResultUiState.Loading,
             SearchResultUiState.LoadFailed,
@@ -228,7 +223,7 @@ private fun SearchContent(
             }
 
             is SearchResultUiState.Success -> {
-                if (searchResultUiState.isEmpty()) {
+                if (searchResultUiState.plants.isEmpty()) {
                     EmptySearchResultBody(searchQuery = query)
                     if (recentSearchUiState is RecentSearchQueriesUiState.Success) {
                         RecentSearchesBody(
@@ -291,7 +286,6 @@ fun RecentSearchesBody(
                 },
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
-
             if (recentSearchQueries.items.isNotEmpty()) {
                 IconButton(
                     onClick = onClearRecentSearches,
@@ -304,20 +298,19 @@ fun RecentSearchesBody(
                     )
                 }
             }
-
-            LazyColumn(modifier = Modifier.padding(horizontal = 16.dp)) {
-                items(recentSearchQueries.items) { recentSearch ->
-                    Text(
-                        text = recentSearch,
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier
-                            .padding(vertical = 16.dp)
-                            .clickable {
-                                onRecentSearchClicked(recentSearch)
-                            }
-                            .fillMaxWidth(),
-                    )
-                }
+        }
+        LazyColumn(modifier = Modifier.padding(horizontal = 16.dp)) {
+            items(recentSearchQueries.items) { recentSearch ->
+                Text(
+                    text = recentSearch,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier
+                        .padding(vertical = 16.dp)
+                        .clickable {
+                            onRecentSearchClicked(recentSearch)
+                        }
+                        .fillMaxWidth(),
+                )
             }
         }
     }
@@ -328,10 +321,13 @@ fun EmptySearchResultBody(
     searchQuery: String,
     modifier: Modifier = Modifier,
 ) {
-    val message = stringResource(id = AppText.search_icon_close_description, searchQuery)
+    val message = stringResource(id = AppText.search_result_not_found, searchQuery)
     val start = message.indexOf(searchQuery)
     Text(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp),
+        textAlign = TextAlign.Center,
         text = AnnotatedString(
             text = message,
             spanStyles = listOf(
@@ -379,10 +375,11 @@ private fun SearchResultBody(
                                 append("Plants")
                             }
                         },
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     )
                 }
                 plants.items.forEach { plant ->
-                    val plantId = plant.name
+                    val plantId = plant.id
                     item(
                         key = "plant-$plantId",
                         span = {

@@ -65,6 +65,7 @@ class UploadService : Service() {
                             accuracy = data.accuracy,
                             image = imageLink,
                             detections = detections,
+                            time = data.time,
                         ),
                     ).first()
                     Timber.d("Recorded $recordId")

@@ -1,5 +1,6 @@
 package com.github.andiim.plantscan.feature.findplant
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -61,6 +62,7 @@ class FindPlantViewModel @Inject constructor(
             started = WhileSubscribed(5_000),
             initialValue = SearchResultUiState.Loading,
         )
+
     val recentSearchQueriesUiState: StateFlow<RecentSearchQueriesUiState> =
         recentSearchQueriesUseCase().map(RecentSearchQueriesUiState::Success)
             .stateIn(
@@ -85,6 +87,7 @@ class FindPlantViewModel @Inject constructor(
     fun onSearchTriggered(query: String) {
         viewModelScope.launch {
             recentSearchRepository.insertOrReplaceRecentSearch(query)
+            Log.d("SEARCH", "onSearchTriggered: $query")
         }
         analyticsHelper.logEvent(
             AnalyticsEvent(

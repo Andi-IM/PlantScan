@@ -1,0 +1,76 @@
+{
+  "hits": [
+    {
+      "path": "plants/qLSZBsSZvZ2nHTZu1IjZ",
+      "name": "test",
+      "species": "test",
+      "thumbnail": "https://firebasestorage.googleapis.com/v0/b/orchid-app-7fe3d.appspot.com/o/orchids%2Ftest%2FOIP.jpeg?alt=media&token=080dfa0d-a99b-4ee2-8ad8-ce17914d6463",
+      "lastmodified": {
+        "_operation": "IncrementSet",
+        "value": 1702724597966
+      },
+      "objectID": "qLSZBsSZvZ2nHTZu1IjZ",
+      "_highlightResult": {
+        "path": {
+          "value": "plants/qLSZBsSZvZ2nHTZu1IjZ",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "name": {
+          "value": "<em>test</em>",
+          "matchLevel": "full",
+          "fullyHighlighted": true,
+          "matchedWords": [
+            "test"
+          ]
+        },
+        "species": {
+          "value": "<em>test</em>",
+          "matchLevel": "full",
+          "fullyHighlighted": true,
+          "matchedWords": [
+            "test"
+          ]
+        },
+        "thumbnail": {
+          "value": "https://firebasestorage.googleapis.com/v0/b/orchid-app-7fe3d.appspot.com/o/orchids%2Ftest%2FOIP.jpeg?alt=media&token=080dfa0d-a99b-4ee2-8ad8-ce17914d6463",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "lastmodified": {
+          "_operation": {
+            "value": "IncrementSet",
+            "matchLevel": "none",
+            "matchedWords": []
+          },
+          "value": {
+            "value": "1702724597966",
+            "matchLevel": "none",
+            "matchedWords": []
+          }
+        }
+      }
+    }
+  ],
+  "nbHits": 1,
+  "page": 0,
+  "nbPages": 1,
+  "hitsPerPage": 20,
+  "exhaustiveNbHits": true,
+  "exhaustiveTypo": true,
+  "exhaustive": {
+    "nbHits": true,
+    "typo": true
+  },
+  "query": "test",
+  "params": "query=test",
+  "renderingContent": {},
+  "processingTimeMS": 1,
+  "processingTimingsMS": {
+    "_request": {
+      "roundTrip": 198
+    },
+    "total": 1
+  },
+  "serverTimeMS": 1
+}

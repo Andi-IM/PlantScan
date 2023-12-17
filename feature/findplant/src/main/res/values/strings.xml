@@ -11,4 +11,5 @@
     <string name="search_clear_search_text">Clear searches</string>
     <string name="recent_searches">Recent searches</string>
     <string name="camera_button_tooltip">Detect with camera</string>
+    <string name="find_plant_placeholder">Find supported plant here…</string>
 </resources>
