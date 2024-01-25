@@ -39,7 +39,7 @@ tensorflow_support = "0.4.3"
 [libraries]
 junit = { module = "junit:junit", version.ref = "junit" }
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version = "0.30.1" }
-accompanist_permission = { module = "com.google.accompanist:accompanist-permissions", version = "0.30.1" }
+accompanist_permission = { module = "com.google.accompanist:accompanist-permissions", version = "0.34.0" }
 androidx_appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx_core_ktx = { module = "androidx.core:core-ktx", version.ref = "core_ktx" }
 androidx_test_rules = { module = "androidx.test:rules", version.ref = "androidx_test_rules" }
