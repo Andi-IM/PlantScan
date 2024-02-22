@@ -47,7 +47,7 @@ androidx_test_runner = { module = "androidx.test:runner", version.ref = "android
 androidx_test_ext_junit = { module = "androidx.test.ext:junit", version.ref = "androidx_test_ext" }
 androidx_test_ext_junit_ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx_test_ext" }
 dagger_hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-dagger_hilt_navigation_compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.0.0" }
+dagger_hilt_navigation_compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0" }
 dagger_hilt_compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 dagger_hilt_testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 camera = { module = "androidx.camera:camera-camera2", version.ref = "camerax_version" }
