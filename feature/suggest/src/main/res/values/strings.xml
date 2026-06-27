@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="suggest_description_error_message">Please give some short description</string>
+    <string name="suggestion_uploading_message">Uploading…</string>
+    <string name="suggestion_description">Description</string>
+
+    <string name="suggestion_button_label">Not sure for the result?</string>
+    <string name="suggestion_action_label">give a suggestion</string>
+    <string name="suggestion_title_screen">Give a suggestion</string>
+    <string name="suggestion_send_label">Send</string>
+    <string name="suggestion_deny_message">Sorry, you must login to access this feature</string>
+    <string name="suggestion_success_message">Thank you for the feedback</string>
+    <string name="cancel_sending_suggestion">Cancel</string>
+    <string name="suggestion_login_snackbar_action">Login</string>
+</resources>

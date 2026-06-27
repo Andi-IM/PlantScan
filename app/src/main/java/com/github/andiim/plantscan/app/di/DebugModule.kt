@@ -1,5 +1,6 @@
 package com.github.andiim.plantscan.app.di
 
+import com.github.andiim.plantscan.app.utils.logger.TimberDebugTree
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

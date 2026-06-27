@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_create_account">Create account</string>
+    <string name="label_sign_in">Sign in</string>
+    <string name="label_sign_up">Sign Up</string>
+    <string name="label_email">Email</string>
+    <string name="email_error">Please insert a valid email.</string>
+    <string name="label_password">Password</string>
+    <string name="error_empty_password">Password cannot be empty.</string>
+    <string name="error_wrong_password">Your password should have at least six digits and include one digit, one lower case letter and one upper case letter.</string>
+    <string name="error_password_match">Passwords do not match.</string>
+    <string name="label_repeat_password">Repeat password</string>
+    <string name="hide_password">Hide Password</string>
+    <string name="show_password">Show Password</string>
+    <string name="login_forgot_password_label">Forgot Password?</string>
+    <string name="have_account_question_label">Already have an account?</string>
+    <string name="no_account_question_label">Don\'t have an account?</string>
+    <string name="terms_label">By continuing, you agree to our</string>
+    <string name="terms_text_button">Terms</string>
+    <string name="and_separator">and</string>
+    <string name="privacy_policy_text_button">Privacy Policy</string>
+    <string name="terms_label_semantics">Terms Label</string>
+    <string name="label_send_email_for_forgot_password">Send</string>
+    <string name="hint_recovery_email_sent">Check your inbox for the recovery email.</string>
+    <string name="error_message">An error occured</string>
+</resources>
