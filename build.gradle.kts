@@ -23,19 +23,14 @@ buildscript {
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.application.compose) apply false
-    alias(libs.plugins.android.application.jacoco) apply false
-    alias(libs.plugins.android.application.firebase) apply false
-    alias(libs.plugins.android.application.flavors) apply false
-    alias(libs.plugins.android.feature) apply false
-    alias(libs.plugins.android.hilt) apply false
-    alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.android.library.compose) apply false
-    alias(libs.plugins.android.library.jacoco) apply false
-    alias(libs.plugins.android.room) apply false
-    alias(libs.plugins.android.test) apply false
-    alias(libs.plugins.com.android.library) apply false
+    id("com.android.application") apply false
+    id("com.android.library") apply false
+    kotlin("android") apply false
+    kotlin("kapt") apply false
+    id("com.google.gms.google-services") version "4.4.3" apply false
+    id("com.google.dagger.hilt.android") apply false
+    id("com.google.firebase.crashlytics") apply false
+    id("com.google.firebase.firebase-perf") version "1.4.2" apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.gms) apply false
     alias(libs.plugins.jvm.library) apply false
